@@ -67,7 +67,8 @@ class NovelEsn(object):
         return Xstates
         
     def predict(self, tau, yntau_size_q, beta_regul):
-        self.check_tau_q_and_p(tau, yntau_size_q)
+        #tau, q and p have conditions that the user must respect
+        self.check_tau_q_and_p(tau, yntau_size_q) 
         YntauVects = self.buildYntauVectors(tau, yntau_size_q)
         num_vects = YntauVects.shape[0]
         XstatesTrain = self.Xstates[0:num_vects, :] #because Xstates ends
