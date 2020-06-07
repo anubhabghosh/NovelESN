@@ -7,7 +7,7 @@
     standard one.
      
 
-    Copyright (C) 2000  Saikat Chatterjee and Aleix Espuña Fontcuberta
+    Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
