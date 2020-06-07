@@ -108,9 +108,7 @@ class NovelEsn(object):
             sys.exit()
         return
 
-
-
-
+    
 def build_history_deque(training_signal, indexn, histo_size):
     yn = np.zeros(histo_size)
     for i in range(histo_size):
