@@ -8,7 +8,7 @@ A standard ESN is a neural network capable to receive a time series (training) a
 ## Installation
 The package "echo_state_network" contains a single module, "novel.py". Inside this module there's a main class, "NovelEsn",  
 which can be used by the user to create an ESN object.  
-There's no instalation. The user can simply download the package "echo_state_network" and import the class   
+There's no installation. The user can simply download the package "echo_state_network" and import the class   
 in a Python script with the command:  
 ```
 from echo_state_network.novel import NovelEsn
