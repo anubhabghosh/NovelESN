@@ -2,8 +2,17 @@
 A novel Echo State Network (ESN) algorithm for predicting very complicated time series without   
 the numerical instability issues of the standard one.
 
-## What the program does
-A standard ESN is a neural network capable to receive a time series (training) and predict its imminent continuation for a short time. We are presenting here a new algorithm. This new method can directly predict the signal at any desired future instants of time, without having to predict the imminent continuation first. Just to give the reader an example, imagine we use a training signal from time t=1sec to t=100sec. We can then ask the program to make a jump of 20sec in the future and return a history of 3 values. That command will directly return a prediction at t=118sec, t=119sec and t=120sec. The previous values from t=111sec to t=117sec will not be predicted. 
+## main.py
+It receives a txt file with the training data and it returns a file with the prediction.
+The code is run via terminal:  
+```
+python main.py training_data.txt outputfile.txt tau history_q beta test_data.txt
+```
+* training_data.txt: path to a txt file with a single column of values representing a time series of scalars {y_0, y_1, ...y_M-1}
+* outputfile: name of the output file the program will generate. The prediction will be written in a column.
+* tau: (integer) Jump in the future. If M-1 is the time index of the last training data value y_M-1, tau indicates that the prediction will end at index M+tau.
+* history_q (integer) Determines the number of predicted values and the beginning of the prediction. The prediction will begin at index M+tau-(q-1). 
+
 
 ## Installation
 The package "echo_state_network" contains a single module, "novel.py". Inside this module there's a main class, "NovelEsn",  
