@@ -3,13 +3,13 @@ A novel Echo State Network (ESN) algorithm for predicting very complicated time 
 the numerical instability issues of the standard one.
 
 ## main.py
-It receives a txt file with the training data and it saves and plots the prediction obtained.
+It receives a txt file with a time series (training data) and it saves and plots the prediction of its future at certain instants of time.
 The code is run via terminal:  
 ```
 python main.py training_data.txt outputfile.txt tau history_q beta test_data.txt
 ```
 * training_data.txt: Path to a txt file with a single column of values representing a time series of M scalars {y<sub>0</sub>, y<sub>1</sub>, ...y<sub>M-1</sub>}
-* outputfile: Path to the output file the program will generate. The prediction will be written in a column.
+* outputfile: Path to the output file where the prediction will be written.
 * tau: (integer) Jump in the future. If M-1 is the time index of the last training data value y<sub>M-1</sub>, tau indicates that the last predicted value will be y_M+tau.
 * history_q (integer) Determines the number of predicted values and the beginning of the prediction. The total number of predicted values will be q and they will go from instant M+tau-(q-1) to M+tau.
 * beta (optional, default=1e-10): Regularization parameter for a ridge regression equation. See the file equations_doc.pdf for more info. 
