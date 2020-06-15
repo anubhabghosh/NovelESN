@@ -15,7 +15,7 @@ python main.py training_data.txt outputfile.txt tau history_q beta test_data.txt
 * beta (optional, float type, default=1e-10): Regularization parameter for a ridge regression equation. See the file equations_doc.pdf for more info. 
 * test_data.txt (optional, string type, default=None): Path to a txt file with test data values. The test data is used to know if the prediction is good or not. A perfect prediction should match the test data. If provided, the program will show a plot comparing the prediction and the test data.
 * history_p (optional, integer type, default=32): Number of feedback values used to update the reservoir of neurons during training. See equations_doc.pdf for more info.
-### algorithm overview
+### Algorithm overview
 Given a time series of M scalars {y<sub>0</sub>, y<sub>1</sub>, ...y<sub>M-1</sub>}, the user will specify a jump in the future tau and a history q. The program will then return a set of predicted values {y<sub>M+tau-(q-1)</sub>, y<sub>M+tau-(q-2)</sub>, ...y<sub>M-tau</sub>}
 
 
