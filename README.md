@@ -3,7 +3,7 @@ A novel Echo State Network (ESN) algorithm for predicting very complicated time 
 the numerical instability issues of the standard one.
 
 ## main.py
-It receives a txt file with a time series (training data) and it saves and plots the prediction of its future at certain instants of time.
+It receives a txt file with a time series (training data) and it saves and plots the prediction of certain future instants of time.
 The code is run via terminal:  
 ```
 python main.py training_data.txt outputfile.txt tau history_q beta test_data.txt
