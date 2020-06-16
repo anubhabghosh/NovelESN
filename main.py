@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
 
+Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +13,7 @@ Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 """
 
 import numpy as np
@@ -39,7 +40,7 @@ parser.add_argument("history_q", type=int, help="Determines the amount of "
 "M+tau-(q-1) to M+tau), generating the predictions "
 "y_M+tau-(q-1), y_M+tau-(q-2) ... y_M+tau.")
 
-parser.add_argument("beta", type=float, default=1e-10, 
+parser.add_argument("beta", type=float, default=1e-10, nargs="?", 
 help="Regularization parameter for a ridge regression equation."
 "See the file equations_doc.pdf for more info")
 
@@ -47,10 +48,11 @@ parser.add_argument("test_data", type=str, default=None, help="Path to a txt"
 "file with test data values. The test data is used to know if the prediction"
 " is good or not. A perfect prediction should match the test data. "
 "If provided, the program will show a plot comparing the prediction and the "
-"test data.")
+"test data.", nargs="?")
 parser.add_argument("history_p", type=int, default=32, help="Number of "
 "feedback values used to update the reservoir of neurons during training. "
-"See equations_doc.pdf for more info")
+"See equations_doc.pdf for more info", nargs="?")
 
 namespace = parser.parse_args()
+print(namespace)
 
