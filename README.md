@@ -6,7 +6,7 @@ the numerical instability issues of the standard one.
 It receives a txt file with a time series (training data) and it predicts its continuation at certain future instants of time. The program will save and plot the prediction obtained.
 The code is run via terminal:  
 ```
-python main.py training_file.txt outputfile.txt tau history_q beta test_data.txt
+python main.py training_file.txt outputfile.txt tau history_q beta test_file.txt
 ```
 * training_file.txt (string type): Path to a txt file with a single column of values representing a time series of M scalars {y<sub>0</sub>, y<sub>1</sub>, ...y<sub>M-1</sub>}.
 * outputfile (string type): Path to the output file where the prediction will be written.
