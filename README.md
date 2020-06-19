@@ -21,4 +21,11 @@ The user can get a help menu with  ```python main.py -h```
 ### To sum up
 Given a time series of M scalars {y<sub>0</sub>, y<sub>1</sub>, ...y<sub>M-1</sub>}, the user will specify a jump in the future tau and a history q. The program will then return a set of predicted values {y<sub>M+tau-(q-1)</sub>, y<sub>M+tau-(q-2)</sub>, ...y<sub>M+tau</sub>}
 
+## System Requirements
+Python 3.7 or newer with the following libraries:
+* numpy
+* matplotlib
+* sklearn
+
+
 
