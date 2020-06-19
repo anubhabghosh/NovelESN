@@ -34,7 +34,7 @@ def define_parser():
     help="Regularization parameter for a ridge regression equation."
     "See the file equations_doc.pdf for more info")
     
-    parser.add_argument("test_data", type=str, default=None, help="Path to a "
+    parser.add_argument("test_file", type=str, default=None, help="Path to a "
     "txt file with test data values. The test data is used to know if the "
     "prediction is good or not. A perfect prediction should match the test "
     "data. If provided, the program will show a plot comparing the prediction"
