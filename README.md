@@ -35,13 +35,14 @@ The user must respect the order of the positional arguments. However, the option
 python main.py TrainingSignals/dynamo_train.txt dynamo_pred.txt 151 152 -test_file TestSignals/dynamo_test_tau151_q152.txt 
 ```
 ```
-python main.py TrainingSignals/dynamo_train.txt dynamo_pred.txt 151 152 -test_file TestSignals/dynamo_test_tau151_q152.txt -beta 1e-9
+python main.py TrainingSignals/dynamo_train.txt dynamo_pred.txt 80 50 -beta 1e-9
 ```
-```
-python main.py TrainingSignals/dynamo_train.txt dynamo_pred.txt 151 152 -history_p 15 -test_file TestSignals/dynamo_test_tau151_q152.txt 
-```
+
 ```
 python main.py TrainingSignals/sinus_train.txt sinus_pred.txt 99 50 -test_file TestSignals/sinus_test_tau99_q50.txt 
+```
+```
+python main.py TrainingSignals/sinus_train.txt sinus_pred.txt 60 61 -history_p 15 
 ```
 
 
