@@ -14,7 +14,7 @@ def define_parser():
 
     parser = argparse.ArgumentParser(description=descrip)
     parser.add_argument("training_file", type=str, help="path to a txt file" 
-    "with a single column representing the training time series "
+    " with a single column representing the training time series "
     "y_0, y_1, ...y_M-1.") 
     
     parser.add_argument("output_file", type=str, help="path to the output file"
@@ -30,17 +30,17 @@ def define_parser():
     "M+tau-(q-1) to M+tau), generating the predictions "
     "y_M+tau-(q-1), y_M+tau-(q-2) ... y_M+tau.")
     
-    parser.add_argument("beta", type=float, default=1e-10, nargs="?", 
+    parser.add_argument("-beta", type=float, default=1e-10, nargs="?", 
     help="Regularization parameter for a ridge regression equation."
     "See the file equations_doc.pdf for more info")
     
-    parser.add_argument("test_file", type=str, default=None, help="Path to a "
+    parser.add_argument("-test_file", type=str, default=None, help="Path to a "
     "txt file with test data values. The test data is used to know if the "
     "prediction is good or not. A perfect prediction should match the test "
     "data. If provided, the program will show a plot comparing the prediction"
     "and the test data.", nargs="?")
     
-    parser.add_argument("history_p", type=int, default=32, help="Number of "
+    parser.add_argument("-history_p", type=int, default=32, help="Number of "
     "feedback values used to update the reservoir of neurons during training."
     " See equations_doc.pdf for more info", nargs="?")
     
