@@ -25,6 +25,7 @@ Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
 
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
 from parser import define_parser
 from echo_state_network.novel import NovelEsn
 
@@ -53,7 +54,7 @@ esn.teacher_forcing(train_signal) #feedback about the train data
 
 #pred of q values
 prediction, train_mse = esn.predict(tau, yntau_size_q, beta)
-print("training mse=", train_mse)
+print("training mse over q =", train_mse/yntau_size_q)
 #given a training time series y_0, y_1, y_2 ...y_M-1, the program will predict:
 # y_M+tau-(q-1), y_M+tau-(q-2) ... y_M+tau
 np.savetxt(fname=output_file, X=prediction)
@@ -73,6 +74,8 @@ plt.title("Prediction vs time index")
 plt.plot(pred_indexes, prediction, label="prediction", color="green")
 if test_file:
     plt.plot(pred_indexes, test_signal, label="test signal", color="orange")
+    test_mse = mean_squared_error(test_signal, prediction)
+    print("test mse=", test_mse)
 plt.legend()
 
 plt.show()
