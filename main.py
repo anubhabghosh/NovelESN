@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+"""
+This program predicts the continuation of a signal.
+It receives a training file and prediction parameters 
+and it saves the prediction in a new file. 
+Run python main.py -h to get a help menu.
 """
 
+"""
 Copyright (C) 2020  Saikat Chatterjee and Aleix Espuña Fontcuberta
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,7 +51,9 @@ if test_file:
 esn = NovelEsn(yn_size_p) #initialization of the esn
 esn.teacher_forcing(train_signal) #feedback about the train data
 
-prediction = esn.predict(tau, yntau_size_q, beta)[0] #pred of q values
+#pred of q values
+prediction, train_mse = esn.predict(tau, yntau_size_q, beta)
+print("training mse=", train_mse)
 #given a training time series y_0, y_1, y_2 ...y_M-1, the program will predict:
 # y_M+tau-(q-1), y_M+tau-(q-2) ... y_M+tau
 np.savetxt(fname=output_file, X=prediction)
