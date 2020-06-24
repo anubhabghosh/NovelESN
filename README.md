@@ -8,7 +8,7 @@ The code is run via terminal:
 ```
 python main.py training_file.txt outputfile.txt tau history_q
 ```
-The user can also specify the optional arguments beta, test_file and history_p, see the section examples.
+The user can also specify the optional arguments beta, test_file and history_p, as shown in section examples.
 
 * training_file.txt (string type): Path to a txt file with a single column of values representing a time series of M scalars {y<sub>0</sub>, y<sub>1</sub>, ...y<sub>M-1</sub>}.
 * outputfile (string type): Path to the output file where the prediction will be written.
