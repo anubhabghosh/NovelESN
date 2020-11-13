@@ -1,3 +1,7 @@
+#### NOTE: This is a forked version of the repository to compare NovelESN with other recurrent architectures like AR model, LSTM and GRU.
+
+Below, is the original description of NovelESN:
+
 # NovelESN
 A novel Echo State Network (ESN) algorithm for predicting very complicated time series without   
 the numerical instability issues of the standard one.
