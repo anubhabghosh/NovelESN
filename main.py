@@ -126,7 +126,8 @@ def main():
     parser.add_argument("--train_file", help="Location of training data file", default=None, type=str)
     parser.add_argument("--output_file", help="Location of the output file", default=None, type=str)
     #parser.add_argument("--test_file", help="(Optional) Location of the test data file", default=None, type=str)
-    parser.add_argument("--use_data", help="(Optional) Use Preprocessed data, 1 - use already present data, 0 - use custom split", default=0, type=int)
+    parser.add_argument("--use_data",
+                        help="(Optional) Use Preprocessed data, 1 - use already present data, 0 - use custom split", default=0, type=int)
     parser.add_argument("--predict_cycle_num", help="Cycle number to be predicted", default=None, type=int)
 
     # Parse the arguments
@@ -154,10 +155,10 @@ def main():
         test_data = np.loadtxt("./data/TestSignals/dynamo_test_tau151_q152.txt") # Only contains the signal
         
         #Training data plot
-        plt.figure()
-        plt.title("Training data vs time index")
-        plt.plot(train_data)
-        plt.show()
+        #plt.figure()
+        #plt.title("Training data vs time index")
+        #plt.plot(train_data)
+        #plt.show()
 
         #train_data = np.loadtxt(train_file)
         # Load the test data (if any)
@@ -183,11 +184,11 @@ def main():
             tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_realsolar(time=train_test_data[:,0],
                                                                                             dynamo=train_test_data[:,1],
                                                                                             cycle_num=predict_cycle_num)
-        plot_train_test_data(trdata_time=tr_data_time,
-                            trdata_signal=tr_data_signal,
-                            tedata_time=te_data_time,
-                            tedata_signal=te_data_signal)
-        
+        #plot_train_test_data(trdata_time=tr_data_time,
+        #                    trdata_signal=tr_data_signal,
+        #                    tedata_time=te_data_time,
+        #                    tedata_signal=te_data_signal)
+       #
         #NOTE: This modification is only applicable for NovelESN
         if model_type == "esn":
             options["esn"]["tau"] = len(te_data_signal) - 1
@@ -206,9 +207,18 @@ def main():
             #pred of q values
             predictions, pred_indexes = train_and_predict_AR(model, tr_data_signal, te_data_signal, 
                 tr_data_time, te_data_time)
+        with open("results__{}.txt".format(model_type),"a") as fp:
+            print("\t".join(
+                        ["{}:{}".format(k, v) for k, v in options["linear_ar"].items()]
+                        + ["{}:{}".format("test__mse",((predictions-te_data_signal)**2).mean())]
+                        + ["{}:{}".format("train__mse", ((predictions - te_data_signal) ** 2).mean())]
+                        + ["{}:{}".format("val__mse", ((predictions - te_data_signal) ** 2).mean())]
+                        ), file=fp)
 
         # Save the results in the output file
-        np.savetxt(fname = output_file, X = predictions)
+        np.savetxt(fname=output_file,
+                   X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
+                   )
 
 if __name__ == "__main__":
     main()
