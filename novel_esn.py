@@ -136,8 +136,6 @@ class NovelEsn(object):
             train_signal ([numpy.ndarray]): time series used as training data
         
         Returns:
-            self.reg_model : Regression model obtained by solving Ridge-Regression
-                            problem
             train_mse: Mean squared error obtained during training (after fitting)
         """
         #tau, q and p have conditions that the user must respect
@@ -157,18 +155,16 @@ class NovelEsn(object):
         # so we take only N-p-tau values from the larger set of reservoir 
         # states to create our training data
         XstatesTrain = self.Xstates[0:num_vects, :] 
-        
         '''
         #at n=N-1, but we can train only until n=N-tau-1. In other words,
         #YntauVects and XstatesTrain must have the same num of vectors
         '''
-
         # XstatesTrain and YntauVects must have the same number of vectors
         # for training
         self.reg_model, train_mse = solve_ridge_regr(XstatesTrain, YntauVects, 
                                                                     self.beta)
 
-        return self.reg_model, train_mse
+        return train_mse
     
     def predict(self):
         """ This function performs prediction for Echo State Network (ESN)
@@ -183,7 +179,7 @@ class NovelEsn(object):
         ypredNtau = np.flip(ypredNtau) #we want indexes progress as time does
         
         # Create prediction indices
-        index_last_pred = len(train_signal) + self.tau # = M+tau
+        index_last_pred = self.N + self.tau # = M+tau
         index_first_pred = index_last_pred - (self.yntau_size_q - 1) # = M+tau-(q-1)
         pred_indexes = np.arange(index_first_pred, index_last_pred + 1)
         
@@ -214,6 +210,12 @@ class NovelEsn(object):
     '''
 
     def buildYntauVectors(self):
+        """ Build a list of target vectors for regression
+
+        Returns:
+            YntauVects [(numpy.ndarray)]: Matrix of prediction values ((N-tau-p) x q)
+            [num_samples x dimension of 'yntau']
+        """
         nstart = self.yn_size_p - 1 #the pairs xn, yn started at p-1
         yntau = build_history_deque(self.train_signal, nstart + self.tau, 
                                     self.yntau_size_q)

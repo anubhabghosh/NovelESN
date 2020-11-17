@@ -11,9 +11,12 @@
 
 "linear_ar":{
     "batchsize":64,
-    "num_taps":10,
-    "lr":1e-3,
-    "num_epochs":30
+    "lossfn_type":"mse",
+    "init_net":true,
+    "device":"cpu",
+    "num_taps":25,
+    "lr":1e-1,
+    "num_epochs":1000
 },
 
 "rnn":{
