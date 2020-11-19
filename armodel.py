@@ -70,7 +70,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8):
 
         #print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
 
-#    plot_losses(losses, val_losses)
+    #plot_losses(losses, val_losses)
 
     return losses, val_losses, model
 

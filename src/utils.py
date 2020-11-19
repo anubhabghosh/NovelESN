@@ -19,7 +19,7 @@ def find_index_of_minimums_dyn(dynamo_signal):
         is_minimum = check_if_is_minimum(dynamo_signal, i)
         if is_minimum:
             index_of_minimums.append(i)
-    return index_of_minimums.astype(int).reshape(-1)
+    return np.array(index_of_minimums).astype(int).reshape(-1)
 
 
 def check_if_is_minimum(signal, index):
@@ -132,9 +132,15 @@ def concat_data(x, col=1):
 
 
 def get_cycle(X,Y,icycle):
-    ytest = Y[icycle]
-    tmp = sum(X[:icycle + 1], [])
-    xtrain = [t[0] for t in tmp]
-    ytrain = [t[1] for t in tmp]
+    if icycle == len(X):
+        ytest=np.array([])
+        tmp = sum(X[:icycle + 1], [])
+        xtrain = [t[0] for t in tmp]
+        ytrain = [t[1] for t in tmp]
+    else:
+        ytest = Y[icycle]
+        tmp = sum(X[:icycle + 1], [])
+        xtrain = [t[0] for t in tmp]
+        ytrain = [t[1] for t in tmp]
     return xtrain,ytrain,ytest
 

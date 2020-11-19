@@ -16,7 +16,7 @@ class RNN(nn.Module):
     def __init__(self,input_size=1,hidden_size=32,num_layers=1):
         super(RNN, self).__init__()
 
-        self.rnn = nn.RNN(
+        self.rnn = nn.LSTM(
             input_size=input_size,
             hidden_size=hidden_size,  # rnn hidden unit
             num_layers=num_layers,  # number of rnn layer
@@ -36,11 +36,10 @@ class RNN(nn.Module):
         # outs = self.out(r_out)
         # outs = outs.view(-1, TIME_STEP, 1)
         # return outs, h_state
-
         # or even simpler, since nn.Linear can accept inputs of any dimension
         # and returns outputs with same dimension except for the last
-        #
-        # return outs
+
+        return outs, h_state
 
 
 if __name__ == "__main__":
@@ -100,3 +99,53 @@ if __name__ == "__main__":
 
     plt.ioff()
     plt.show()
+
+def train_and_predict_RNN(model, xtrain, ytrain, ytest,tau=1):
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)  # optimize all cnn parameters
+    loss_func = nn.MSELoss()
+
+    h_state = None  # for initial hidden state
+    n_predict=ytest.shape[0]
+
+    plt.close()
+    T = xtrain.shape[0]
+    err=[]
+    for epoch in range(10):
+        loss=0
+        for t in range(1, T-1):
+
+            x = torch.from_numpy(xtrain[:t,1].reshape(1,-1,1).astype(np.float32))  # shape (batch, time_step, input_size)
+            y = torch.from_numpy(xtrain[t:t+tau,1].reshape(1,-1,1).astype(np.float32))
+
+            prediction, h_state = model(x, h_state)  # rnn output
+
+            # !! next step is important !!
+            h_state = tuple(h.data for h in h_state)  # repack the hidden state, break the connection from last iteration
+
+            loss += loss_func(prediction[:, -1, :], y)  # calculate loss
+        optimizer.zero_grad()  # clear gradients for this training step
+        loss.backward()  # backpropagation, compute gradients
+        optimizer.step()  # apply gradients
+        err.append(loss.item())
+
+        print(epoch, np.mean(err[-T:]))
+
+    model.eval()
+    out=torch.from_numpy(np.zeros((T+n_predict),dtype=np.float32))
+    out[:T]=torch.from_numpy(xtrain[:,1].astype(np.float32))
+    for ipredict in range(n_predict):
+        prediction, h_state = model(out[ipredict:T+ipredict].reshape(1,-1,1), h_state)
+        out[T+ipredict]=prediction[0,-1,0]
+    prediction = out[-n_predict:].detach().numpy()
+
+    plt.figure();plt.subplot(311)
+    plt.plot(ytest);
+    plt.plot(prediction)
+    plt.title("Training data size: {}".format(xtrain.shape[0]))
+    plt.subplot(312)
+    plt.plot(err)
+    plt.subplot(313)
+    plt.plot(xtrain[:,1])
+    plt.savefig("Training_data_size{}.png".format(xtrain.shape[0]))
+    return prediction

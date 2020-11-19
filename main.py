@@ -26,7 +26,7 @@ from armodel import Linear_AR, create_dataset, train_armodel, predict_armodel, p
 from argparse import RawTextHelpFormatter
 from cycle_selector_dynamo import get_train_test_dynamo
 from cycle_selector_realsolar import get_train_test_realsolar, plot_train_test_data
-from rnntest import RNN
+from rnntest import RNN, train_and_predict_RNN
 
 def load_model_with_opts(options, model_type):
     """ This function is used for loading the appropriate model
@@ -147,34 +147,90 @@ def main():
 
     with open(config_file) as f:
         options = json.load(f)  # This loads options as a dict with keys that can be accessed
-    options[model_type]["num_taps"] = 120
+    options[model_type]["num_taps"] = 10
     p = options[model_type]["num_taps"]
 
     # Load the training data
     data = np.loadtxt(train_file)
+    data[:,1] = (data[:,1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())
     minimum_idx = get_minimum(data, dataset)
 
-    # Get multiple step ahead prediction datasets
-    X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
 
+    # Get multiple step ahead prediction datasets
+
+    X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
     # options[model_type]["num_taps"]
     n_cycles = len(Y)
-    err = np.zeros(n_cycles)
-    for icycle in range(n_cycles):
-        xtrain, ytrain, ytest = get_cycle(X, Y, icycle)
-        # NOTE: This modification is only applicable for NovelESN
-        model = load_model_with_opts(options, model_type)
-        predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), ytest[:, 1])
-        err[icycle] = mean_squared_error(ytest[:, 1], predictions)
+    n_tests = 3
+    # xtrain, ytrain, ytest = get_cycle(X, Y, n_cycles+1)
+    P = [10, 20, 30]
+    val_err = np.zeros((n_cycles, len(P)))
 
-        # plot_predictions(
-        #    ytest=ytest,
-        #    predictions=predictions,
-        #    title="Predictions using Linear AR model"
-        # )
+        # errors = new_train_ar(data,minimum_idx)
+        # errors ={"validatation errors": (n_val_cycles, n_tried_numtapsvalues),
+        #            "test_errors":(n_test_cycles,),
+        #            "test_predictions: list of n_test_cycles arrays [ (length of 1st test cycle, 2), .. ]
+        #            "future_points": (120,)
+        #  }
+
+
+
+    for ip, p in enumerate(P):
+        X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
+        for icycle in range(n_cycles-n_tests):
+            xtrain, ytrain, yval = get_cycle(X, Y, icycle)
+            if model_type == "linear_ar":
+                model = Linear_AR(
+                    num_taps=p,
+                    lossfn_type=options[model_type]["lossfn_type"],
+                    lr=options[model_type]["lr"],
+                    num_epochs=options[model_type]["num_epochs"],
+                    init_net=options[model_type]["init_net"],
+                    device=options[model_type]["device"]
+                )
+
+                predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
+
+            elif model_type == "rnn":
+                model = RNN(input_size=1, hidden_size=10)
+                X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
+                for icycle in [0, 20]:#range(n_cycles - n_tests):
+                    xtrain = X[icycle]
+                    ytrain = None
+                    yval = Y[icycle]
+                    #model = RNN(input_size=1, hidden_size=10)
+
+                    predictions = train_and_predict_RNN(model, xtrain, ytrain, yval[:, 1])
+
+                    print("")
+
+            val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)
+
+
+    optimal_p = np.argmin(val_err.mean(0)).reshape(-1)[0]
+    X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=optimal_p)
+    test_err_ar=np.zeros(n_tests)
+    for i_test_cycle in range(n_cycles-n_tests, n_cycles):
+        xtrain, ytrain, ytest = get_cycle(X, Y, i_test_cycle)
+        model = load_model_with_opts(options, model_type)
+        predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
+        test_err_ar[i_test_cycle] = mean_squared_error(ytest[:, 1], predictions)
+
+    # model = load_model_with_opts(options, model_type)
+    model = RNN(input_size=p, hidden_size=10)
+    predictions = train_and_predict_RNN(model, concat_data(xtrain), concat_data(ytrain), ytest[:, 1])
+
+    err[icycle] = mean_squared_error(ytest[:, 1], predictions)
+
+    plot_predictions(
+       ytest=ytest,
+       predictions=predictions,
+       title="Predictions using Linear AR model"
+    )
 
     plt.figure();
     plt.plot(list(range(n_cycles)), err)
+    plt.show()
     sys.exit(0)
 
 
