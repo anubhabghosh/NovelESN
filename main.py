@@ -11,8 +11,10 @@ Author: Anubhab Ghosh
 """
 
 # Import the necessary libraries
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle
 import torch
 from torch import nn, optim
 from torch.autograd import Variable
@@ -24,6 +26,7 @@ from armodel import Linear_AR, create_dataset, train_armodel, predict_armodel, p
 from argparse import RawTextHelpFormatter
 from cycle_selector_dynamo import get_train_test_dynamo
 from cycle_selector_realsolar import get_train_test_realsolar, plot_train_test_data
+from rnntest import RNN
 
 def load_model_with_opts(options, model_type):
     """ This function is used for loading the appropriate model
@@ -35,7 +38,8 @@ def load_model_with_opts(options, model_type):
         for each model considered
         model_type ([str]): type of model under consideration
     """
-    if model_type.lower() == "esn":
+
+    if model_type == "esn":
 
         model = NovelEsn(
                         num_neur=options[model_type]["num_neurons"],
@@ -46,8 +50,8 @@ def load_model_with_opts(options, model_type):
                         history_p=options[model_type]["history_p"],
                         beta_regularizer=options[model_type]["beta_regularizer"]
                         )
-    #TODO: AR model integrated
-    elif model_type.lower() == "linear_ar":
+    # TODO: AR model integrated
+    elif model_type == "linear_ar":
 
         model = Linear_AR(
                         num_taps=options[model_type]["num_taps"],
@@ -57,7 +61,8 @@ def load_model_with_opts(options, model_type):
                         init_net=options[model_type]["init_net"],
                         device=options[model_type]["device"] 
         )
-
+    elif model_type == "rnn":
+        model = RNN()
     return model
 
 def train_and_predict_ESN(model, train_data, test_data=None):
@@ -73,41 +78,37 @@ def train_and_predict_ESN(model, train_data, test_data=None):
                     pred_indexes=pred_indexes,
                     predictions=predictions,
                     title="Predictions using NovelESN model")
-        
+
     return predictions, pred_indexes
 
-def train_and_predict_AR(model, train_data, test_data=None, 
-                    train_indices=None, test_indices=None):
 
-    train_data_inputs, train_data_targets = create_dataset(train_data, alen=model.num_taps)
-    #test_data_inputs, test_data_targets = create_dataset(test_data, alen=model.num_taps)
+def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data):
     tr_losses, val_losses, model = train_armodel(model, nepochs=model.num_epochs, inputs=train_data_inputs,
         targets=train_data_targets, tr_split=0.75)
 
-    #test_input = test_data_inputs[0].reshape((1, -1))
-    test_input = train_data[-model.num_taps:].reshape((1, -1))
-    predictions_ar = predict_armodel(model=model, eval_input=test_input, n_predict=len(test_data))
-    
+    predictions_ar = predict_armodel(model=model, eval_input=train_data_inputs[-1], n_predict=len(test_data))
+
+    return predictions_ar
+
+def plot_predictions(ytest,  predictions, title):
+
+    #Prediction plot
+    plt.figure()
+    #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
+    plt.title(title, fontsize=20)
+    plt.plot(ytest[:,0], ytest[:,1], label="actual test signal", color="orange")
+    plt.plot(ytest[:,0], predictions, label="prediction", color="green")
+    plt.legend()
+    plt.show()
+"""
+
     plot_predictions(
         actual_test_data=test_data,
         pred_indexes=test_indices,
         predictions=predictions_ar,
         title="Predictions using Linear AR model"
     )
-
-    return predictions_ar, test_indices
-
-def plot_predictions(actual_test_data, pred_indexes, predictions, title):
-
-    #Prediction plot
-    plt.figure()
-    #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
-    plt.title(title, fontsize=20)
-    plt.plot(pred_indexes, actual_test_data, label="actual test signal", color="orange")
-    plt.plot(pred_indexes, predictions, label="prediction", color="green")
-    plt.legend()
-    plt.show()
-
+"""
 def main():
     
     parser = argparse.ArgumentParser(description=
@@ -125,100 +126,95 @@ def main():
     parser.add_argument("--dataset", help="Type of dataset used - (dynamo/solar_data/sinus)", default="dynamo", type=str)
     parser.add_argument("--train_file", help="Location of training data file", default=None, type=str)
     parser.add_argument("--output_file", help="Location of the output file", default=None, type=str)
+    parser.add_argument("--verbose", help="Verbosity (0 or 1)", default=0, type=int)
     #parser.add_argument("--test_file", help="(Optional) Location of the test data file", default=None, type=str)
-    parser.add_argument("--use_data",
-                        help="(Optional) Use Preprocessed data, 1 - use already present data, 0 - use custom split", default=0, type=int)
     parser.add_argument("--predict_cycle_num", help="Cycle number to be predicted", default=None, type=int)
 
     # Parse the arguments
     args = parser.parse_args() 
-    model_type = args.model_type
+    model_type = args.model_type.lower()
     dataset = args.dataset
     train_file = args.train_file
     output_file = args.output_file
-    #test_file = args.test_file
-    use_data_flag = args.use_data
+    verbose = args.verbose
+
+    # test_file = args.test_file
     predict_cycle_num = args.predict_cycle_num
 
     # Load the configurations required for training
-    config_file = "./configurations.json" # It is assumed that the configurations are 
-                                          # present in this location
+    config_file = "./configurations.json"  # It is assumed that the configurations are
+                                           # present in this location
 
     with open(config_file) as f:
-        options = json.load(f) # This loads options as a dict with keys that can be accessed
+        options = json.load(f)  # This loads options as a dict with keys that can be accessed
+    options[model_type]["num_taps"] = 120
+    p = options[model_type]["num_taps"]
 
-    print(use_data_flag)
     # Load the training data
-    if use_data_flag == 1:
-        
-        train_data = np.loadtxt("./data/TrainingSignals/dynamo_train.txt") # Only contains the signal
-        test_data = np.loadtxt("./data/TestSignals/dynamo_test_tau151_q152.txt") # Only contains the signal
-        
-        #Training data plot
-        #plt.figure()
-        #plt.title("Training data vs time index")
-        #plt.plot(train_data)
-        #plt.show()
+    data = np.loadtxt(train_file)
+    minimum_idx = get_minimum(data, dataset)
 
-        #train_data = np.loadtxt(train_file)
-        # Load the test data (if any)
-        #if test_file:
-        #    test_data = np.loadtxt(test_file)
+    # Get multiple step ahead prediction datasets
+    X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
+
+    # options[model_type]["num_taps"]
+    n_cycles = len(Y)
+    err = np.zeros(n_cycles)
+    for icycle in range(n_cycles):
+        xtrain, ytrain, ytest = get_cycle(X, Y, icycle)
+        # NOTE: This modification is only applicable for NovelESN
+        model = load_model_with_opts(options, model_type)
+        predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), ytest[:, 1])
+        err[icycle] = mean_squared_error(ytest[:, 1], predictions)
+
+        # plot_predictions(
+        #    ytest=ytest,
+        #    predictions=predictions,
+        #    title="Predictions using Linear AR model"
+        # )
+
+    plt.figure();
+    plt.plot(list(range(n_cycles)), err)
+    sys.exit(0)
+
+
+
+    if model_type == "esn":
+        options["esn"]["tau"] = len(te_data_signal) - 1
+        options["esn"]["history_q"] = options["esn"]["tau"] + 1
+        print("Shape of training data:{}".format(tr_data_signal.shape))
+        print("Shape of testing data:{}".format(te_data_signal.shape))
         # Load the model with corresponding options
         model = load_model_with_opts(options, model_type)
-        #pred of q values
-        predictions, pred_indexes = train_and_predict_ESN(model, train_data, test_data)
+        # pred of q values
+        predictions, pred_indexes = train_and_predict_ESN(model, tr_data_signal, te_data_signal)
 
-        #given a training time series y_0, y_1, y_2 ...y_M-1, the program will predict:
-        # y_M+tau-(q-1), y_M+tau-(q-2) ... y_M+tau
-        np.savetxt(fname = output_file, X = predictions)
-    
-    else:
+    elif model_type == "linear_ar":
+        # Load the model with corresponding options
+        model = load_model_with_opts(options, model_type)
 
-        train_test_data = np.loadtxt(train_file)
-        if dataset.lower() == "dynamo":
-            tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_dynamo(time=train_test_data[:,0],
-                                                                                            dynamo=train_test_data[:,1],
-                                                                                            cycle_num=predict_cycle_num)
-        elif dataset.lower() == "solar":
-            tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_realsolar(time=train_test_data[:,0],
-                                                                                            dynamo=train_test_data[:,1],
-                                                                                            cycle_num=predict_cycle_num)
-        #plot_train_test_data(trdata_time=tr_data_time,
-        #                    trdata_signal=tr_data_signal,
-        #                    tedata_time=te_data_time,
-        #                    tedata_signal=te_data_signal)
-       #
-        #NOTE: This modification is only applicable for NovelESN
-        if model_type == "esn":
-            options["esn"]["tau"] = len(te_data_signal) - 1
-            options["esn"]["history_q"] = options["esn"]["tau"] + 1
-            print("Shape of training data:{}".format(tr_data_signal.shape))
-            print("Shape of testing data:{}".format(te_data_signal.shape))
-            # Load the model with corresponding options
-            model = load_model_with_opts(options, model_type)
-            #pred of q values
-            predictions, pred_indexes = train_and_predict_ESN(model, tr_data_signal, te_data_signal)
+        # pred of q values
+        predictions, pred_indexes = train_and_predict_AR(model, xtrain, ytrain, ytest)
 
-        elif model_type == "linear_ar":
+    elif model_type == "rnn":
+        model = load_model_with_opts(options, model_type)
 
-            # Load the model with corresponding options
-            model = load_model_with_opts(options, model_type)
-            #pred of q values
-            predictions, pred_indexes = train_and_predict_AR(model, tr_data_signal, te_data_signal, 
-                tr_data_time, te_data_time)
-        with open("results__{}.txt".format(model_type),"a") as fp:
-            print("\t".join(
-                        ["{}:{}".format(k, v) for k, v in options["linear_ar"].items()]
-                        + ["{}:{}".format("test__mse",((predictions-te_data_signal)**2).mean())]
-                        + ["{}:{}".format("train__mse", ((predictions - te_data_signal) ** 2).mean())]
-                        + ["{}:{}".format("val__mse", ((predictions - te_data_signal) ** 2).mean())]
-                        ), file=fp)
 
-        # Save the results in the output file
-        np.savetxt(fname=output_file,
-                   X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
-                   )
+
+    with open("results__{}.txt".format(model_type), "a") as fp:
+        print("\t".join(
+                    ["{}:{}".format(k, v) for k, v in options["linear_ar"].items()]
+                    + ["{}:{}".format("test__mse", ((predictions-te_data_signal)**2).mean())]
+                    + ["{}:{}".format("train__mse", ((predictions - te_data_signal) ** 2).mean())]
+                    + ["{}:{}".format("val__mse", ((predictions - te_data_signal) ** 2).mean())]
+                    ), file=fp)
+
+    # Save the results in the output file
+    np.savetxt(fname=output_file,
+               X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
+               )
+
 
 if __name__ == "__main__":
     main()
+
