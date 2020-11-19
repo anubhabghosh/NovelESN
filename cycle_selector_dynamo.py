@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 
 # THIS SET OF FUNCTIONS ONLY WORK FOR THE DYNAMO SIGNAL, NOT FOR THE SOLAR DATA!
 
+
 def get_train_test_dynamo(time, dynamo, cycle_num):
-    index_minimums = find_index_of_minimums(dynamo) 
+    index_minimums = find_index_of_minimums_dyn(dynamo)
     index_cycle_start = index_minimums[cycle_num-1]
     index_cycle_end = index_minimums[cycle_num]
     
@@ -23,13 +24,13 @@ def get_train_test_dynamo(time, dynamo, cycle_num):
     return time_train, train_signal, time_test, test_signal
 
 
-def find_index_of_minimums(dynamo_signal):
+def find_index_of_minimums_dyn(dynamo_signal):
     index_of_minimums = []
     for i in range(1, dynamo_signal.size): # point 0 has not a preceeding point
         is_minimum = check_if_is_minimum(dynamo_signal, i)
         if is_minimum:
             index_of_minimums.append(i)
-    return index_of_minimums
+    return index_of_minimums.astype(int).reshape(-1)
 
 
 def check_if_is_minimum(signal, index):
@@ -48,7 +49,6 @@ def plot_minimums_found(dynamo_signal, index_of_minimums):
     return
 
 def main():
-
     # Example of selection and plotting of cycle 45
     cycle = 45
     path_to_dynamo_file = "./data/dynamo_esn.txt" # change this according to your path
