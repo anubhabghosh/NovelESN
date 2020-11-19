@@ -68,33 +68,25 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8):
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
 
-        print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
+        #print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
 
-    plot_losses(losses, val_losses)
+#    plot_losses(losses, val_losses)
 
     return losses, val_losses, model
 
+
 def predict_armodel(model, eval_input, n_predict):
-
+    p = eval_input.shape[0]
+    out=np.zeros(p+n_predict)
+    out[:p] = eval_input
     model.net.eval()
-    eval_predictions = []
     with torch.no_grad():
-
-        for _ in range(n_predict):
-            
-            X_eval = Variable(torch.Tensor(eval_input), requires_grad=False).type(torch.FloatTensor)
+        for i in range(n_predict):
+            X_eval = Variable(torch.Tensor(out[i:p+i]), requires_grad=False).type(torch.FloatTensor)
             val_prediction = model(X_eval)
-            
-            eval_predictions.append(val_prediction.numpy())
-            
-            eval_input = np.roll(eval_input, shift=-1)
-            if eval_input.shape[1] is not None:
-                eval_input[:, -1] = val_prediction.numpy()
-            else:
-                eval_input[-1] = val_prediction.numpy()
+            out[p+i] = val_prediction.numpy()
+    return out[p:]
 
-    eval_predictions = np.row_stack(eval_predictions)
-    return eval_predictions
 
 def plot_losses(tr_losses, val_losses):
     plt.figure()
