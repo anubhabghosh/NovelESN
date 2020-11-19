@@ -1,55 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def detect_cycle_minimums(solar_data, window_length, resolution=12, num_precision=3):
-    
-    solar_data_mean_norm = np.copy(solar_data)
-    #solar_data_grad[:, 0] = solar_data[:, 0]
-    shifting_factor = np.mean(solar_data[:, 1])
-    solar_data_mean_norm[:, 1] = solar_data[:, 1] - shifting_factor
-    print(len(solar_data))
-    solar_data_mean_norm_neg = np.copy(solar_data_mean_norm)
-    solar_data_mean_norm_neg[:,1] = np.where(solar_data_mean_norm[:,1] < 0, solar_data_mean_norm[:,1], 0)
-    print(len(solar_data_mean_norm_neg))
-    #window_length = 11 * 12
-    
-    # Obtain the minimum values of the time-series
-    start = 0
-    end = window_length + 1
-    num_windows = solar_data_mean_norm_neg.shape[0] // window_length
-    # Pad Signal to make sure that all frames have equal number of samples 
-    # without truncating any samples from the original signal
-    pad_signal_length = num_windows * window_length + window_length
-    z = np.zeros((pad_signal_length - solar_data_mean_norm_neg.shape[0]))
-    solar_data_mean_norm_neg_pd = np.append(solar_data_mean_norm_neg[:,1], z) 
-    
-    num_windows = solar_data_mean_norm_neg_pd.shape[0] // window_length
-    print("Number of windows: {}".format(num_windows))
-    minimum_values = np.zeros((num_windows, 2))
-    solar_cycle_ind_array = np.zeros((num_windows, 1))
-    #minimum_values[0,0] = solar_data_mean_norm_neg[0,0]
-    
-    for i in range(num_windows):
-        window = solar_data_mean_norm_neg_pd[start:end]
-        if np.min(window) < 0:
-            minimum_values[i, 0] = (np.argmin(window) / resolution) + (start / resolution) + solar_data_mean_norm[0,0]
-            #minimum_values[i, 0] = np.argmin(window)
-            minimum_values[i, 1] = np.min(window) + shifting_factor
-        start = start + window_length
-        end = end + window_length
-        solar_cycle_index = np.argwhere((np.around(solar_data[:, 1], num_precision) == np.around(minimum_values[i, 1], 
-        decimals=num_precision)))
-        solar_cycle_index = solar_cycle_index[np.logical_or((solar_cycle_index<start),(solar_cycle_index<end))]
-        print("Start window:{}, End window:{}, Solar data index:{}, Time index:{:.3f}, Min.value:{:.3f} ".format(start,
-        end, solar_cycle_index, minimum_values[i, 0], minimum_values[i, 1]))
-        solar_cycle_ind_array[i] = solar_cycle_index[-1]
-    
-    plot_timeseries_with_cycle_minima(solar_data=solar_data, 
-                    solar_data_mean_norm=solar_data_mean_norm,
-                    solar_data_mean_norm_neg=solar_data_mean_norm_neg,
-                    minimum_values=minimum_values)
-    
-    return minimum_values, solar_cycle_ind_array
 
 def plot_timeseries_with_cycle_minima(solar_data, solar_data_mean_norm, solar_data_mean_norm_neg, minimum_values):
     
@@ -80,12 +31,12 @@ def split_tr_test_data(time_indices, solar_data, cycle_indices,
 
     return traindata_time, traindata_solar, testdata_time, testdata_solar
 
-def plot_train_test_data(trdata_time, trdata_signal, tedata_time, tedata_signal):
+def plot_train_test_data(trdata, tedata):
     
     # the function returns you the training and test signal as numpy arrays
     plt.figure()
-    plt.plot(trdata_time, trdata_signal, 'r+-', linewidth=3)
-    plt.plot(tedata_time, tedata_signal, 'b+-', linewidth=3)
+    plt.plot(trdata[:,0], trdata[:,1], 'r+-', linewidth=3)
+    plt.plot(tedata[:,0], tedata[:,1], 'b+-', linewidth=3)
     plt.title("Plot of training and testing data", fontsize=20)
     plt.xlabel('Time (in months)', fontsize=16)
     plt.ylabel('Signal Amplitude', fontsize=16)
@@ -94,7 +45,6 @@ def plot_train_test_data(trdata_time, trdata_signal, tedata_time, tedata_signal)
     return None
 
 def get_train_test_realsolar(datafile):
-
     real_solar_data = np.loadtxt(datafile)
     print("The shape of the solar data is:{}".format(real_solar_data.shape))
 
@@ -103,15 +53,16 @@ def get_train_test_realsolar(datafile):
     print("************* Solar data *************")
     window_length = 11 * 12
     minimum_values_real, solar_cycle_ind_array_real = detect_cycle_minimums(solar_data=real_solar_data, 
-    window_length=window_length, resolution=12, num_precision=3)
-    cycle_indices_real = np.array([[i+1, int(solar_cycle_ind_array_real[i]), int(solar_cycle_ind_array_real[i+1])] 
+        window_length=window_length, resolution=12, num_precision=3)
+    cycle_indices_real = np.array([[i+1, int(solar_cycle_ind_array_real[i]), int(solar_cycle_ind_array_real[i+1])]
         for i in range(0, len(solar_cycle_ind_array_real) - 1)])
+
     print("Cycle indices of shape {} (<cycle no., start, end>) are:\n{}".format(cycle_indices_real.shape,cycle_indices_real))
     
     trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real = split_tr_test_data(time_indices=real_solar_data[:, 0],
         solar_data=real_solar_data[:,1], cycle_indices=cycle_indices_real, specific_cycle_number=24)
 
-    #plot_train_test_data(trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real)
+    # plot_train_test_data(trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real)
     return trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real
 
 def main():
