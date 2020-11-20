@@ -152,7 +152,7 @@ def main():
 
     # Load the training data
     data = np.loadtxt(train_file)
-    data[:, 1] = (data[:, 1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())
+    data[:, 1] = 2*((data[:, 1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())) - 1
     minimum_idx = get_minimum(data, dataset)
 
 

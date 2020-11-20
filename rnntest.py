@@ -100,6 +100,8 @@ if __name__ == "__main__":
     plt.ioff()
     plt.show()
 
+def make_sample(value):
+    return torch.from_numpy(np.array([value], dtype=np.float32)[np.newaxis, :, np.newaxis])
 
 def predict_rnn(model, n_future, h_state, x_init, ytrue=None,enplot=True,enliveplot=False):
     if enliveplot:
@@ -107,7 +109,7 @@ def predict_rnn(model, n_future, h_state, x_init, ytrue=None,enplot=True,enlivep
         plt.ion()
 
     x_hat = np.zeros(n_future)
-    previous = torch.from_numpy(np.array([x_init], dtype=np.float32)[np.newaxis, :, np.newaxis])
+    previous = make_sample(x_init)
     for i in range(n_future):
         prediction, h_state = model(previous, h_state)  # rnn output
         if isinstance(h_state, tuple):
@@ -141,18 +143,21 @@ def train_rnn(model, xtrain, enplot=True,n_epochs=1,enliveplot=False,lr=1e-3):
     loss_func = nn.MSELoss()
     T = xtrain.shape[0]
     err = []
+
     if enplot:
         xhat = np.zeros(xtrain.shape[0])
 
     if enliveplot:
         plt.figure(1, figsize=(12, 5))
         plt.ion()  # continuously plot
+    snr_db=5
+    pnoise = xtrain[:,1].var()/(10**(snr_db/10))
     for epoch in range(n_epochs):
-
         h_state = None  # for initial hidden state
+        xdata = xtrain[:, 1] + np.random.randn(xtrain.shape[0]) * np.sqrt(pnoise)
         for t in range(T-1):
-            x_in = torch.from_numpy(np.array([xtrain[t, 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])  # shape (batch, time_step, input_size)
-            y_in = torch.from_numpy(np.array([xtrain[t + 1, 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])
+            x_in = torch.from_numpy(np.array([xdata[t]], dtype=np.float32)[np.newaxis, :, np.newaxis])  # shape (batch, time_step, input_size)
+            y_in = torch.from_numpy(np.array([xdata[t + 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])
 
             prediction, h_state = model(x_in, h_state)  # rnn output
 
@@ -176,7 +181,7 @@ def train_rnn(model, xtrain, enplot=True,n_epochs=1,enliveplot=False,lr=1e-3):
                 plt.plot(t + 1, prediction[0, 0, 0].detach().numpy(), "r.")
                 plt.draw()
                 plt.pause(0.001)
-        print(epoch, np.mean(err[-T:]))
+        print(epoch, np.mean(err[-T:]),pnoise)
     if enliveplot:
         plt.ioff()
 
@@ -196,11 +201,11 @@ def train_and_predict_RNN(model, xtrain, ytrain, ytest, enplot=False, n_future=1
     #xtrain = np.concatenate([timeline[:, None], np.sin(timeline)[:,None]],axis=1).astype(np.float32)
 
     model.train()
-    model, h_state_out = train_rnn(model, xtrain, enplot=True, enliveplot=False, n_epochs=10, lr=1e-4)
+    model, h_state_out = train_rnn(model, xtrain, enplot=True, enliveplot=False, n_epochs=10, lr=1e-3)
     model.eval()
     xtrain_hat, h_state = predict_rnn(model, xtrain.shape[0], None, xtrain[0, 1], ytrue=xtrain[:, 1], enliveplot=True)
 
-    # test
+    # Test
     # h_state = None
     #xtrain_hat, h_state = predict_rnn(model, xtrain.shape[0], h_state, xtrain[0, 1], ytrue=xtrain[:, 1], enplot=True)
     ytest_hat, h_state = predict_rnn(model, ytest.shape[0], h_state_out, xtrain[-1, 1], ytrue=ytest, enliveplot=False,enplot=True)
