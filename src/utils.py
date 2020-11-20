@@ -131,16 +131,18 @@ def concat_data(x, col=1):
     return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
 
 
-def get_cycle(X,Y,icycle):
-    if icycle == len(X):
-        ytest=np.array([])
+def get_cycle(X, Y, icycle):
+    if isinstance(X[0], np.ndarray):
+        xtrain = X[icycle]
+        ytrain = None
+    else:
         tmp = sum(X[:icycle + 1], [])
         xtrain = [t[0] for t in tmp]
         ytrain = [t[1] for t in tmp]
+
+    if icycle == len(X):
+        ytest = np.array([])
     else:
         ytest = Y[icycle]
-        tmp = sum(X[:icycle + 1], [])
-        xtrain = [t[0] for t in tmp]
-        ytrain = [t[1] for t in tmp]
-    return xtrain,ytrain,ytest
+    return xtrain, ytrain, ytest
 

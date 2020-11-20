@@ -6,11 +6,11 @@ torch: 0.4
 matplotlib
 numpy
 """
+
 import torch
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 class RNN(nn.Module):
     def __init__(self,input_size=1,hidden_size=32,num_layers=1):
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         prediction, h_state = rnn(x, h_state)  # rnn output
 
         # !! next step is important !!
-        h_state = h_state.data  # repack the hidden state, break the connection from last iteration
+        h_state = tuple(h.data for h in h_state)  # repack the hidden state, break the connection from last iteration
 
         loss = loss_func(prediction, y)  # calculate loss
         optimizer.zero_grad()  # clear gradients for this training step
@@ -94,58 +94,116 @@ if __name__ == "__main__":
         # Plotting
         plt.plot(steps, y_np.flatten(), 'r-')
         plt.plot(steps, prediction.data.numpy().flatten(), 'b-')
-        plt.draw();
+        plt.draw()
         plt.pause(0.05)
 
     plt.ioff()
     plt.show()
 
-def train_and_predict_RNN(model, xtrain, ytrain, ytest,tau=1):
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)  # optimize all cnn parameters
+def predict_rnn(model, n_future, h_state, x_init, ytrue=None,enplot=True,enliveplot=False):
+    if enliveplot:
+        plt.figure()
+        plt.ion()
+
+    x_hat = np.zeros(n_future)
+    previous = torch.from_numpy(np.array([x_init], dtype=np.float32)[np.newaxis, :, np.newaxis])
+    for i in range(n_future):
+        prediction, h_state = model(previous, h_state)  # rnn output
+        if isinstance(h_state, tuple):
+            h_state = tuple(h.data for h in h_state)
+        else:
+            h_state = h_state.data  # repack the hidden state, break the connection from last iteration
+
+        x_hat[i] = prediction[0, 0, 0].detach().numpy()
+        previous = prediction.data
+        if enliveplot:
+            if not (ytrue is None):
+                plt.plot(i, ytrue[i], "k.", label="True")
+            plt.plot(i, x_hat[i], "r.", label="Predicted")
+            plt.draw()
+            plt.pause(0.001)
+
+    if enliveplot:
+        plt.ioff()
+
+    if enplot:
+        plt.figure()
+        plt.plot(ytrue,"k.",label="True")
+        plt.plot(x_hat, "r.", label="predicted")
+        plt.show()
+
+    return x_hat, h_state
+
+
+def train_rnn(model, xtrain, enplot=True,n_epochs=1,enliveplot=False,lr=1e-3):
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)  # optimize all cnn parameters
     loss_func = nn.MSELoss()
-
-    h_state = None  # for initial hidden state
-    n_predict=ytest.shape[0]
-
-    plt.close()
     T = xtrain.shape[0]
-    err=[]
-    for epoch in range(10):
-        loss=0
-        for t in range(1, T-1):
+    err = []
+    if enplot:
+        xhat = np.zeros(xtrain.shape[0])
 
-            x = torch.from_numpy(xtrain[:t,1].reshape(1,-1,1).astype(np.float32))  # shape (batch, time_step, input_size)
-            y = torch.from_numpy(xtrain[t:t+tau,1].reshape(1,-1,1).astype(np.float32))
+    if enliveplot:
+        plt.figure(1, figsize=(12, 5))
+        plt.ion()  # continuously plot
+    for epoch in range(n_epochs):
 
-            prediction, h_state = model(x, h_state)  # rnn output
+        h_state = None  # for initial hidden state
+        for t in range(T-1):
+            x_in = torch.from_numpy(np.array([xtrain[t, 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])  # shape (batch, time_step, input_size)
+            y_in = torch.from_numpy(np.array([xtrain[t + 1, 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])
+
+            prediction, h_state = model(x_in, h_state)  # rnn output
 
             # !! next step is important !!
-            h_state = tuple(h.data for h in h_state)  # repack the hidden state, break the connection from last iteration
+            if isinstance(h_state, tuple):
+                h_state = tuple(h.data for h in h_state)
+            else:
+                h_state = h_state.data  # repack the hidden state, break the connection from last iteration
 
-            loss += loss_func(prediction[:, -1, :], y)  # calculate loss
-        optimizer.zero_grad()  # clear gradients for this training step
-        loss.backward()  # backpropagation, compute gradients
-        optimizer.step()  # apply gradients
-        err.append(loss.item())
+            loss = loss_func(prediction, y_in)  # calculate loss
+            optimizer.zero_grad()  # clear gradients for this training step
+            loss.backward(retain_graph=True)  # backpropagation, compute gradients
+            optimizer.step()  # apply gradients
 
+            err.append(loss.item())
+            if enplot:
+                xhat[t] = prediction[0, 0, 0].detach().numpy()
+
+            if enliveplot:
+                plt.plot(t + 1, y_in[0, 0, 0], "k.")
+                plt.plot(t + 1, prediction[0, 0, 0].detach().numpy(), "r.")
+                plt.draw()
+                plt.pause(0.001)
         print(epoch, np.mean(err[-T:]))
+    if enliveplot:
+        plt.ioff()
 
+    if enplot:
+        plt.figure()
+        plt.plot(xtrain[:, 1], "k.")
+        plt.plot(xhat,"r.")
+        plt.show()
+
+    return model, h_state
+
+def train_and_predict_RNN(model, xtrain, ytrain, ytest, enplot=False, n_future=120):
+    k = 20
+    n = 30 * k
+
+    timeline = np.linspace(0, np.pi * 2 * k, n, dtype=np.float32)  # float32 for converting torch FloatTensor
+    #xtrain = np.concatenate([timeline[:, None], np.sin(timeline)[:,None]],axis=1).astype(np.float32)
+
+    model.train()
+    model, h_state_out = train_rnn(model, xtrain, enplot=True, enliveplot=False, n_epochs=10, lr=1e-4)
     model.eval()
-    out=torch.from_numpy(np.zeros((T+n_predict),dtype=np.float32))
-    out[:T]=torch.from_numpy(xtrain[:,1].astype(np.float32))
-    for ipredict in range(n_predict):
-        prediction, h_state = model(out[ipredict:T+ipredict].reshape(1,-1,1), h_state)
-        out[T+ipredict]=prediction[0,-1,0]
-    prediction = out[-n_predict:].detach().numpy()
+    xtrain_hat, h_state = predict_rnn(model, xtrain.shape[0], None, xtrain[0, 1], ytrue=xtrain[:, 1], enliveplot=True)
 
-    plt.figure();plt.subplot(311)
-    plt.plot(ytest);
-    plt.plot(prediction)
-    plt.title("Training data size: {}".format(xtrain.shape[0]))
-    plt.subplot(312)
-    plt.plot(err)
-    plt.subplot(313)
-    plt.plot(xtrain[:,1])
-    plt.savefig("Training_data_size{}.png".format(xtrain.shape[0]))
-    return prediction
+    # test
+    # h_state = None
+    #xtrain_hat, h_state = predict_rnn(model, xtrain.shape[0], h_state, xtrain[0, 1], ytrue=xtrain[:, 1], enplot=True)
+    ytest_hat, h_state = predict_rnn(model, ytest.shape[0], h_state_out, xtrain[-1, 1], ytrue=ytest, enliveplot=False,enplot=True)
+    y_future, _ = predict_rnn(model, 11*12, h_state, ytest[-1], ytrue=None, enliveplot=False,enplot=True)
+
+
