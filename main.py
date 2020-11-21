@@ -152,7 +152,7 @@ def main():
 
     # Load the training data
     data = np.loadtxt(train_file)
-    data[:,1] = (data[:,1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())
+    data[:, 1] = 2*((data[:, 1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())) - 1
     minimum_idx = get_minimum(data, dataset)
 
 
@@ -162,18 +162,17 @@ def main():
     # options[model_type]["num_taps"]
     n_cycles = len(Y)
     n_tests = 3
+
     # xtrain, ytrain, ytest = get_cycle(X, Y, n_cycles+1)
     P = [10, 20, 30]
     val_err = np.zeros((n_cycles, len(P)))
 
         # errors = new_train_ar(data,minimum_idx)
-        # errors ={"validatation errors": (n_val_cycles, n_tried_numtapsvalues),
+        # errors = {"validatation errors": (n_val_cycles, n_tried_numtapsvalues),
         #            "test_errors":(n_test_cycles,),
         #            "test_predictions: list of n_test_cycles arrays [ (length of 1st test cycle, 2), .. ]
         #            "future_points": (120,)
         #  }
-
-
 
     for ip, p in enumerate(P):
         X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
@@ -192,13 +191,13 @@ def main():
                 predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
 
             elif model_type == "rnn":
-                model = RNN(input_size=1, hidden_size=10)
+
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
-                for icycle in [0, 20]:#range(n_cycles - n_tests):
-                    xtrain = X[icycle]
-                    ytrain = None
-                    yval = Y[icycle]
-                    #model = RNN(input_size=1, hidden_size=10)
+
+                for icycle in [20]:  # range(n_cycles - n_tests):
+                    xtrain, ytrain, yval = get_cycle(X, Y, icycle)
+
+                    model = RNN(1, 32, 2)
 
                     predictions = train_and_predict_RNN(model, xtrain, ytrain, yval[:, 1])
 

@@ -176,32 +176,21 @@ def concat_data(x, col=1):
 
 
 def get_cycle(X, Y, icycle):
-    """ Retrives the training data, training targets and test targets for 
-    predicting the i-th cycle
-    Args:
-        X ([list of list of tuples]): training data + targets (training_data_i, training_target_i) 
-            for all solar cycles (including future cycle, for which test data is not available yet)
-        Y ([list]): Data for test cycles 
-        icycle ([int]): cycle index
-
-    Returns:
-        xtrain - For predicting the i-th cycle, the number of 'p'-shifted training data 
-        points (contains data upto i-th cycle, but not including it)
-        ytrain - For predicting the i-th cycle, the number of 'p'-shifted training data targets
-        (contains data upto i-th cycle, but not including it)
-        ytest - The data points corresponding to the i-th cycle 
-    """
-    if icycle == len(X):
-        ytest=np.array([])
-        tmp = sum(X[:icycle+1], [])
+    
+    if isinstance(X[0], np.ndarray):
+        xtrain = X[icycle]
+        ytrain = None
+    else:
+        tmp = sum(X[:icycle + 1], [])
         xtrain = [t[0] for t in tmp]
         ytrain = [t[1] for t in tmp]
+
+    if icycle == len(X):
+        ytest = np.array([])
     else:
         ytest = Y[icycle]
-        tmp = sum(X[:icycle+1], []) # Aggregates all the training data upto the i-th cycle
-        xtrain = [t[0] for t in tmp] 
-        ytrain = [t[1] for t in tmp]
     return xtrain, ytrain, ytest
+
 
 def create_combined_param_dict(param_dict):
 
