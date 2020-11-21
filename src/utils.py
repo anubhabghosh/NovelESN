@@ -1,8 +1,51 @@
 import numpy as np
 import sys
+import itertools
 
+def plot_timeseries_with_cycle_minima(solar_data, solar_data_mean_norm, solar_data_mean_norm_neg, minimum_values):
+    
+    #print("Minimum values with indices are:\n{}".format(minimum_values))
+    
+    plt.rcParams["figure.figsize"] = (20,10)
+    plt.figure()
+    plt.plot(solar_data[:,0], solar_data[:,1], 'r+-', linewidth=3)
+    plt.plot(solar_data_mean_norm[:,0], solar_data_mean_norm[:, 1], 'b--', linewidth=2)
+    plt.plot(solar_data_mean_norm_neg[:,0], solar_data_mean_norm_neg[:, 1], 'k+-', linewidth=2)
+    plt.plot(minimum_values[:,0], minimum_values[:,1], 'g*', linewidth=4, markersize=15)
+    plt.xlabel('Time (in months)', fontsize=16)
+    plt.ylabel('Signal Amplitude', fontsize=16)
+    plt.title("Plot of the Solar dataset with Cycle minima", fontsize=20)
+    plt.legend(['Original data', 'Mean normalized data', 'Mean normalized data - positive clipped', 'Cycle-wise Minimum values'])
+    plt.show()
+    return None
+
+def normalize(X, feature_space=(0, 1)):
+    """ Normalizing the features in the feature_space (lower_lim, upper_lim)
+
+    Args:
+        X ([numpy.ndarray]): Unnormalized data consisting of signal points
+        feature_space (tuple, optional): [lower and upper limits]. Defaults to (0, 1).
+
+    Returns:
+        X_norm [numpy.ndarray]: Normalized feature values
+    """
+    X_norm = (X - X.min())/(X.max() - X.min()) * (feature_space[1] - feature_space[0]) + \
+        feature_space[0]
+    return X_norm
 
 def get_minimum(X, dataset):
+    """ This function returns the 'minimum' indices or the indices for
+    the solar cycles for the particular dataset type.
+
+    Args:
+        X ([numpy.ndarray]): The complete time-series data present as (N_samples x 2),
+        with each row being of the form (time-stamp x signal value)
+        dataset ([str]): String to indicate the type of the dataset - solar / dynamo
+
+    Returns:
+        minimum_idx : An array containing the list of indices for the minimum 
+        points of the data
+    """
     if dataset == "solar":
         _, minimum_idx = detect_cycle_minimums_solar(solar_data=X, window_length=11 * 12, resolution=12,
                                                      num_precision=3)
@@ -88,14 +131,14 @@ def detect_cycle_minimums_solar(solar_data, window_length, resolution=12, num_pr
 def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
     """Given
         X:           (n_samples,2), time series with timestamps on the first column and values on the second
-        minimum_idx: The index on the minimums
-        tau:         Number of the steps ahead
+        minimum_idx: The index on the minimums 
+        tau:         Number of the steps ahead (to predict)
         p:           Order of model (number of steps backwards to use in the training data),
        return
         xtrain: List of lists,
           the ith element of `xtrain` is a list containing the training data relative to the prediction of the samples
           in the ith cycle. if p is np.inf, The training data consists in the data up to the start of the ith cycle
-        Y: List of np.ndarray, the ith element of `Y` is the raw data of the ith cycle
+        Y: List of np.ndarray, the ith element of `Y` is the raw data of the ith cycle 
 
        """
     Y = []
@@ -117,11 +160,12 @@ def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
             #tmp.append((X[0:i, :], X[i:i + tau]))
             xtrain.append(tmp)
         else:
+            # If p is given as np.inf, in that case the entire signal is used for
+            # prediction relative to the target
             xtrain.append(X[:minimum_idx[icycle]])
 
         if icycle + 1 < minimum_idx.shape[0]:
             Y.append(X[minimum_idx[icycle]:minimum_idx[icycle + 1], :])
-
 
     return xtrain, Y
 
@@ -131,16 +175,50 @@ def concat_data(x, col=1):
     return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
 
 
-def get_cycle(X,Y,icycle):
+def get_cycle(X, Y, icycle):
+    """ Retrives the training data, training targets and test targets for 
+    predicting the i-th cycle
+    Args:
+        X ([list of list of tuples]): training data + targets (training_data_i, training_target_i) 
+            for all solar cycles (including future cycle, for which test data is not available yet)
+        Y ([list]): Data for test cycles 
+        icycle ([int]): cycle index
+
+    Returns:
+        xtrain - For predicting the i-th cycle, the number of 'p'-shifted training data 
+        points (contains data upto i-th cycle, but not including it)
+        ytrain - For predicting the i-th cycle, the number of 'p'-shifted training data targets
+        (contains data upto i-th cycle, but not including it)
+        ytest - The data points corresponding to the i-th cycle 
+    """
     if icycle == len(X):
         ytest=np.array([])
-        tmp = sum(X[:icycle + 1], [])
+        tmp = sum(X[:icycle+1], [])
         xtrain = [t[0] for t in tmp]
         ytrain = [t[1] for t in tmp]
     else:
         ytest = Y[icycle]
-        tmp = sum(X[:icycle + 1], [])
-        xtrain = [t[0] for t in tmp]
+        tmp = sum(X[:icycle+1], []) # Aggregates all the training data upto the i-th cycle
+        xtrain = [t[0] for t in tmp] 
         ytrain = [t[1] for t in tmp]
-    return xtrain,ytrain,ytest
+    return xtrain, ytrain, ytest
 
+def create_combined_param_dict(param_dict):
+
+    keys, values = zip(*param_dict.items())
+    param_combinations_dict = [dict(zip(keys, v)) for v in itertools.product(*values)]
+    return param_combinations_dict
+
+def create_list_of_dicts(options, model_type, param_dict):
+    
+    params_dict_list_all = []
+    param_combinations_dict = create_combined_param_dict(param_dict)
+    for p_dict in param_combinations_dict:
+        keys = p_dict.keys()
+        tmp_dict = options[model_type]
+        for key in keys:
+            tmp_dict[key] = p_dict[key]
+        params_dict_list_all.append(tmp_dict.copy())
+
+    print("Grid-search will be computed for the following set of parameter lists:\n{}".format(len(params_dict_list_all)))
+    return params_dict_list_all
