@@ -44,7 +44,7 @@ def plot_train_test_data(trdata, tedata):
     plt.show()
     return None
 
-def get_train_test_realsolar(datafile):
+def get_train_test_realsolar(datafile, cycle_num=24):
     real_solar_data = np.loadtxt(datafile)
     print("The shape of the solar data is:{}".format(real_solar_data.shape))
 
@@ -60,7 +60,7 @@ def get_train_test_realsolar(datafile):
     print("Cycle indices of shape {} (<cycle no., start, end>) are:\n{}".format(cycle_indices_real.shape,cycle_indices_real))
     
     trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real = split_tr_test_data(time_indices=real_solar_data[:, 0],
-        solar_data=real_solar_data[:,1], cycle_indices=cycle_indices_real, specific_cycle_number=24)
+        solar_data=real_solar_data[:,1], cycle_indices=cycle_indices_real, specific_cycle_number=cycle_num)
 
     # plot_train_test_data(trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real)
     return trdata_time_real, trdata_signal_real, tedata_time_real, tedata_signal_real

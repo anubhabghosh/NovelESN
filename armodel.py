@@ -29,12 +29,12 @@ class Linear_AR(nn.Module):
     def init_linearAR(self):
         self.net = nn.Sequential(
             nn.Linear(self.num_taps, 1))
-        print(self.net)
+        #print(self.net)
     
     def forward(self, inputs):
         return self.net(inputs)
 
-def train_armodel(model, nepochs, inputs, targets, tr_split=0.8):
+def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=False):
     
     # Train -  Validation split
     tr_inputs, tr_targets, val_inputs, val_targets = train_validation_split(
@@ -68,12 +68,13 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8):
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
 
-        #print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
+        if tr_verbose == True:
+            print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
 
-    #plot_losses(losses, val_losses)
+    if tr_verbose == True:
+        plot_losses(losses, val_losses)
 
     return losses, val_losses, model
-
 
 def predict_armodel(model, eval_input, n_predict):
     p = eval_input.shape[0]

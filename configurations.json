@@ -14,8 +14,8 @@
     "lossfn_type":"mse",
     "init_net":true,
     "device":"cpu",
-    "num_taps":25,
-    "lr":1e-1,
+    "num_taps":30,
+    "lr":1e-2,
     "num_epochs":1000
 },
 
