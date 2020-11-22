@@ -172,11 +172,13 @@ def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
 
 def concat_data(x, col=1):
     """Concatenate all the `col` column of the element"""
-    return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
-
+    if col == 1:
+        return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
+    elif col == -1:
+        return np.concatenate([xx[:, :].reshape(1, -1) for xx in x], axis=0)
 
 def get_cycle(X, Y, icycle):
-    
+
     if isinstance(X[0], np.ndarray):
         xtrain = X[icycle]
         ytrain = None
@@ -185,7 +187,7 @@ def get_cycle(X, Y, icycle):
         xtrain = [t[0] for t in tmp]
         ytrain = [t[1] for t in tmp]
 
-    if icycle == len(X):
+    if icycle == len(X) - 1:
         ytest = np.array([])
     else:
         ytest = Y[icycle]

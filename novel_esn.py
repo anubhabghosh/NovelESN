@@ -111,8 +111,9 @@ class NovelEsn(object):
             #we update yn to pair xn, to create a list of N-p values of y_{n} (for feedback)
             yn.appendleft(train_signal[n]) 
             
+            #print(n, self.xstate.shape)
             #xn is already ready
-            Xstates[num_saved, :] = self.xstate #save
+            Xstates[num_saved, :] = self.xstate.reshape((-1,)) #save
             
             # counter updated
             num_saved += 1 
@@ -175,6 +176,7 @@ class NovelEsn(object):
             pred_indexes ([numpy.ndarray]): array of indices for predicting
             values
         """
+        self.xstate = self.xstate.reshape((-1,))
         ypredNtau = self.reg_model.predict([self.xstate])[0] #xstate is x_N
         ypredNtau = np.flip(ypredNtau) #we want indexes progress as time does
         
@@ -248,7 +250,9 @@ class NovelEsn(object):
         Returns: 
             None (self.xstate gets overridden with new result)
         """
-        self.xstate = np.dot(self.Wres, self.xstate) + np.dot(self.Wfb, yn)                                                           
+        #self.xstate = np.dot(self.Wres, self.xstate) + np.dot(self.Wfb, yn)                                                           
+        #self.xstate = np.tanh(self.xstate)
+        self.xstate = np.dot(self.Wres, self.xstate).reshape((-1, 1)) + np.dot(self.Wfb, yn).reshape((-1, 1))                                                           
         self.xstate = np.tanh(self.xstate)
         return
         

@@ -70,20 +70,22 @@ def load_model_with_opts(options, model_type):
     return model
 
 def train_and_predict_ESN(model, train_data, test_data=None):
-   
-    model.teacher_forcing(train_data)
-    train_mse = model.train(train_signal=train_data)
+    
+    tr_data_signal = train_data[:, -1].reshape((-1, 1))
+    te_data_signal = test_data[:, -1].reshape((-1, 1))
+    
+    model.teacher_forcing(tr_data_signal)
+    train_mse = model.train(train_signal=tr_data_signal)
     print("training mse over q =", train_mse / model.yntau_size_q)
     predictions, pred_indexes = model.predict()
-    test_mse = mean_squared_error(test_data, predictions)
+    test_mse = mean_squared_error(te_data_signal, predictions)
     print("test mse=", test_mse)
     
-    plot_predictions(actual_test_data=test_data,
-                    pred_indexes=pred_indexes,
+    plot_predictions(ytest=test_data,
                     predictions=predictions,
                     title="Predictions using NovelESN model")
 
-    return predictions, pred_indexes
+    return predictions, te_data_signal, pred_indexes
 
 
 def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False):
@@ -133,7 +135,7 @@ def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data
     '''
     return predictions_ar, test_error, val_error, tr_error
 
-def plot_predictions(ytest,  predictions, title):
+def plot_predictions(ytest, predictions, title):
 
     #Prediction plot
     plt.figure()
@@ -204,7 +206,7 @@ def grid_search_AR_single_cycle(data, solar_indices, model_type, options, params
         print("Parameter set used:\n{}".format(param_options))
         
         X, Y = get_msah_training_dataset(data, minimum_idx=solar_indices,tau=1, p=p)
-        xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num - 1)
+        xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
         options[model_type]["num_taps"] = p
         model = load_model_with_opts(options, model_type)
         predictions, test_error, val_error, tr_error = train_and_predict_AR(
@@ -220,7 +222,7 @@ def main():
     
     parser = argparse.ArgumentParser(description=
     "Use a variety of recurrent architectures for predicting solar sunpots as a time series\n"\
-    "Example: python main.py --model_type [esn/linear_ar/rnn/lstm/gru] --dataset dynamo --train_file [full path to training data file] \
+    "Example: python main_gs.py --model_type [esn/linear_ar/rnn/lstm/gru] --dataset dynamo --train_file [full path to training data file] \
     --output_file [path to file containing predictions] --test_file [path to test file (if any)] \
     --verbosity [1 or 2] \n"
     "Description of different model types: \n"\
@@ -235,7 +237,7 @@ def main():
     parser.add_argument("--output_file", help="Location of the output file", default=None, type=str)
     parser.add_argument("--verbose", help="Verbosity (0 or 1)", default=0, type=int)
     #parser.add_argument("--test_file", help="(Optional) Location of the test data file", default=None, type=str)
-    parser.add_argument("--predict_cycle_num", help="Cycle number to be predicted", default=None, type=int)
+    parser.add_argument("--predict_cycle_num", help="Cycle index to be predicted", default=None, type=int)
     parser.add_argument("--grid_search", help="Option to perform grid search or not (1 - True, 0 - False", default=0, type=int)
 
     # Parse the arguments
@@ -266,7 +268,36 @@ def main():
 
     # Get multiple step ahead prediction datasets : #NOTE: Only for Linear_AR so far
     if model_type == "esn":
+        
+        X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau=1, 
+            p=1)
+        
+        # predict cycle index = entered predict cycle num - 1
+        xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
 
+        options["esn"]["tau"] = len(ytest) - 1
+        options["esn"]["history_q"] = options["esn"]["tau"] + 1
+        model = load_model_with_opts(options, model_type)
+
+        # Concat data 
+        xtrain_ct = concat_data(xtrain, col=-1)
+        ytrain_ct = concat_data(ytrain, col=-1)
+
+        #tr_data_signal = xtrain_ct[:, -1].reshape((-1, 1))
+        #te_data_signal = ytest[:, -1].reshape((-1, 1))
+
+        # pred of q values
+        predictions, te_data_signal, pred_indexes = train_and_predict_ESN(model, train_data=xtrain_ct, test_data=ytest)
+        
+        np.savetxt(fname=output_file,
+               X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
+               )
+        '''
+        predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
+        plot_predictions(predictions=predictions_ar, ytest=ytest, title="AR model predictions with {} taps for cycle index {}".format(
+            options[model_type]["num_taps"], predict_cycle_num))
+        '''
+        
         #if dataset == "dynamo":
         #    tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_dynamo(data[:,0],
                                                                                                #data[:,1],
@@ -286,13 +317,14 @@ def main():
         pass
 
     elif model_type == "linear_ar":
+
         # Load the model with corresponding options
         if use_grid_search == 0:
             
             model = load_model_with_opts(options, model_type)
             X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=options[model_type]["num_taps"])
             # predict cycle index = entered predict cycle num - 1
-            xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num - 1)
+            xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
             # pred of q values
             predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
             plot_predictions(predictions=predictions_ar, ytest=ytest, title="AR model predictions with {} taps for cycle index {}".format(
@@ -313,8 +345,9 @@ def main():
             optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
                 solar_indices=minimum_idx, model_type=model_type, options=options, params=params, predict_cycle_num_array=predict_cycle_num_array)
             
-            Error_dict["validation_errors"] = val_errors_all.tolist()
-            Error_dict["Optimal_num_taps"] = optimal_num_taps_all.tolist()
+            Error_dict["validation_errors_with_taps"] = [(float(params["num_taps"][i]), *val_errors_all[:,i]) 
+                for i in range(val_errors_all.shape[1])]
+
 
             plt.figure()
             plt.plot(params["num_taps"], val_errors_all[0], label="Validation MSE")
@@ -328,16 +361,18 @@ def main():
             if type(optimal_num_taps_all) != list:
                 optimal_num_taps_all = [optimal_num_taps_all]
 
+            Error_dict["optimal_num_taps"] = [float(*optimal_num_taps_all)] #NOTE: Object of int64 is not json serializable
+
             # Retrain the model again with the optimal value
             for i, optimal_num_taps in enumerate(optimal_num_taps_all):
                 
                 options[model_type]["num_taps"] = optimal_num_taps
                 model = load_model_with_opts(options, model_type)
                 X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=optimal_num_taps)
-                xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num_array[i] - 1)
+                xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num_array[i])
                 # pred of q values
                 predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
-                test_predictions.append(predictions_ar)
+                test_predictions.append(predictions_ar.tolist())
                 if len(ytest) > 0:
                     
                     plot_predictions(predictions=predictions_ar, ytest=ytest, title="AR model predictions with {} taps for cycle index {}".format(
@@ -355,10 +390,13 @@ def main():
                     plt.show()
 
             Error_dict["Test_predictions"] = test_predictions
-            Error_dict["Test_error"] = [test_error_optimal]
+            if len(test_error_optimal) > 0:
+                Error_dict["Test_error"] = [test_error_optimal]
+            else:
+                Error_dict["Test_error"] = []
 
-            #with open('./log/grid_search_results.json', 'w') as fp:
-            #    json.dump(Error_dict, fp, sort_keys=False, indent=4)
+            with open('./log/grid_search_results_cycle{}.json'.format(predict_cycle_num_array[i]), 'w+') as fp:
+                json.dump(Error_dict, fp, indent=2)
 
             #TODO: To fix saving result files properly
 
