@@ -14,7 +14,7 @@ Author: Anubhab Ghosh
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle, normalize, create_list_of_dicts
+from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle, normalize, create_list_of_dicts, save_pred_results
 import torch
 import copy
 from torch import nn, optim
@@ -64,7 +64,7 @@ def load_model_with_opts(options, model_type):
                         device=options[model_type]["device"] 
         )
     elif model_type == "rnn":
-        
+
         model = RNN()
     
     return model
@@ -289,32 +289,8 @@ def main():
         # pred of q values
         predictions, te_data_signal, pred_indexes = train_and_predict_ESN(model, train_data=xtrain_ct, test_data=ytest)
         
-        np.savetxt(fname=output_file,
-               X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
-               )
-        '''
-        predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
-        plot_predictions(predictions=predictions_ar, ytest=ytest, title="AR model predictions with {} taps for cycle index {}".format(
-            options[model_type]["num_taps"], predict_cycle_num))
-        '''
-        
-        #if dataset == "dynamo":
-        #    tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_dynamo(data[:,0],
-                                                                                               #data[:,1],
-                                                                                               #cycle_num=predict_cycle_num)
-        #elif dataset == "solar":
-        #    tr_data_time, tr_data_signal, te_data_time, te_data_signal = get_train_test_realsolar(data[:,0],
-                                                                                               #data[:,1],
-                                                                                               #cycle_num=predict_cycle_num)
-        #options["esn"]["tau"] = len(te_data_signal) - 1
-        #options["esn"]["history_q"] = options["esn"]["tau"] + 1
-        #print("Shape of training data:{}".format(tr_data_signal.shape))
-        #print("Shape of testing data:{}".format(te_data_signal.shape))
-        # Load the model with corresponding options
-        #model = load_model_with_opts(options, model_type)
-        # pred of q values#
-        # predictions, pred_indexes = train_and_predict_ESN(model, tr_data_signal, te_data_signal)
-        pass
+        # Saving prediction results
+        save_pred_results(output_file=output_file, predictions=predictions, te_data_signal=te_data_signal)
 
     elif model_type == "linear_ar":
 
@@ -329,6 +305,9 @@ def main():
             predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
             plot_predictions(predictions=predictions_ar, ytest=ytest, title="AR model predictions with {} taps for cycle index {}".format(
                 options[model_type]["num_taps"], predict_cycle_num))
+            
+            # Save prediction results in a txt file
+            save_pred_results(output_file=output_file, predictions=predictions_ar, te_data_signal=ytest[:,-1])
 
         elif use_grid_search == 1:
             
@@ -339,8 +318,8 @@ def main():
             num_total_cycles = len(np.diff(minimum_idx))
             #predict_cycle_num_array = list(np.arange(num_total_cycles-nval, num_total_cycles))
             predict_cycle_num_array = [predict_cycle_num]
-            #params = {"num_taps":[5,10,15]}
-            params = {"num_taps":list(np.arange(10, 40, 2))}
+            #params = {"num_taps":list(np.arange(2, 50, 1))} # For Dynamo
+            params = {"num_taps":list(np.arange(2, 50, 1))} # For Solar
             #TODO: Fix array nature of optimal_num_taps_all
             optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
                 solar_indices=minimum_idx, model_type=model_type, options=options, params=params, predict_cycle_num_array=predict_cycle_num_array)
@@ -395,10 +374,11 @@ def main():
             else:
                 Error_dict["Test_error"] = []
 
-            with open('./log/grid_search_results_cycle{}.json'.format(predict_cycle_num_array[i]), 'w+') as fp:
+            with open('./log/grid_search_results_{}_cycle{}.json'.format(dataset, predict_cycle_num_array[i]), 'w+') as fp:
                 json.dump(Error_dict, fp, indent=2)
-
+            
             #TODO: To fix saving result files properly
+            save_pred_results(output_file=output_file, predictions=predictions_ar, te_data_signal=ytest[:,-1])
 
     elif model_type == "rnn":
         model = load_model_with_opts(options, model_type)
@@ -410,13 +390,9 @@ def main():
                     + ["{}:{}".format("train__mse", ((predictions - te_data_signal) ** 2).mean())]
                     + ["{}:{}".format("val__mse", ((predictions - te_data_signal) ** 2).mean())]
                     ), file=fp)
-    
-    # Save the results in the output file
-    
-    np.savetxt(fname=output_file,
-               X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
-               )
+
     '''
+    
 
 if __name__ == "__main__":
     main()

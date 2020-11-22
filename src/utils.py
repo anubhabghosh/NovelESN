@@ -1,6 +1,10 @@
 import numpy as np
 import sys
+import parse
+from parse import parse
+import os
 import itertools
+import matplotlib.pyplot as plt
 
 def plot_timeseries_with_cycle_minima(solar_data, solar_data_mean_norm, solar_data_mean_norm_neg, minimum_values):
     
@@ -47,8 +51,10 @@ def get_minimum(X, dataset):
         points of the data
     """
     if dataset == "solar":
+        #NOTE: Setting a num_precision of 5 is becoming necessary after normalization of data in [0,1],
+        # for unnormalized data, num_precision can also work
         _, minimum_idx = detect_cycle_minimums_solar(solar_data=X, window_length=11 * 12, resolution=12,
-                                                     num_precision=3)
+                                                     num_precision=5, verbose=False)
     elif dataset == "dynamo":
         minimum_idx = find_index_of_minimums_dyn(X[:, 1])
     else:
@@ -120,7 +126,7 @@ def detect_cycle_minimums_solar(solar_data, window_length, resolution=12, num_pr
                 end, solar_cycle_index, minimum_values[i, 0], minimum_values[i, 1]))
         solar_cycle_ind_array[i] = solar_cycle_index[-1]
 
-    # plot_timeseries_with_cycle_minima(solar_data=solar_data,
+    #plot_timeseries_with_cycle_minima(solar_data=solar_data,
     #                solar_data_mean_norm=solar_data_mean_norm,
     #                solar_data_mean_norm_neg=solar_data_mean_norm_neg,
     #                minimum_values=minimum_values)
@@ -169,7 +175,6 @@ def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
 
     return xtrain, Y
 
-
 def concat_data(x, col=1):
     """Concatenate all the `col` column of the element"""
     if col == 1:
@@ -213,3 +218,21 @@ def create_list_of_dicts(options, model_type, param_dict):
 
     print("Grid-search will be computed for the following set of parameter lists:\n{}".format(len(params_dict_list_all)))
     return params_dict_list_all
+
+def save_pred_results(output_file, predictions, te_data_signal):
+    
+    # Save the results in the output file
+    if len(te_data_signal) > 0:
+        np.savetxt(fname=output_file,
+               X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
+               )
+    else:
+        # In case of future predictions only need to save the predictions
+
+        # Assuming output folder is of the form "[output_folder]/[filename].[extension]"
+        o_folder, o_filename, ext = parse("{}/{}.{}", output_file)
+        output_file_modified = os.path.join(o_folder, (o_filename + "_future" + "." + ext))
+        np.savetxt(fname=output_file_modified,
+               X = np.array(predictions.reshape(-1, 1))
+               #X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
+               )
