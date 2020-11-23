@@ -192,6 +192,8 @@ def main():
                 predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
 
             elif model_type == "rnn":
+                #Usage:
+                #  python /home/anthon@ad.cmm.se/Desktop/projects/NovelESN/main.py --model_type rnn --dataset dynamo --train_file data/dynamo_esn.txt --output_file tmp.txt --predict_cycle_num 10
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
 
                 predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120)
