@@ -154,6 +154,7 @@ def main():
     data = np.loadtxt(train_file)
     data[:, 1] = 2*((data[:, 1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())) - 1
     minimum_idx = get_minimum(data, dataset)
+    plt.figure()
 
 
     # Get multiple step ahead prediction datasets
@@ -191,17 +192,9 @@ def main():
                 predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
 
             elif model_type == "rnn":
-
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
 
-                for icycle in [20]:  # range(n_cycles - n_tests):
-                    xtrain, ytrain, yval = get_cycle(X, Y, icycle)
-
-                    model = RNN(1, 32, 2)
-
-                    predictions = train_and_predict_RNN(model, xtrain, ytrain, yval[:, 1])
-
-                    print("")
+                predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120)
 
             val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)
 

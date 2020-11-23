@@ -1,6 +1,5 @@
 import numpy as np
 import sys
-import parse
 from parse import parse
 import os
 import itertools
