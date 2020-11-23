@@ -187,41 +187,44 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
     batches = [(x_in[:, i:min([xdata.shape[0]-1, i+BATCH_SIZE]), :], x_in[:, i+1:min([xdata.shape[0],i+1+BATCH_SIZE]), :]) for i in range(0, T-1,BATCH_SIZE)]
 
     # batches = [(xx.permute(1,0,2),yy.permute(1,0,2)) for xx,yy in batches]
+    with open("training_log_{}_val_cycle_{}.log".format(type, val_cycle), "a") as tr_log:
+        print("Model Configuration:\n", file=tr_log)
+        print("Val_cycle: {}, Hidden_size: {}, Num_layers: {}, Num_epochs: {}, lr: {}, rnntype: {}\n".format(
+            val_cycle, hidden_size, num_layers, n_epochs, lr, type), file=tr_log)
+        for epoch in range(n_epochs):
+            h_state = None  # for initial hidden state
 
-    for epoch in range(n_epochs):
-        h_state = None  # for initial hidden state
+            epoch_err = []
+            for x_in, y_in in batches:
+                # x_in = torch.from_numpy(np.array([xdata[t]], dtype=np.float32)[np.newaxis, :, np.newaxis])  # shape (batch, time_step, input_size)
+                # y_in = torch.from_numpy(np.array([xdata[t + 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])
 
-        epoch_err = []
-        for x_in, y_in in batches:
-            # x_in = torch.from_numpy(np.array([xdata[t]], dtype=np.float32)[np.newaxis, :, np.newaxis])  # shape (batch, time_step, input_size)
-            # y_in = torch.from_numpy(np.array([xdata[t + 1]], dtype=np.float32)[np.newaxis, :, np.newaxis])
+                prediction, h_state = model(x_in, h_state)  # rnn output
 
-            prediction, h_state = model(x_in, h_state)  # rnn output
+                # !! next step is important !!
+                if isinstance(h_state, tuple):
+                    h_state = tuple(h.data for h in h_state)
+                else:
+                    h_state = h_state.data  # repack the hidden state, break the connection from last iteration
 
-            # !! next step is important !!
-            if isinstance(h_state, tuple):
-                h_state = tuple(h.data for h in h_state)
-            else:
-                h_state = h_state.data  # repack the hidden state, break the connection from last iteration
+                loss = loss_func(prediction, y_in)  # calculate loss
+                optimizer.zero_grad()  # clear gradients for this training step
+                loss.backward(retain_graph=True)  # backpropagation, compute gradients
+                optimizer.step()  # apply gradients
 
-            loss = loss_func(prediction, y_in)  # calculate loss
-            optimizer.zero_grad()  # clear gradients for this training step
-            loss.backward(retain_graph=True)  # backpropagation, compute gradients
-            optimizer.step()  # apply gradients
+                epoch_err.append(loss.item())
+                # if enplot:
+                #    xhat.append(prediction[:, 0, 0].squeeze().detach().numpy())
 
-            epoch_err.append(loss.item())
-           # if enplot:
-           #     xhat.append(prediction[:, 0, 0].squeeze().detach().numpy())
+                #if enliveplot:
+                #    plt.plot(t + 1, y_in[0, 0, 0], "k.")
+                #    plt.plot(t + 1, prediction[0, 0, 0].detach().numpy(), "r.")
+                #    plt.draw()
+                #    plt.pause(0.001)
 
-            #if enliveplot:
-            #    plt.plot(t + 1, y_in[0, 0, 0], "k.")
-            #    plt.plot(t + 1, prediction[0, 0, 0].detach().numpy(), "r.")
-            #    plt.draw()
-            #    plt.pause(0.001)
-
-        err.append(np.mean(epoch_err))
-        if verbose:
-            print(epoch, err[-1])
+            err.append(np.mean(epoch_err))
+            if (verbose == True) and (epoch % 5 == 4 or epoch == 0):
+                print("Epoch:{}, Training MSE:{}".format(epoch+1, err[-1]), file=tr_log)
 
     if enliveplot:
         plt.ioff()
@@ -275,7 +278,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
     params = {"val_cycle": [72,73,74],
               "hidden_size": [8, 16, 32],
               "num_layers": [1, 2],
-              "n_epochs": [5, 10],
+              "n_epochs": [50, 100],
               "lr": [1e-2, 1e-3],
               "type": ["GRU", "LSTM"]}
 
@@ -288,8 +291,8 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
     tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
     val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
 
-    if os.path.isfile("rnn_crossval.pkl"):
-        with open("rnn_crossval.pkl", "rb") as fp:
+    if os.path.isfile("rnn_crossval_dynamo.pkl"):
+        with open("rnn_crossval_dynamo.pkl", "rb") as fp:
             errors = pkl.load(fp)
     else:
         for i, opts in enumerate(d_l):
@@ -301,14 +304,15 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
             #break
         errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
 
-        with open("rnn_crossval.pkl", "wb") as fp:
+        with open("rnn_crossval_dynamo.pkl", "wb") as fp:
             pkl.dump(errors,fp)
 
     best_idx = np.unravel_index(np.argmin(errors["val_err"], axis=None), errors["val_err"].shape)
     #best_idx = np.argmin(errors["val_err"]).reshape(-1).tolist()
 
     best_opts = {k: errors["params"][k][ii] for k,ii in zip(errors["params"].keys(),best_idx)} #{k:params[i] for }
-
+    print("Best options are:\n{}".format(best_opts))
+    '''
     best_opts["val_cycle"] = len(Y)-1
 
     model, h_state_out, train_err, test_err, test_predictions = train_rnn(X, Y, verbose=False, enplot=enplot, enliveplot=False,
@@ -322,6 +326,6 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
     # h_state = None
     #xtrain_hat, h_state = predict_rnn(model, xtrain.shape[0], h_state, xtrain[0, 1], ytrue=xtrain[:, 1], enplot=True)
 #    y_future, _ = predict_rnn(model, 11*12, h_state, ytest[-1], ytrue=None, enliveplot=False, enplot=True)
-
+    '''
 
 
