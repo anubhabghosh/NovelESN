@@ -238,7 +238,7 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
 
     model.eval()
     yval_hat, h_state, eval_err = predict_rnn(model, yval.shape[0],
-                                              tuple(h[:, -1, :].reshape(num_layers, 1, -1) for h in h_state),
+                                              h_state,
                                               xtrain[-1, 1],
                                               ytrue=yval[:, 1],
                                               enliveplot=enliveplot,
@@ -248,6 +248,13 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
 
 
 import itertools
+
+
+def reshape_h(h_state, num_layers):
+    if isinstance(h_state, tuple):
+        return tuple(h[:, -1, :].reshape(num_layers, 1, -1) for h in h_state)
+    else:
+        return h_state[:, -1, :].reshape(num_layers, 1, -1)
 
 
 def field_crossprod(f):
@@ -270,7 +277,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
               "num_layers": [1, 2],
               "n_epochs": [5, 10],
               "lr": [1e-2, 1e-3],
-              "type": ["LSTM", "GRU"]}
+              "type": ["GRU", "LSTM"]}
 
     d_l = field_crossprod(params)
 
@@ -291,7 +298,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
             _, _, train_err, validation_err, _ = train_rnn(X, Y, verbose=True, enplot=False, enliveplot=False, **opts)
             tr_err[idx] = train_err
             val_err[idx] = validation_err
-            break
+            #break
         errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
 
         with open("rnn_crossval.pkl", "wb") as fp:

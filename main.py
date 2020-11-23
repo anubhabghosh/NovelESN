@@ -195,7 +195,7 @@ def main():
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
 
                 predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120)
-
+                sys.exit(0)
             val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)
 
 
