@@ -275,34 +275,44 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
  #   k = 20
 #    n = 30 * k
 
-    params = {"val_cycle": [72,73,74],
+    params = {"val_cycle": [72, 73, 74],
               "hidden_size": [8, 16, 32],
               "num_layers": [1, 2],
               "n_epochs": [50, 100],
               "lr": [1e-2, 1e-3],
               "type": ["GRU", "LSTM"]}
-
+    
     d_l = field_crossprod(params)
 
    # timeline = np.linspace(0, np.pi * 2 * k, n, dtype=np.float32)  # float32 for converting torch FloatTensor
    # xx = np.sin(timeline)
    # xtrain = np.concatenate([timeline[:, None], xx[:, None]], axis=1).astype(np.float32)
 
-    tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
-    val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
+    #tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
+    #val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
+    
+    tr_err = np.zeros(len(d_l), 1)
+    val_err = np.zeros(len(d_l), 1)
 
     if os.path.isfile("rnn_crossval_dynamo.pkl"):
         with open("rnn_crossval_dynamo.pkl", "rb") as fp:
             errors = pkl.load(fp)
+    
     else:
+        params_list = []
         for i, opts in enumerate(d_l):
             idx = tuple(params[k].index(opts[k]) for k in opts.keys())
             print(i+1, "/", len(d_l), ":", json.dumps(opts))
+            params_list.append(json.dumps(opts))
             _, _, train_err, validation_err, _ = train_rnn(X, Y, verbose=True, enplot=False, enliveplot=False, **opts)
-            tr_err[idx] = train_err
-            val_err[idx] = validation_err
+            #tr_err[idx] = train_err
+            #val_err[idx] = validation_err
+            tr_err[i] = train_err
+            val_err[i] = validation_err
             #break
-        errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
+
+        errors = {"params": params_list, "tr_err": tr_err, "val_err": val_err}    
+        #errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
 
         with open("rnn_crossval_dynamo.pkl", "wb") as fp:
             pkl.dump(errors,fp)
@@ -317,7 +327,6 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
 
     model, h_state_out, train_err, test_err, test_predictions = train_rnn(X, Y, verbose=False, enplot=enplot, enliveplot=False,
                                                               **best_opts)
-
 
     # predict_rnn(model, yval.shape[0], h_state, xtrain[-1, 1], ytrue=yval, enliveplot=False,enplot=True)
     xtrain_hat, h_state, yfuture_hat = predict_rnn(model, n_future, h_state_out, Y[-1][-1, 1], ytrue=None, enliveplot=True)

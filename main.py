@@ -195,9 +195,9 @@ def main():
                 #Usage:
                 #  python /home/anthon@ad.cmm.se/Desktop/projects/NovelESN/main.py --model_type rnn --dataset dynamo --train_file data/dynamo_esn.txt --output_file tmp.txt --predict_cycle_num 10
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
-
                 predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120)
                 sys.exit(0)
+            
             val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)
 
 
@@ -248,8 +248,6 @@ def main():
 
     elif model_type == "rnn":
         model = load_model_with_opts(options, model_type)
-
-
 
     with open("results__{}.txt".format(model_type), "a") as fp:
         print("\t".join(

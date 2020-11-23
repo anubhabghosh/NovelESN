@@ -318,8 +318,8 @@ def main():
             num_total_cycles = len(np.diff(minimum_idx))
             #predict_cycle_num_array = list(np.arange(num_total_cycles-nval, num_total_cycles))
             predict_cycle_num_array = [predict_cycle_num]
-            #params = {"num_taps":list(np.arange(2, 50, 1))} # For Dynamo
-            params = {"num_taps":list(np.arange(2, 50, 1))} # For Solar
+            #params = {"num_taps":list(np.arange(10, 50, 2))} # For Dynamo
+            params = {"num_taps":list(np.arange(5, 50, 2))} # For Solar
             #TODO: Fix array nature of optimal_num_taps_all
             optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
                 solar_indices=minimum_idx, model_type=model_type, options=options, params=params, predict_cycle_num_array=predict_cycle_num_array)
