@@ -277,7 +277,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
 
     params = {"val_cycle": [72, 73, 74],
               "hidden_size": [8, 16, 32],
-              "num_layers": [1, 2],
+              "num_layers": [1,2],
               "n_epochs": [50, 100],
               "lr": [1e-2, 1e-3],
               "type": ["GRU", "LSTM"]}
@@ -291,8 +291,8 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
     #tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
     #val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
     
-    tr_err = np.zeros(len(d_l), 1)
-    val_err = np.zeros(len(d_l), 1)
+    tr_err = np.zeros((len(d_l), 1))
+    val_err = np.zeros((len(d_l), 1))
 
     if os.path.isfile("rnn_crossval_dynamo.pkl"):
         with open("rnn_crossval_dynamo.pkl", "rb") as fp:
@@ -311,16 +311,18 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
             val_err[i] = validation_err
             #break
 
-        errors = {"params": params_list, "tr_err": tr_err, "val_err": val_err}    
+        errors = {"params":params, "params_list_dl": params_list, "tr_err": tr_err, "val_err": val_err}    
         #errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
 
         with open("rnn_crossval_dynamo.pkl", "wb") as fp:
             pkl.dump(errors,fp)
 
-    best_idx = np.unravel_index(np.argmin(errors["val_err"], axis=None), errors["val_err"].shape)
-    #best_idx = np.argmin(errors["val_err"]).reshape(-1).tolist()
+    #best_idx = np.unravel_index(np.argmin(errors["val_err"], axis=None), errors["val_err"].shape)
+    best_idx = np.argmin(errors["val_err"])
 
-    best_opts = {k: errors["params"][k][ii] for k,ii in zip(errors["params"].keys(),best_idx)} #{k:params[i] for }
+    #best_opts = {k: errors["params"][k][ii] for k,ii in zip(errors["params"].keys(),best_idx)} #{k:params[i] for }
+    best_opts = errors["params_list_dl"][best_idx]
+
     print("Best options are:\n{}".format(best_opts))
     '''
     best_opts["val_cycle"] = len(Y)-1
