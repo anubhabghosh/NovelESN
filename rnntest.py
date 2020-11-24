@@ -274,8 +274,17 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
 
  #   k = 20
 #    n = 30 * k
-
+    '''
+    # For Dynamo 
     params = {"val_cycle": [72, 73, 74],
+              "hidden_size": [8, 16, 32],
+              "num_layers": [1,2],
+              "n_epochs": [50, 100],
+              "lr": [1e-2, 1e-3],
+              "type": ["GRU", "LSTM"]}
+    '''
+    # For Solar
+    params = {"val_cycle": [20, 21, 22],
               "hidden_size": [8, 16, 32],
               "num_layers": [1,2],
               "n_epochs": [50, 100],
@@ -294,10 +303,13 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
     tr_err = np.zeros((len(d_l), 1))
     val_err = np.zeros((len(d_l), 1))
 
-    if os.path.isfile("rnn_crossval_dynamo.pkl"):
-        with open("rnn_crossval_dynamo.pkl", "rb") as fp:
+    #if os.path.isfile("rnn_crossval_dynamo.pkl"):
+    #    with open("rnn_crossval_dynamo.pkl", "rb") as fp:
+    #        errors = pkl.load(fp)
+    if os.path.isfile("rnn_crossval_solar.pkl"):
+        with open("rnn_crossval_solar.pkl", "rb") as fp:
             errors = pkl.load(fp)
-    
+
     else:
         params_list = []
         for i, opts in enumerate(d_l):
@@ -314,9 +326,12 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
         errors = {"params":params, "params_list_dl": params_list, "tr_err": tr_err, "val_err": val_err}    
         #errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
 
-        with open("rnn_crossval_dynamo.pkl", "wb") as fp:
-            pkl.dump(errors,fp)
+        #with open("rnn_crossval_dynamo.pkl", "wb") as fp:
+        #    pkl.dump(errors,fp)
 
+        with open("rnn_crossval_solar.pkl", "wb") as fp:
+            pkl.dump(errors,fp)
+    
     #best_idx = np.unravel_index(np.argmin(errors["val_err"], axis=None), errors["val_err"].shape)
     best_idx = np.argmin(errors["val_err"])
 
