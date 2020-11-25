@@ -168,12 +168,12 @@ def main():
     P = [10, 20, 30]
     val_err = np.zeros((n_cycles, len(P)))
 
-        # errors = new_train_ar(data,minimum_idx)
-        # errors = {"validatation errors": (n_val_cycles, n_tried_numtapsvalues),
-        #            "test_errors":(n_test_cycles,),
-        #            "test_predictions: list of n_test_cycles arrays [ (length of 1st test cycle, 2), .. ]
-        #            "future_points": (120,)
-        #  }
+    # errors = new_train_ar(data,minimum_idx)
+    # errors = {"validatation errors": (n_val_cycles, n_tried_numtapsvalues),
+    #            "test_errors":(n_test_cycles,),
+    #            "test_predictions: list of n_test_cycles arrays [ (length of 1st test cycle, 2), .. ]
+    #            "future_points": (120,)
+    #  }
 
     for ip, p in enumerate(P):
         X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=p)
@@ -192,10 +192,10 @@ def main():
                 predictions = train_and_predict_AR(model, concat_data(xtrain), concat_data(ytrain), yval[:, 1])
 
             elif model_type == "rnn":
-                #Usage:
+                # Usage:
                 #  python /home/anthon@ad.cmm.se/Desktop/projects/NovelESN/main.py --model_type rnn --dataset dynamo --train_file data/dynamo_esn.txt --output_file tmp.txt --predict_cycle_num 10
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
-                predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120, dataset=dataset)
+                predictions = train_and_predict_RNN(X, Y, enplot=False, n_future=120, dataset=dataset)
                 sys.exit(0)
             
             val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)
@@ -203,7 +203,7 @@ def main():
 
     optimal_p = np.argmin(val_err.mean(0)).reshape(-1)[0]
     X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=optimal_p)
-    test_err_ar=np.zeros(n_tests)
+    test_err_ar = np.zeros(n_tests)
     for i_test_cycle in range(n_cycles-n_tests, n_cycles):
         xtrain, ytrain, ytest = get_cycle(X, Y, i_test_cycle)
         model = load_model_with_opts(options, model_type)
