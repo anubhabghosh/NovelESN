@@ -154,7 +154,7 @@ def main():
     data = np.loadtxt(train_file)
     data[:, 1] = 2*((data[:, 1] - data[:,1].min())/(data[:,1].max() - data[:,1].min())) - 1
     minimum_idx = get_minimum(data, dataset)
-    plt.figure()
+#    plt.figure()
 
 
     # Get multiple step ahead prediction datasets
@@ -195,7 +195,7 @@ def main():
                 #Usage:
                 #  python /home/anthon@ad.cmm.se/Desktop/projects/NovelESN/main.py --model_type rnn --dataset dynamo --train_file data/dynamo_esn.txt --output_file tmp.txt --predict_cycle_num 10
                 X, Y = get_msah_training_dataset(data, minimum_idx, tau=1, p=np.inf)
-                predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120)
+                predictions = train_and_predict_RNN(X, Y, enplot=False,n_future=120, dataset=dataset)
                 sys.exit(0)
             
             val_err[icycle, ip] = mean_squared_error(yval[:, 1], predictions)

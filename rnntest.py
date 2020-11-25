@@ -268,77 +268,82 @@ def field_crossprod(f):
     return out
 
 
-def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None):
+def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None, dataset="dynamo"):
     if val_cycles is None:
         val_cycles = [20]
 
  #   k = 20
 #    n = 30 * k
-    '''
+    if dataset == "dynamo":
     # For Dynamo 
-    params = {"val_cycle": [72, 73, 74],
+        params = {"val_cycle": [72, 73, 74],
               "hidden_size": [8, 16, 32],
               "num_layers": [1,2],
               "n_epochs": [50, 100],
               "lr": [1e-2, 1e-3],
               "type": ["GRU", "LSTM"]}
-    '''
-    # For Solar
-    params = {"val_cycle": [20, 21, 22],
+
+    elif dataset=="solar":
+        params = {"val_cycle": [20, 21, 22],
               "hidden_size": [8, 16, 32],
               "num_layers": [1,2],
               "n_epochs": [50, 100],
               "lr": [1e-2, 1e-3],
               "type": ["GRU", "LSTM"]}
-    
-    d_l = field_crossprod(params)
-
-   # timeline = np.linspace(0, np.pi * 2 * k, n, dtype=np.float32)  # float32 for converting torch FloatTensor
-   # xx = np.sin(timeline)
-   # xtrain = np.concatenate([timeline[:, None], xx[:, None]], axis=1).astype(np.float32)
-
-    #tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
-    #val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
-    
-    tr_err = np.zeros((len(d_l), 1))
-    val_err = np.zeros((len(d_l), 1))
+    else:
+        print("(error) > Dataset {} unknown. Exit.".format(dataset))
+        sys.exit(1)
 
     #if os.path.isfile("rnn_crossval_dynamo.pkl"):
     #    with open("rnn_crossval_dynamo.pkl", "rb") as fp:
     #        errors = pkl.load(fp)
-    if os.path.isfile("rnn_crossval_solar.pkl"):
-        with open("rnn_crossval_solar.pkl", "rb") as fp:
+    crossval_file="crossval_files/rnn_crossval_{}.pkl".format(dataset)
+    if os.path.isfile(crossval_file):
+        with open(crossval_file, "rb") as fp:
             errors = pkl.load(fp)
 
     else:
+
+        d_l = field_crossprod(params)
+
+        # timeline = np.linspace(0, np.pi * 2 * k, n, dtype=np.float32)  # float32 for converting torch FloatTensor
+        # xx = np.sin(timeline)
+        # xtrain = np.concatenate([timeline[:, None], xx[:, None]], axis=1).astype(np.float32)
+
+        tr_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
+        val_err = np.zeros(tuple(len(params[k]) for k in params.keys()))
+
+        # tr_err = np.zeros((len(d_l), 1))
+        # val_err = np.zeros((len(d_l), 1))
+
         params_list = []
         for i, opts in enumerate(d_l):
             idx = tuple(params[k].index(opts[k]) for k in opts.keys())
             print(i+1, "/", len(d_l), ":", json.dumps(opts))
             params_list.append(json.dumps(opts))
             _, _, train_err, validation_err, _ = train_rnn(X, Y, verbose=True, enplot=False, enliveplot=False, **opts)
-            #tr_err[idx] = train_err
-            #val_err[idx] = validation_err
-            tr_err[i] = train_err
-            val_err[i] = validation_err
-            #break
+            tr_err[idx] = train_err
+            val_err[idx] = validation_err
+            # tr_err[i] = train_err
+            # val_err[i] = validation_err
+            # break
 
-        errors = {"params":params, "params_list_dl": params_list, "tr_err": tr_err, "val_err": val_err}    
-        #errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
+        errors = {"params": params, "params_list_dl": params_list, "tr_err": tr_err, "val_err": val_err}
+        # errors = {"params": params, "tr_err": tr_err, "val_err": val_err}
+        # with open("rnn_crossval_dynamo.pkl", "wb") as fp:
+        #     pkl.dump(errors,fp)
 
-        #with open("rnn_crossval_dynamo.pkl", "wb") as fp:
-        #    pkl.dump(errors,fp)
-
-        with open("rnn_crossval_solar.pkl", "wb") as fp:
-            pkl.dump(errors,fp)
+        with open(crossval_file, "wb") as fp:
+            pkl.dump(errors, fp)
     
-    #best_idx = np.unravel_index(np.argmin(errors["val_err"], axis=None), errors["val_err"].shape)
-    best_idx = np.argmin(errors["val_err"])
+    best_idx = np.unravel_index(np.argmin(errors["val_err"].mean(0), axis=None), errors["val_err"].shape)
+    # best_idx = np.argmin(errors["val_err"].mean(0))
 
-    #best_opts = {k: errors["params"][k][ii] for k,ii in zip(errors["params"].keys(),best_idx)} #{k:params[i] for }
-    best_opts = errors["params_list_dl"][best_idx]
+    best_opts = {k: errors["params"][k][ii] for k, ii in zip(errors["params"].keys(),best_idx)} #{k:params[i] for }
+    # best_opts = errors["params_list_dl"][best_idx]
 
     print("Best options are:\n{}".format(best_opts))
+
     '''
     best_opts["val_cycle"] = len(Y)-1
 
