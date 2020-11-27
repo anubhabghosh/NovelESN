@@ -49,8 +49,9 @@ class RNN(nn.Module):
         else:
             print("Error: unknown type {}".format(type),file=sys.stderr)
             sys.exit(1)
-
+        self.num_layers=num_layers
         self.out = nn.Linear(hidden_size, 1)
+        #self.out = nn.Linear(hidden_size, 1)
 
     def forward(self, x, h_state):
         # x (batch, time_step, input_size)
@@ -59,7 +60,7 @@ class RNN(nn.Module):
         # Initialize hidden state with zeros
         r_out, h_state = self.rnn(x, h_state)
         outs = self.out(r_out)
-
+        return outs, h_state
         # instead, for simplicity, you can replace above codes by follows
         # r_out = r_out.view(-1, 32)
         # outs = self.out(r_out)
@@ -68,7 +69,20 @@ class RNN(nn.Module):
         # or even simpler, since nn.Linear can accept inputs of any dimension
         # and returns outputs with same dimension except for the last
 
-        return outs, h_state
+    def forward2(self, h_state, n_pred=1):
+        # x (batch, time_step, input_size)
+        # h_state (n_layers, batch, hidden_size)
+        # r_out (batch, time_step, hidden_size)
+        # Initialize hidden state with zeros
+        x = torch.from_numpy(np.array([[[0.]]])).type(torch.float32)
+        xout = torch.from_numpy(np.zeros(n_pred).reshape(1,n_pred,1)).type(torch.float32)
+        for i in range(n_pred):
+            out, h_state = self.rnn(x, h_state)
+            h_state = reshape_h(h_state, num_layers=self.num_layers)
+            xout[0,i,0] = self.out(out)
+            x = xout[0,i,0].reshape(1,1,1)
+
+        return xout, h_state
 
 
 if __name__ == "__main__":
@@ -176,7 +190,9 @@ def predict_rnn(model, n_future, h_state, x_init, ytrue=None,enplot=True,enlivep
 def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, n_epochs=1, lr=1e-3, hidden_size=8, num_layers=1,type="LSTM"):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = RNN(input_size=1, hidden_size=hidden_size, num_layers=num_layers, type=type).to(device)
+    model2 = RNN(input_size=1, hidden_size=hidden_size, num_layers=num_layers, type=type).to(device)
     model.train()
+    model2.train()
 
     if val_cycle != -1:
         xtrain_data, ytrain_data, yval_data = get_cycle(X, Y, val_cycle)
@@ -187,6 +203,8 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
         # xtrain, ytrain, yval = get_cycle(X, Y, val_cycle)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)  # optimize all cnn parameters
+    optimizer2 = torch.optim.Adam(model2.parameters(), lr=lr)
+
     #lmbda = lambda epoch: 0.95
     scheduler = ExponentialLR(optimizer, gamma=0.99)
     loss_func = nn.MSELoss()
@@ -214,7 +232,7 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
     if enliveplot:
         plt.figure()
         plt.ion()
-
+    torch.autograd.set_detect_anomaly(True)
     with open("training_log_{}_val_cycle_{}.log".format(type, val_cycle), "a") as tr_log:
         print("Model Configuration:\n", file=tr_log)
         print("Val_cycle: {}, Hidden_size: {}, Num_layers: {}, Num_epochs: {}, lr: {}, rnntype: {}\n".format(
@@ -237,31 +255,39 @@ def train_rnn(X, Y, verbose=False, enplot=True, enliveplot=False, val_cycle=20, 
         # plt.subplot(212)
         # plt.plot(teach.sum(0)/teach.shape[0])
         iseq = 0
-        for epoch in range(2000):
+        tau = 10
+        p= 50
+        for epoch in range(200):
             epoch_err = []
             h_state = None
             loss = 0
             if iseq > n_teaching_seq-1:
                 break
-            for t in range(T-1):
-                prediction, h_state = model(previous, h_state)  # rnn output
-                h_state = reshape_h(h_state, num_layers)
-                loss += loss_func(prediction, x_train[:, t + 1, :].reshape(1, 1, 1))  # calculate loss
-                xhat[t+1] = prediction.detach().cpu().numpy()[0, 0, 0]
-
-                if sequences[iseq][0, t]:
-                    previous = x_train[:, t + 1, :].reshape(1, 1, 1)
+            for t in range(T-tau):
+                if t <= p:  # sequences[iseq][0, t]:
+                    prediction, h_state = model(previous, h_state)  # rnn output
+                    h_state = reshape_h(h_state, num_layers=num_layers)
+                    loss += loss_func(prediction, x_train[:, t + 1, :].reshape(1, 1, 1))  # calculate loss
+                    xhat[t + 1] = prediction.detach().cpu().numpy()[0, 0, 0]
                 else:
-                    previous = prediction.data
+                    _, h_state = model(previous, h_state)  # rnn output
+                    prediction, h_state = model2.forward2(h_state, n_pred=tau)  # rnn output
+                    loss += loss_func(prediction, x_train[:, t:t+tau, :].reshape(1, -1, 1))  # calculate loss
+
+                previous = x_train[:, t + 1, :].reshape(1, 1, 1)
+                    #previous = prediction.data
 
             optimizer.zero_grad()  # clear gradients for this training step
+            optimizer2.zero_grad()
             loss.backward(retain_graph=True)  # backpropagation, compute gradients
             optimizer.step()  # apply gradients
-            scheduler.step()
+            optimizer2.step()  # apply gradients
+
             epoch_err.append(loss.item()/(T-1))
             err.append(epoch_err[-1])
             Pteach.append(sequences[iseq].sum()/(T-1))
             log_str = "Epoch:{}, Training MSE:{}, p_teach: {}".format(epoch + 1, err[-1], Pteach[-1])
+
             if (epoch % 2 == 0):
                 if verbose:
                     print(log_str, file=tr_log)
@@ -320,9 +346,9 @@ import itertools
 
 def reshape_h(h_state, num_layers):
     if isinstance(h_state, tuple):
-        return tuple(h[:, -1, :].reshape(num_layers, 1, -1) for h in h_state)
+        return tuple(h[:, -1, :].reshape(num_layers, 1, -1).data for h in h_state)
     else:
-        return h_state[:, -1, :].reshape(num_layers, 1, -1)
+        return h_state[:, -1, :].reshape(num_layers, 1, -1).data
 
 
 def field_crossprod(f):
@@ -342,7 +368,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None, dat
 
     if dataset == "dynamo":
     # For Dynamo 
-        params = {"val_cycle": [72, 73, 74],
+        params = {"val_cycle": [1, 73, 74],
               "hidden_size": [128, 32, 16, 8],
               "num_layers": [1, 2, 4, 6],
               "n_epochs": [200],
@@ -385,7 +411,7 @@ def train_and_predict_RNN(X, Y, enplot=False, n_future=120, val_cycles=None, dat
             idx = tuple(params[k].index(opts[k]) for k in opts.keys())
             print(i+1, "/", len(d_l), ":", json.dumps(opts))
             params_list.append(json.dumps(opts))
-            _, _, train_err, validation_err, _ = train_rnn(X, Y, verbose=True, enplot=False, enliveplot=False, **opts)
+            _, _, train_err, validation_err, _ = train_rnn(X, Y, verbose=True, enplot=False, enliveplot=True, **opts)
             tr_err[idx] = train_err
             val_err[idx] = validation_err
             # tr_err[i] = train_err
