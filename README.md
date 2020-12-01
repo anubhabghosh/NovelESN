@@ -28,11 +28,24 @@
   - [ ] Restructuring of code to make it easier to read and more flexible to arguments. So that comparisons can be easier with other methods.
 
 ## Linear Auto-Regressive model
-Add details here
-
+### Trying to run grid-search for Linear AR model using `main_gs.py`
+For example, if it is required to run main_gs.py for predicting the cycle for cycle index 75
+(cycle 76 - future cycle for *dynamo*, and cycle 23 - future cycle for *solar*)
+```
+python main_gs.py --model_type linear_ar --dataset dynamo --train_file ./data/dynamo_esn.txt --output_file models/dynamo_pred_linear_ar_75.txt --predict_cycle_num 75 --grid_search 1
+```
 ## Long-Short Term Memory
-Add details here
-
+### Trying to run LSTM on `main_gs.py`
+For example, if it is required to run main_gs.py for predicting the cycle for cycle index 75
+(cycle 76 - future cycle for *dynamo*, and cycle 23 - future cycle for *solar*)
+```
+python main_gs.py --model_type lstm --dataset dynamo --train_file ./data/dynamo_esn.txt --output_file models/dynamo_pred_lstm_75.txt --predict_cycle_num 75 --grid_search 0
+```
 ## Gated Recurrent Units
-Add details here
+### Trying to run GRU on `main_gs.py`
+For example, if it is required to run main_gs.py for predicting the cycle for cycle index 75
+(cycle 76 - future cycle for *dynamo*, and cycle 23 - future cycle for *solar*)
+```
+python main_gs.py --model_type gru --dataset dynamo --train_file ./data/dynamo_esn.txt --output_file models/dynamo_pred_gru_75.txt --predict_cycle_num 75 --grid_search 0
+```
 
