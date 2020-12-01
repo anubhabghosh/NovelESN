@@ -14,7 +14,8 @@ Author: Anubhab Ghosh
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle, normalize, create_list_of_dicts, save_pred_results
+from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle
+from src.utils import normalize, create_list_of_dicts, save_pred_results, unnormalize, plot_losses
 import torch
 import copy
 from torch import nn, optim
@@ -24,11 +25,11 @@ import json
 import itertools
 import argparse
 from novel_esn import NovelEsn
-from armodel import Linear_AR, create_dataset, train_armodel, predict_armodel, plot_losses
+from armodel import Linear_AR, create_dataset, train_armodel, predict_armodel
 from argparse import RawTextHelpFormatter
 from cycle_selector_dynamo import get_train_test_dynamo
 from cycle_selector_realsolar import get_train_test_realsolar, plot_train_test_data
-from rnntest import RNN, train_and_predict_RNN
+from testrnn_aliter import RNN_model, train_rnn, predict_rnn, train_validation_split
 
 def load_model_with_opts(options, model_type):
     """ This function is used for loading the appropriate model
@@ -52,7 +53,7 @@ def load_model_with_opts(options, model_type):
                         history_p=options[model_type]["history_p"],
                         beta_regularizer=options[model_type]["beta_regularizer"]
                         )
-    # TODO: AR model integrated
+    
     elif model_type == "linear_ar":
 
         model = Linear_AR(
@@ -63,9 +64,20 @@ def load_model_with_opts(options, model_type):
                         init_net=options[model_type]["init_net"],
                         device=options[model_type]["device"] 
         )
-    elif model_type == "rnn":
+    elif model_type in ["rnn", "lstm", "gru"]:
 
-        model = RNN()
+        model = RNN_model(
+                        input_size=options[model_type]["input_size"],
+                        output_size=options[model_type]["output_size"],
+                        n_hidden=options[model_type]["n_hidden"],
+                        n_layers=options[model_type]["n_layers"],
+                        num_directions=options[model_type]["num_directions"],
+                        model_type=options[model_type]["model_type"],
+                        batch_first=options[model_type]["batch_first"],
+                        lr=options[model_type]["lr"],
+                        device=options[model_type]["device"],
+                        num_epochs=options[model_type]["num_epochs"],
+        )
     
     return model
 
@@ -135,6 +147,64 @@ def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data
     '''
     return predictions_ar, test_error, val_error, tr_error
 
+#TODO: Implement the version here
+def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False):
+
+    # Apply concat data to concatenate the rows that have columns with signal (not the timestamp)
+    train_data_inputs, train_data_targets = concat_data(train_data_inputs), concat_data(train_data_targets) 
+    
+    if len(train_data_inputs.shape) == 2:
+        # Extra dimension to be added
+        N, P = train_data_inputs.shape
+        train_data_inputs = train_data_inputs.reshape((N, P, model.input_size))
+        #train_data_target = train_data_inputs.reshape((N, P, model.input_size))
+
+    # Train -  Validation split
+    tr_inputs, tr_targets, val_inputs, val_targets = train_validation_split(
+        train_data_inputs, train_data_targets, tr_split=tr_to_val_split)
+
+    tr_losses, val_losses, model = train_rnn(model=model, nepochs=model.num_epochs, tr_inputs=tr_inputs, tr_targets=tr_targets, 
+                                            val_inputs=val_inputs, val_targets=val_targets, tr_verbose=tr_verbose)
+    
+    if tr_verbose == True:
+        plot_losses(tr_losses=tr_losses, val_losses=val_losses, logscale=False)
+
+    # Trying to visualise training data predictions
+    #predictions_rnn_train = predict_rnn(model=model, eval_input=train_data_inputs[0, :, :].reshape((1, P, -1)), n_predict=len(train_data_targets))
+    #plot_training_predictions(ytrain=train_data_targets, predictions=predictions_rnn_train, title="Predictions for Training data")
+
+    if len(test_data) > 0:
+        predictions_rnn = predict_rnn(model=model, eval_input=train_data_inputs[-1, :, :].reshape((1, P, -1)), n_predict=len(test_data))
+        test_error = mean_squared_error(y_true=test_data[:, -1], y_pred=predictions_rnn)
+    else:
+        #NOTE: Heuristically setting the number of future predictions
+        predictions_rnn = predict_rnn(model=model, eval_input=train_data_inputs[-1, :, :].reshape((1, P, -1)), n_predict=132)
+        test_error = np.nan # No reference to compare for genearting Test error
+
+    tr_error = tr_losses[-1] # latest training error
+    val_error = val_losses[-1] # latest validation error
+    #print("**********************************************************************************************************")
+    print("{} - {}, {} - {},  {} - {},  {}, - {}".format("Model", model.model_type,
+                                                                "Training Error",
+                                                                tr_error,
+                                                                "Validation Error",
+                                                                val_error,
+                                                                "Test Error",
+                                                                test_error))
+    print("***********************************************************************************************************")
+    return predictions_rnn, test_error, val_error, tr_error
+
+def plot_training_predictions(ytrain, predictions, title):
+
+    #Prediction plot
+    plt.figure()
+    #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
+    plt.title(title, fontsize=10)
+    plt.plot(ytrain, label="actual training signal", color="orange")
+    plt.plot(predictions, label="prediction", color="green")
+    plt.legend()
+    plt.show()
+
 def plot_predictions(ytest, predictions, title):
 
     #Prediction plot
@@ -153,6 +223,20 @@ def plot_predictions(ytest, predictions, title):
         title="Predictions using Linear AR model"
     )
 """
+
+def plot_future_predictions(data, minimum_idx, ytrain, predictions, title=None):
+    
+    resolution = np.around(np.diff(data[:,0]).mean(),1)
+    plt.figure()
+    plt.plot(data[:minimum_idx[-1],0], data[:minimum_idx[-1],1], 'r+-')
+    plt.plot(np.arange(ytrain[-1][-1][0] + resolution, ((len(predictions)) * resolution) + 
+        ytrain[-1][-1][0], resolution), predictions, 'b*-')
+    plt.legend(['Original timeseries', 'Future prediction'])
+    if title is None:
+        plt.title('Plot of original timeseries and future predictions')
+    else:
+        plt.title(title)
+    plt.show()
 
 def grid_search_AR_all_cycles(data, solar_indices, model_type, options, params, 
                 predict_cycle_num_array):
@@ -263,7 +347,7 @@ def main():
     data = np.loadtxt(train_file)
     # Keep a copy of the unnormalized data
     unnormalized_data = copy.deepcopy(data)
-    data[:, 1] = normalize(X=data[:, 1], feature_space=(0, 1))
+    data[:, 1], Xmax, Xmin = normalize(X=data[:, 1], feature_space=(0, 1))
     minimum_idx = get_minimum(data, dataset)
 
     # Get multiple step ahead prediction datasets : #NOTE: Only for Linear_AR so far
@@ -298,7 +382,7 @@ def main():
         if use_grid_search == 0:
             
             model = load_model_with_opts(options, model_type)
-            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=options[model_type]["num_taps"])
+            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau=1, p=options[model_type]["num_taps"])
             # predict cycle index = entered predict cycle num - 1
             xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
             # pred of q values
@@ -380,19 +464,55 @@ def main():
             #TODO: To fix saving result files properly
             save_pred_results(output_file=output_file, predictions=predictions_ar, te_data_signal=ytest[:,-1])
 
-    elif model_type == "rnn":
-        model = load_model_with_opts(options, model_type)
-    '''
-    with open("results__{}.txt".format(model_type), "a") as fp:
-        print("\t".join(
-                    ["{}:{}".format(k, v) for k, v in options["linear_ar"].items()]
-                    + ["{}:{}".format("test__mse", ((predictions-te_data_signal)**2).mean())]
-                    + ["{}:{}".format("train__mse", ((predictions - te_data_signal) ** 2).mean())]
-                    + ["{}:{}".format("val__mse", ((predictions - te_data_signal) ** 2).mean())]
-                    ), file=fp)
+    elif model_type in ["rnn", "lstm", "gru"]:
+       
+        # In case parameter tuning is not carried out
+        if use_grid_search == 0:
 
-    '''
-    
+            # Load the model with the corresponding options
+            model = load_model_with_opts(options, model_type)
+            
+            #NOTE: Obtain the data and targets by heuristically setting p
+            num_taps_rnn = 22
+            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = 1, p=num_taps_rnn)
+
+            # Get xtrain, ytrain, ytest
+            xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
+
+            # Pred of q values
+            predictions_rnn, test_error, val_error, tr_error = train_and_predict_RNN(model, xtrain, ytrain, ytest, 
+                                                                                    tr_to_val_split=0.90, tr_verbose=True)
+            if len(ytest) > 0:
+                
+                # Normalized predictions in [0, 1]
+                plot_predictions(predictions=predictions_rnn, ytest=ytest, title="{} model predictions with {} taps for cycle index {}".format(
+                    model_type, num_taps_rnn, predict_cycle_num))
+                
+                # Unnormalized predictions in original scale
+                ytest_un = np.copy(ytest)
+                ytest_un[:,-1] = unnormalize(ytest[:,-1], Xmax, Xmin)
+                plot_predictions(predictions=unnormalize(predictions_rnn, Xmax, Xmin), ytest=ytest_un, title="{} model predictions (unnormalized) with {} taps for cycle index {}".format(
+                    model_type, num_taps_rnn, predict_cycle_num))
+
+                # Save prediction results in a txt file
+                save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest[:,-1])
+            else:
+
+                plot_future_predictions(data=data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=predictions_rnn,
+                title="Plot of original timeseries and future predictions for {} for cycle index {}".format(
+                    model_type, predict_cycle_num))
+                
+                plot_future_predictions(data=unnormalized_data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=unnormalize(predictions_rnn, Xmax, Xmin),
+                title="Plot of original unnormalized timeseries and future predictions for {} for cycle index {}".format(
+                    model_type, predict_cycle_num))
+                
+                # Save prediction results in a txt file
+                save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest)
+
+        elif use_grid_search == 1:
+
+            #TODO: Implement grid search here
+            pass
 
 if __name__ == "__main__":
     main()

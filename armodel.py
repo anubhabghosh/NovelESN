@@ -88,18 +88,6 @@ def predict_armodel(model, eval_input, n_predict):
             out[p+i] = val_prediction.numpy()
     return out[p:]
 
-
-def plot_losses(tr_losses, val_losses):
-    plt.figure()
-    plt.plot(tr_losses, 'r+-')
-    plt.plot(val_losses, 'b*-')
-    plt.xlabel("No. of training iterations")
-    plt.ylabel("MSE Loss")
-    plt.legend(['Training Set', 'Validation Set'])
-    plt.title("MSE loss vs. no. of training iterations")
-    #plt.savefig('./models/loss_vs_iterations.pdf')
-    plt.show()
-
 def plot_timeseries(ts_data, tr_data=None, predicted_data=None, eval=False):
 
     if not eval:

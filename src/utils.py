@@ -34,7 +34,12 @@ def normalize(X, feature_space=(0, 1)):
     """
     X_norm = (X - X.min())/(X.max() - X.min()) * (feature_space[1] - feature_space[0]) + \
         feature_space[0]
-    return X_norm
+    return X_norm, X.max(), X.min()
+
+def unnormalize(X_norm, X_max, X_min, feature_space=(0, 1)):
+    X_unnorm = ((X_norm - feature_space[0]) / (feature_space[1] - feature_space[0])) * (X_max - X_min) + \
+        X_min
+    return X_unnorm
 
 def get_minimum(X, dataset):
     """ This function returns the 'minimum' indices or the indices for
@@ -227,7 +232,6 @@ def save_pred_results(output_file, predictions, te_data_signal):
                )
     else:
         # In case of future predictions only need to save the predictions
-
         # Assuming output folder is of the form "[output_folder]/[filename].[extension]"
         o_folder, o_filename, ext = parse("{}/{}.{}", output_file)
         output_file_modified = os.path.join(o_folder, (o_filename + "_future" + "." + ext))
@@ -235,3 +239,27 @@ def save_pred_results(output_file, predictions, te_data_signal):
                X = np.array(predictions.reshape(-1, 1))
                #X=np.concatenate([predictions.reshape(-1, 1), te_data_signal.reshape(-1, 1)], axis=1)
                )
+
+def plot_losses(tr_losses, val_losses, logscale=False):
+    
+    plt.figure()
+    if logscale == False:
+
+        plt.plot(tr_losses, 'r+-')
+        plt.plot(val_losses, 'b*-')
+        plt.xlabel("No. of training iterations")
+        plt.ylabel("MSE Loss")
+        plt.legend(['Training Set', 'Validation Set'])
+        plt.title("MSE loss vs. no. of training iterations")
+
+    elif logscale == True:
+
+        plt.plot(np.log10(tr_losses), 'r+-')
+        plt.plot(np.log10(val_losses), 'b*-')
+        plt.xlabel("No. of training iterations")
+        plt.ylabel("Log of MSE Loss")
+        plt.legend(['Training Set', 'Validation Set'])
+        plt.title("Log of MSE loss vs. no. of training iterations")
+        
+    #plt.savefig('./models/loss_vs_iterations.pdf')
+    plt.show()
