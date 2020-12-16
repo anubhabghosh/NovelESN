@@ -167,7 +167,7 @@ def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_dat
                                             val_inputs=val_inputs, val_targets=val_targets, tr_verbose=tr_verbose)
     
     if tr_verbose == True:
-        plot_losses(tr_losses=tr_losses, val_losses=val_losses, logscale=False)
+        plot_losses(tr_losses=tr_losses, val_losses=val_losses, logscale=True)
 
     # Trying to visualise training data predictions
     #predictions_rnn_train = predict_rnn(model=model, eval_input=train_data_inputs[0, :, :].reshape((1, P, -1)), n_predict=len(train_data_targets))
@@ -211,8 +211,8 @@ def plot_predictions(ytest, predictions, title):
     plt.figure()
     #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
     plt.title(title, fontsize=10)
-    plt.plot(ytest[:,0], ytest[:,1], label="actual test signal", color="orange")
-    plt.plot(ytest[:,0], predictions, label="prediction", color="green")
+    plt.plot(ytest[:,0], ytest[:,1], '+-', label="actual test signal", color="orange")
+    plt.plot(ytest[:,0], predictions, '*-', label="prediction", color="green")
     plt.legend()
     plt.show()
 """
@@ -337,9 +337,9 @@ def main():
     predict_cycle_num = args.predict_cycle_num
 
     # Load the configurations required for training
-    config_file = "./configurations.json"  # It is assumed that the configurations are
-                                           # present in this location
-
+    # It is assumed that the configurations are present in this location
+    config_file = "./configurations_{}.json".format(dataset)  
+    
     with open(config_file) as f:
         options = json.load(f)  # This loads options as a dict with keys that can be accessed
     
@@ -349,6 +349,7 @@ def main():
     unnormalized_data = copy.deepcopy(data)
     data[:, 1], Xmax, Xmin = normalize(X=data[:, 1], feature_space=(0, 1))
     minimum_idx = get_minimum(data, dataset)
+    #data[:, 1] = np.diff(data[:,1], prepend=data[0, 1])
 
     # Get multiple step ahead prediction datasets : #NOTE: Only for Linear_AR so far
     if model_type == "esn":
@@ -402,8 +403,8 @@ def main():
             num_total_cycles = len(np.diff(minimum_idx))
             #predict_cycle_num_array = list(np.arange(num_total_cycles-nval, num_total_cycles))
             predict_cycle_num_array = [predict_cycle_num]
-            #params = {"num_taps":list(np.arange(10, 50, 2))} # For Dynamo
-            params = {"num_taps":list(np.arange(5, 50, 2))} # For Solar
+            params = {"num_taps":list(np.arange(10, 50, 2))} # For Dynamo
+            #params = {"num_taps":list(np.arange(5, 50, 2))} # For Solar
             #TODO: Fix array nature of optimal_num_taps_all
             optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
                 solar_indices=minimum_idx, model_type=model_type, options=options, params=params, predict_cycle_num_array=predict_cycle_num_array)
@@ -434,7 +435,7 @@ def main():
                 X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=optimal_num_taps)
                 xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num_array[i])
                 # pred of q values
-                predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
+                predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.75, tr_verbose=True)
                 test_predictions.append(predictions_ar.tolist())
                 if len(ytest) > 0:
                     
@@ -510,9 +511,54 @@ def main():
                 save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest)
 
         elif use_grid_search == 1:
+            
+            gs_params = {"n_hidden":[30, 40, 50]
+                        }
+            
+            gs_list_of_options = create_list_of_dicts(options=options,
+                                                    model_type=model_type,
+                                                    param_dict=gs_params)
+            
+            print("Grid Search to be carried over following {} configs:\n".format(len(gs_list_of_options)))
+            val_errors_list = []
 
-            #TODO: Implement grid search here
-            pass
+            for i, gs_option in enumerate(gs_list_of_options):
+                
+                print("Config:{} is \n{}".format(i+1, gs_option))
+                # Load the model with the corresponding options
+                model = RNN_model(
+                        input_size=gs_option["input_size"],
+                        output_size=gs_option["output_size"],
+                        n_hidden=gs_option["n_hidden"],
+                        n_layers=gs_option["n_layers"],
+                        num_directions=gs_option["num_directions"],
+                        model_type=gs_option["model_type"],
+                        batch_first=gs_option["batch_first"],
+                        lr=gs_option["lr"],
+                        device=gs_option["device"],
+                        num_epochs=gs_option["num_epochs"],
+                    )
+                
+                #NOTE: Obtain the data and targets by heuristically setting p
+                num_taps_rnn = 22
+                X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = 1, p=num_taps_rnn)
+
+                # Get xtrain, ytrain, ytest
+                xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
+
+                # Pred of q values
+                predictions_rnn, _, val_error, tr_error = train_and_predict_RNN(model, xtrain, ytrain, ytest, 
+                                                                                        tr_to_val_split=0.90, 
+                                                                                        tr_verbose=True)
+                gs_option["Validation_Error"] = val_error
+                gs_option["Training_Error"] = tr_error
+
+                val_errors_list.append(gs_option)
+                
+            with open('gsresults_cycle{}.json'.format(predict_cycle_num), 'w') as f:
+                f.write(json.dumps(val_errors_list, indent=2))
+
+
 
 if __name__ == "__main__":
     main()

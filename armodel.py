@@ -7,6 +7,7 @@ from torch import nn, optim
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import pandas as pd
+from src.utils import plot_losses
 
 # Create an AR model for prediction
 class Linear_AR(nn.Module):
@@ -68,7 +69,8 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
 
-        if tr_verbose == True:
+        #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
+        if (((epoch + 1) % 100) == 0 or epoch == 0):
             print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
 
     if tr_verbose == True:

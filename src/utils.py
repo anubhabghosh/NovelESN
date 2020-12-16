@@ -220,7 +220,7 @@ def create_list_of_dicts(options, model_type, param_dict):
             tmp_dict[key] = p_dict[key]
         params_dict_list_all.append(tmp_dict.copy())
 
-    print("Grid-search will be computed for the following set of parameter lists:\n{}".format(len(params_dict_list_all)))
+    #print("Grid-search will be computed for the following set of parameter lists:\n{}".format(len(params_dict_list_all)))
     return params_dict_list_all
 
 def save_pred_results(output_file, predictions, te_data_signal):
@@ -262,4 +262,48 @@ def plot_losses(tr_losses, val_losses, logscale=False):
         plt.title("Log of MSE loss vs. no. of training iterations")
         
     #plt.savefig('./models/loss_vs_iterations.pdf')
+    plt.show()
+
+def plot_training_predictions(ytrain, predictions, title):
+
+    #Prediction plot
+    plt.figure()
+    #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
+    plt.title(title, fontsize=10)
+    plt.plot(ytrain, label="actual training signal", color="orange")
+    plt.plot(predictions, label="prediction", color="green")
+    plt.legend()
+    plt.show()
+
+def plot_predictions(ytest, predictions, title):
+
+    #Prediction plot
+    plt.figure()
+    #plt.title("Prediction value of number of sunspots vs time index", fontsize=20)
+    plt.title(title, fontsize=10)
+    plt.plot(ytest[:,0], ytest[:,1], '+-', label="actual test signal", color="orange")
+    plt.plot(ytest[:,0], predictions, '*-', label="prediction", color="green")
+    plt.legend()
+    plt.show()
+"""
+    plot_predictions(
+        actual_test_data=test_data,
+        pred_indexes=test_indices,
+        predictions=predictions_ar,
+        title="Predictions using Linear AR model"
+    )
+"""
+
+def plot_future_predictions(data, minimum_idx, ytrain, predictions, title=None):
+    
+    resolution = np.around(np.diff(data[:,0]).mean(),1)
+    plt.figure()
+    plt.plot(data[:minimum_idx[-1],0], data[:minimum_idx[-1],1], 'r+-')
+    plt.plot(np.arange(ytrain[-1][-1][0] + resolution, ((len(predictions)) * resolution) + 
+        ytrain[-1][-1][0], resolution), predictions, 'b*-')
+    plt.legend(['Original timeseries', 'Future prediction'])
+    if title is None:
+        plt.title('Plot of original timeseries and future predictions')
+    else:
+        plt.title(title)
     plt.show()

@@ -5,6 +5,7 @@ from torch import nn, optim
 import matplotlib.pyplot as plt
 import sys
 from torch.autograd import Variable
+from torch.optim.lr_scheduler import ExponentialLR, StepLR
 
 # Create the necessary time series data
 def generate_sine(k, n, add_noise=False):
@@ -114,16 +115,16 @@ class RNN_model(nn.Module):
                 num_layers=self.num_layers, batch_first=self.batch_first)   
         elif model_type.lower() == "lstm":
             self.rnn = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_dim, 
-                num_layers=self.num_layers, batch_first=self.batch_first)   
+                num_layers=self.num_layers, batch_first=self.batch_first, bidirectional=False)   
         elif model_type.lower() == "gru":
             self.rnn = nn.GRU(input_size=self.input_size, hidden_size=self.hidden_dim, 
-                num_layers=self.num_layers, batch_first=self.batch_first)   
+                num_layers=self.num_layers, batch_first=self.batch_first, bidirectional=False)   
         else:
             print("Model type cannot be recognized!!") 
             sys.exit() 
         
         # Fully connected layer
-        self.fc = nn.Linear(self.hidden_dim, self.output_size)
+        self.fc = nn.Linear(self.hidden_dim * self.num_directions, self.output_size)
     
     def init_h0(self, batch_size):
         
@@ -143,7 +144,6 @@ class RNN_model(nn.Module):
         r_out = r_out.contiguous().view(batch_size, -1, self.num_directions, self.hidden_dim)[:,-1,:,:]
         r_out_last_step = r_out.reshape((-1, self.hidden_dim))
         y = self.fc(r_out_last_step)
-        
         return y
 
 #NOTE: Introduced the function here, but not incorporated into the code so far
@@ -155,6 +155,8 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
     
     model.train()
     optimizer = optim.Adam(model.parameters(), lr=model.lr)
+    #scheduler = ExponentialLR(optimizer, gamma=0.99)
+    scheduler = StepLR(optimizer, step_size=200, gamma=0.9)
     criterion = nn.MSELoss()
     losses = []
     val_losses = []
@@ -177,7 +179,8 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
 
-        if tr_verbose == True:
+        #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
+        if (((epoch + 1) % 50) == 0 or epoch == 0):
             print("Epoch: {}/{}, Training MSE Loss:{:.9f}, Val. MSE Loss:{:.9f} ".format(epoch+1, 
             model.num_epochs, tr_loss, val_loss))
 
