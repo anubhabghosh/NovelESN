@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import ExponentialLR, StepLR
+from timeit import default_timer as timer
 
 # Create the necessary time series data
 def generate_sine(k, n, add_noise=False):
@@ -155,14 +156,20 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
     
     model.train()
     optimizer = optim.Adam(model.parameters(), lr=model.lr)
+    
     #scheduler = ExponentialLR(optimizer, gamma=0.99)
     scheduler = StepLR(optimizer, step_size=200, gamma=0.9)
     criterion = nn.MSELoss()
     losses = []
     val_losses = []
 
+    total_time = 0.0
+
     for epoch in range(nepochs):
         
+        # Start time
+        starttime = timer()
+
         optimizer.zero_grad()
         X = Variable(tr_inputs, requires_grad=False).type(torch.FloatTensor)
         tr_predictions = model.forward(X)
@@ -174,38 +181,61 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
 
         with torch.no_grad():
             
+            _, P, _ = val_inputs.shape
+            val_predictions = predict_rnn(model=model, eval_input=tr_inputs[-1, :, :].reshape((1, P, -1)), n_predict=len(val_inputs))
+            val_loss = criterion(torch.FloatTensor(val_predictions).reshape((-1, 1)), val_targets)
+            val_losses.append(val_loss.item())
+            '''
             X_val = Variable(val_inputs, requires_grad=False).type(torch.FloatTensor)
             val_predictions = model.forward(X_val)
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
+            '''
+
+        endtime = timer()
+        # Measure wallclock time
+        time_per_epoch = endtime - starttime
+        total_time += time_per_epoch
 
         #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
-        if (((epoch + 1) % 50) == 0 or epoch == 0):
-            print("Epoch: {}/{}, Training MSE Loss:{:.9f}, Val. MSE Loss:{:.9f} ".format(epoch+1, 
-            model.num_epochs, tr_loss, val_loss))
+        if (((epoch + 1) % 100) == 0 or epoch == 0):
+            print("Epoch: {}/{}, Training MSE Loss:{:.9f}, Val. MSE Loss:{:.9f}, Time elapsed:{} secs ".format(epoch+1, 
+            model.num_epochs, tr_loss, val_loss, time_per_epoch))
+
+    # Measure wallclock time for total training
+    print("Time elapsed measured in seconds:{}".format(total_time))
 
     return losses, val_losses, model
 
 def predict_rnn(model, eval_input, n_predict):
 
     eval_predictions = []
+    eval_input = torch.Tensor(eval_input)
     model.eval()
     with torch.no_grad():
 
         for _ in range(n_predict):
             
+            X_eval = Variable(eval_input, requires_grad=False).type(torch.FloatTensor)
+            val_prediction = model.forward(X_eval)
+            eval_predictions.append(val_prediction)
+            eval_input = torch.roll(eval_input, -1, 0)
+            if eval_input.shape[1] is not None:
+                eval_input[:, -1] = val_prediction
+            else:
+                eval_input[-1] = val_prediction
+            '''
             X_eval = Variable(torch.Tensor(eval_input), requires_grad=False).type(torch.FloatTensor)
             val_prediction = model.forward(X_eval)
-            
             eval_predictions.append(val_prediction.numpy())
-            
             eval_input = np.roll(eval_input, shift=-1)
             if eval_input.shape[1] is not None:
                 eval_input[:, -1] = val_prediction.numpy()
             else:
                 eval_input[-1] = val_prediction.numpy()
-
-    eval_predictions = np.row_stack(eval_predictions)
+            '''
+    #eval_predictions = np.row_stack(eval_predictions)
+    eval_predictions = torch.stack(eval_predictions).numpy()
     return eval_predictions
 
 

@@ -307,3 +307,13 @@ def plot_future_predictions(data, minimum_idx, ytrain, predictions, title=None):
     else:
         plt.title(title)
     plt.show()
+
+def count_params(model):
+    """
+    Counts two types of parameters:
+    - Total no. of parameters in the model (including trainable parameters)
+    - Number of trainable parameters (i.e. parameters whose gradients will be computed)
+    """
+    total_num_params = sum(p.numel() for p in model.parameters())
+    total_num_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad == True)
+    return total_num_params, total_num_trainable_params

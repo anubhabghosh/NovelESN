@@ -80,6 +80,10 @@ def grid_search_AR_single_cycle(data, solar_indices, model_type, options, params
 
 def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False):
     
+    # Count number of model parameters
+    total_num_params, total_num_trainable_params = count_params(model=model)
+    print("The total number of params: {} and the number of trainable params:{}".format(total_num_params, total_num_trainable_params))
+    
     # Apply concat data to concatenate the rows that have columns with signal (not the timestamp)
     train_data_inputs, train_data_targets = concat_data(train_data_inputs), concat_data(train_data_targets) 
 
@@ -109,7 +113,7 @@ def train_and_predict_AR(model, train_data_inputs, train_data_targets, test_data
                                                                 test_error))
     print("***********************************************************************************************************")
     '''
-    with open("results__{}.txt".format(model_type), "a") as fp:
+    with open("results_{}.txt".format(model_type), "a") as fp:
         print("**********************************************************************************************************")
         print("{} - {},  {} - {},  {} - {:.8f},  {} - {:.8f},  {}, - {:.8f}".format(
                                                                 "Model", "AR",
@@ -135,7 +139,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         # predict cycle index = entered predict cycle num - 1
         xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
         # pred of q values
-        predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=False)
+        predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.9, tr_verbose=True)
         
         # Save prediction results in a txt file
         if len(ytest) > 0:
@@ -152,7 +156,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         num_total_cycles = len(np.diff(minimum_idx))
         #predict_cycle_num_array = list(np.arange(num_total_cycles-nval, num_total_cycles))
         predict_cycle_num_array = [predict_cycle_num]
-        params = {"num_taps":list(np.arange(10, 50, 2))} # For Dynamo
+        params = {"num_taps":list(np.arange(10, 40, 5))} # For Dynamo
         #params = {"num_taps":list(np.arange(5, 50, 2))} # For Solar
         #TODO: Fix array nature of optimal_num_taps_all
         optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
@@ -163,7 +167,6 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
 
         plt.figure()
         plt.plot(params["num_taps"], val_errors_all[0], label="Validation MSE")
-        plt.plot(params["num_taps"], training_errors_all[0], label="Training MSE")
         plt.ylabel("MSE")
         plt.xlabel("Number of taps")
         plt.legend()
@@ -183,7 +186,8 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
             X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=optimal_num_taps)
             xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num_array[i])
             # pred of q values
-            predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, tr_to_val_split=0.75, tr_verbose=True)
+            predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, 
+                tr_to_val_split=0.90, tr_verbose=True)
             test_predictions.append(predictions_ar.tolist())
             if len(ytest) > 0:
                 
@@ -202,7 +206,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         else:
             Error_dict["Test_error"] = []
 
-        with open('./log/grid_search_results_{}_cycle{}.json'.format(dataset, predict_cycle_num_array[i]), 'w+') as fp:
+        with open('./log/grid_search_results_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
             json.dump(Error_dict, fp, indent=2)
         
         # Saving result files properly

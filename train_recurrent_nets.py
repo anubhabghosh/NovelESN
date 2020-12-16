@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle, plot_predictions, plot_future_predictions
-from src.utils import normalize, create_list_of_dicts, save_pred_results, unnormalize, plot_losses
+from src.utils import normalize, create_list_of_dicts, save_pred_results, unnormalize, plot_losses, count_params
 import torch
 import copy
 from torch import nn, optim
@@ -12,11 +12,16 @@ from sklearn.metrics import mean_squared_error
 import json
 import itertools
 import argparse
-from testrnn_aliter import train_rnn, predict_rnn, train_validation_split
+from testrnn_aliter import train_rnn, predict_rnn, train_validation_split, RNN_model
 from load_model import load_model_with_opts
+
 
 # Implement the version here
 def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False):
+
+    # Count number of model parameters
+    total_num_params, total_num_trainable_params = count_params(model=model)
+    print("The total number of params: {} and the number of trainable params:{}".format(total_num_params, total_num_trainable_params))
 
     # Apply concat data to concatenate the rows that have columns with signal (not the timestamp)
     train_data_inputs, train_data_targets = concat_data(train_data_inputs), concat_data(train_data_targets) 
@@ -81,7 +86,7 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
         predictions_rnn, test_error, val_error, tr_error = train_and_predict_RNN(model, xtrain, ytrain, ytest, 
                                                                                 tr_to_val_split=0.90, tr_verbose=False)
         if len(ytest) > 0:
-            '''
+            
             # Normalized predictions in [0, 1]
             plot_predictions(predictions=predictions_rnn, ytest=ytest, title="{} model predictions with {} taps for cycle index {}".format(
                 model_type, num_taps_rnn, predict_cycle_num))
@@ -91,11 +96,11 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             ytest_un[:,-1] = unnormalize(ytest[:,-1], Xmax, Xmin)
             plot_predictions(predictions=unnormalize(predictions_rnn, Xmax, Xmin), ytest=ytest_un, title="{} model predictions (unnormalized) with {} taps for cycle index {}".format(
                 model_type, num_taps_rnn, predict_cycle_num))
-            '''
+            
             # Save prediction results in a txt file
             save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest[:,-1])
         else:
-            '''
+            
             plot_future_predictions(data=data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=predictions_rnn,
             title="Plot of original timeseries and future predictions for {} for cycle index {}".format(
                 model_type, predict_cycle_num))
@@ -103,12 +108,15 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             plot_future_predictions(data=unnormalized_data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=unnormalize(predictions_rnn, Xmax, Xmin),
             title="Plot of original unnormalized timeseries and future predictions for {} for cycle index {}".format(
                 model_type, predict_cycle_num))
-            '''
+            
             # Save prediction results in a txt file
             save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest)
 
     elif use_grid_search == 1:
         
+        orig_stdout = sys.stdout
+        f_tmp = open('{}_gs_logs.txt'.format(model_type), 'a')
+        sys.stdout = f_tmp
         gs_params = {"n_hidden":[30, 40, 50]
                     }
         
@@ -155,5 +163,8 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             
         with open('gsresults_cycle{}.json'.format(predict_cycle_num), 'w') as f:
             f.write(json.dumps(val_errors_list, indent=2))
-    
+
+        sys.stdout = orig_stdout
+        f.close()
+
     return predictions_rnn

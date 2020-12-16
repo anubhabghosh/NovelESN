@@ -8,6 +8,7 @@ from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import pandas as pd
 from src.utils import plot_losses
+from timeit import default_timer as timer
 
 # Create an AR model for prediction
 class Linear_AR(nn.Module):
@@ -51,30 +52,47 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
     losses = []
     val_losses = []
 
+    total_time = 0.0
+
     for epoch in range(nepochs):
         
+        starttime = timer()
         optimizer.zero_grad()
         X = Variable(tr_inputs, requires_grad=False).type(torch.FloatTensor)
         tr_predictions = model(X)
         tr_loss = criterion(tr_predictions, tr_targets)
         tr_loss.backward(retain_graph=True)
         optimizer.step()
-
         losses.append(tr_loss.item())
 
         with torch.no_grad():
             
+            _, P = val_inputs.shape
+            val_predictions = predict_armodel(model=model, eval_input=tr_inputs[-1, :], n_predict=len(val_inputs))
+            val_loss = criterion(torch.FloatTensor(val_predictions).reshape((-1, 1)), val_targets)
+            val_losses.append(val_loss.item())
+            '''
             X_val = Variable(val_inputs, requires_grad=False).type(torch.FloatTensor)
             val_predictions = model(X_val)
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
+            '''
+        
+        endtime = timer()
+        # Measure wallclock time
+        time_per_epoch = endtime - starttime
+        total_time += time_per_epoch
 
-        #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
-        if (((epoch + 1) % 100) == 0 or epoch == 0):
-            print("Epoch: {}, Training MSE Loss:{}, Val. MSE Loss:{} ".format(epoch+1, tr_loss, val_loss))
+        if tr_verbose == True and (((epoch + 1) % 50) == 0):
+        #if (((epoch + 1) % 100) == 0 or epoch == 0):
+            print("Epoch: {}/{}, Training MSE Loss:{:.8f}, Val. MSE Loss:{:.8f}, Time elapsed:{} secs ".format(
+                epoch+1, nepochs, tr_loss, val_loss, time_per_epoch))
 
-    if tr_verbose == True:
-        plot_losses(losses, val_losses)
+    # Measure wallclock time for total training
+    print("Time elapsed measured in seconds:{}".format(total_time))
+
+    #if tr_verbose == True:
+    #    plot_losses(losses, val_losses)
 
     return losses, val_losses, model
 
