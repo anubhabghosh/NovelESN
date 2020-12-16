@@ -67,7 +67,7 @@ def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_dat
     print("***********************************************************************************************************")
     return predictions_rnn, test_error, val_error, tr_error
 
-def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, tau=1, output_file=None, use_grid_search=0):
+def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, tau=1, output_file=None, use_grid_search=0, Xmax=None, Xmin=None):
 
     # In case parameter tuning is not carried out
     if use_grid_search == 0:

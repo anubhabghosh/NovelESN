@@ -219,7 +219,7 @@ def predict_rnn(model, eval_input, n_predict):
             X_eval = Variable(eval_input, requires_grad=False).type(torch.FloatTensor)
             val_prediction = model.forward(X_eval)
             eval_predictions.append(val_prediction)
-            eval_input = torch.roll(eval_input, -1, 0)
+            eval_input = torch.roll(eval_input, -1)
             if eval_input.shape[1] is not None:
                 eval_input[:, -1] = val_prediction
             else:
@@ -235,7 +235,7 @@ def predict_rnn(model, eval_input, n_predict):
                 eval_input[-1] = val_prediction.numpy()
             '''
     #eval_predictions = np.row_stack(eval_predictions)
-    eval_predictions = torch.stack(eval_predictions).numpy()
+    eval_predictions = torch.stack(eval_predictions).numpy().reshape((-1, 1))
     return eval_predictions
 
 

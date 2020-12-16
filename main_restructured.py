@@ -106,7 +106,7 @@ def main():
 
         elif model_type in ["rnn", "lstm", "gru"]:
             predictions_rnn = train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num=predict_cycle_num, 
-                                            tau=1, output_file=output_file, use_grid_search=use_grid_search)
+                                            tau=1, output_file=output_file, use_grid_search=use_grid_search, Xmax=Xmax, Xmin=Xmin)
 
     # In case running for all models
     elif compare_all_models == 1:
@@ -118,9 +118,11 @@ def main():
         #predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
         #                                        output_file=output_file, use_grid_search=use_grid_search)
         predictions_lstm = train_model_RNN(options, "lstm", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
-                                        output_file=get_pred_output_file(output_file, "lstm"), use_grid_search=use_grid_search)
+                                        output_file=get_pred_output_file(output_file, "lstm"), use_grid_search=use_grid_search,
+                                        Xmax=Xmax, Xmin=Xmin)
         predictions_gru = train_model_RNN(options, "gru", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
-                                        output_file=get_pred_output_file(output_file, "gru"), use_grid_search=use_grid_search)
+                                        output_file=get_pred_output_file(output_file, "gru"), use_grid_search=use_grid_search,
+                                        Xmax=Xmax, Xmin=Xmin)
 
         # Plot the LSTM, GRU predictions
         #plt.figure(figsize=(15,10))
