@@ -44,6 +44,12 @@ def get_pred_output_file(filename, model_name):
         filename_new = filename_ + "_" + model_name + "." + extension
     return filename_new
 
+class NDArrayEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+
 def main():
     
     parser = argparse.ArgumentParser(description=
@@ -110,22 +116,38 @@ def main():
 
     # In case running for all models
     elif compare_all_models == 1:
-
+        
+        orig_stdout = sys.stdout
+        f_tmp = open('compare_all_preds_{}_cycle{}_logs.txt'.format(dataset, predict_cycle_num), 'w')
+        sys.stdout = f_tmp
+        
         predictions_esn, ytest = train_model_ESN(options, "esn", data, minimum_idx, predict_cycle_num=predict_cycle_num, 
                                         tau=1, output_file=get_pred_output_file(output_file, "esn"))
         predictions_ar = train_model_AR(options, "linear_ar", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
                                         output_file=get_pred_output_file(output_file, "linear_ar"), use_grid_search=use_grid_search)
-        #predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
-        #                                        output_file=output_file, use_grid_search=use_grid_search)
+        predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
+                                                output_file=get_pred_output_file(output_file, "rnn"), use_grid_search=use_grid_search)
         predictions_lstm = train_model_RNN(options, "lstm", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
                                         output_file=get_pred_output_file(output_file, "lstm"), use_grid_search=use_grid_search,
                                         Xmax=Xmax, Xmin=Xmin)
         predictions_gru = train_model_RNN(options, "gru", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
                                         output_file=get_pred_output_file(output_file, "gru"), use_grid_search=use_grid_search,
                                         Xmax=Xmax, Xmin=Xmin)
+        
+        compare_model_preds = {}
+        compare_model_preds["original_test"] = list(ytest)
+        compare_model_preds["pred_esn"] = list(predictions_esn)
+        compare_model_preds["pred_ar"] = list(predictions_ar)
+        compare_model_preds["pred_rnn"] = list(predictions_vanilla_rnn)
+        compare_model_preds["pred_lstm"] = list(predictions_lstm)
+        compare_model_preds["pred_gru"] = list(predictions_gru)
+
+        with open('compare_all_preds_{}_cycle{}.json'.format(dataset, predict_cycle_num), 'w') as f:
+            f.write(json.dumps(compare_model_preds, cls=NDArrayEncoder, indent=2))
 
         # Plot the LSTM, GRU predictions
         #plt.figure(figsize=(15,10))
+        '''
         plt.figure()
         plt.title("Compare predictions across models", fontsize=20)
         if len(ytest) > 0:
@@ -149,7 +171,9 @@ def main():
 
         plt.savefig('./log/ComparingPred_Cycle{}.pdf'.format(predict_cycle_num))
         plt.show()
-
+        '''
+        sys.stdout = orig_stdout
+        f.close()
     
 if __name__ == "__main__":
     main()

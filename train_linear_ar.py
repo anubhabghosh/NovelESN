@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from src.utils import get_msah_training_dataset, get_minimum, concat_data, get_cycle, plot_predictions, plot_future_predictions
-from src.utils import normalize, create_list_of_dicts, save_pred_results, unnormalize, plot_losses
+from src.utils import normalize, create_list_of_dicts, save_pred_results, unnormalize, plot_losses, count_params
 import torch
 import copy
 from torch import nn, optim

@@ -14,7 +14,7 @@
         "lossfn_type":"mse",
         "init_net":true,
         "device":"cpu",
-        "num_taps":20,
+        "num_taps":22,
         "lr":1e-2,
         "num_epochs":1000
     },
@@ -22,14 +22,14 @@
     "rnn":{
         "input_size":1,
         "output_size":1,
-        "n_hidden":40,
+        "n_hidden":50,
         "n_layers":2,
         "num_directions":1,
         "model_type":"rnn",
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":600
+        "num_epochs":1500
     },
     
     "lstm":{
@@ -42,18 +42,18 @@
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":600
+        "num_epochs":1500
     },
     
     "gru":{
         "input_size":1,
         "output_size":1,
-        "n_hidden":40,
+        "n_hidden":50,
         "n_layers":2,
         "num_directions":1,
         "model_type":"gru",
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":600
+        "num_epochs":1500
     }}

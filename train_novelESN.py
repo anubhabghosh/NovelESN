@@ -19,7 +19,7 @@ def train_and_predict_ESN(model, train_data, test_data=None):
     if len(test_data) > 0:
         tr_data_signal = train_data[:, -1].reshape((-1, 1))
         te_data_signal = test_data[:, -1].reshape((-1, 1))
-        print(tr_data_signal.shape)
+        #print(tr_data_signal.shape)
         model.teacher_forcing(tr_data_signal)
         train_mse = model.train(train_signal=tr_data_signal)
         #print("training mse over q =", train_mse / model.yntau_size_q)
@@ -71,10 +71,10 @@ def train_model_ESN(options, model_type, data, minimum_idx, predict_cycle_num, t
         model = load_model_with_opts(options, model_type)
 
         # Concat data 
-        print(xtrain[1].shape)
+        #print(xtrain[1].shape)
         xtrain_ct = concat_data(xtrain, col=-1)
         #ytrain_ct = concat_data(ytrain, col=None)
-        print(xtrain_ct.shape)
+        #print(xtrain_ct.shape)
 
     else:
         X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau=1, p=1)

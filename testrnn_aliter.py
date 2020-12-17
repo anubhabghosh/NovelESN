@@ -164,12 +164,12 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
     val_losses = []
 
     total_time = 0.0
+    
+    # Start time
+    starttime = timer()
 
     for epoch in range(nepochs):
         
-        # Start time
-        starttime = timer()
-
         optimizer.zero_grad()
         X = Variable(tr_inputs, requires_grad=False).type(torch.FloatTensor)
         tr_predictions = model.forward(X)
@@ -194,16 +194,15 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
 
         endtime = timer()
         # Measure wallclock time
-        time_per_epoch = endtime - starttime
-        total_time += time_per_epoch
-
+        time_elapsed = endtime - starttime
+        
         #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
         if (((epoch + 1) % 100) == 0 or epoch == 0):
             print("Epoch: {}/{}, Training MSE Loss:{:.9f}, Val. MSE Loss:{:.9f}, Time elapsed:{} secs ".format(epoch+1, 
-            model.num_epochs, tr_loss, val_loss, time_per_epoch))
+            model.num_epochs, tr_loss, val_loss, time_elapsed))
 
     # Measure wallclock time for total training
-    print("Time elapsed measured in seconds:{}".format(total_time))
+    print("Time elapsed measured in seconds:{}".format(timer() - starttime))
 
     return losses, val_losses, model
 

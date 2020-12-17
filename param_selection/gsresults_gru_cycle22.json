@@ -1,0 +1,72 @@
+[
+  {
+    "input_size": 1,
+    "output_size": 1,
+    "n_hidden": 20,
+    "n_layers": 2,
+    "num_directions": 1,
+    "model_type": "gru",
+    "batch_first": true,
+    "lr": 0.01,
+    "device": "cpu",
+    "num_epochs": 1500,
+    "Validation_Error": 0.034511566162109375,
+    "Training_Error": 8.021674148039892e-05
+  },
+  {
+    "input_size": 1,
+    "output_size": 1,
+    "n_hidden": 30,
+    "n_layers": 2,
+    "num_directions": 1,
+    "model_type": "gru",
+    "batch_first": true,
+    "lr": 0.01,
+    "device": "cpu",
+    "num_epochs": 1500,
+    "Validation_Error": 0.03259458392858505,
+    "Training_Error": 8.060442632995546e-05
+  },
+  {
+    "input_size": 1,
+    "output_size": 1,
+    "n_hidden": 40,
+    "n_layers": 2,
+    "num_directions": 1,
+    "model_type": "gru",
+    "batch_first": true,
+    "lr": 0.01,
+    "device": "cpu",
+    "num_epochs": 1500,
+    "Validation_Error": 0.051984820514917374,
+    "Training_Error": 8.65561087266542e-05
+  },
+  {
+    "input_size": 1,
+    "output_size": 1,
+    "n_hidden": 50,
+    "n_layers": 2,
+    "num_directions": 1,
+    "model_type": "gru",
+    "batch_first": true,
+    "lr": 0.01,
+    "device": "cpu",
+    "num_epochs": 1500,
+    "Validation_Error": 0.024204283952713013,
+    "Training_Error": 8.00412381067872e-05
+  },
+  {
+    "input_size": 1,
+    "output_size": 1,
+    "n_hidden": 60,
+    "n_layers": 2,
+    "num_directions": 1,
+    "model_type": "gru",
+    "batch_first": true,
+    "lr": 0.01,
+    "device": "cpu",
+    "num_epochs": 1500,
+    "Validation_Error": 0.027051158249378204,
+    "Training_Error": 8.055445505306125e-05
+  }
+]

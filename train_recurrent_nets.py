@@ -88,26 +88,26 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
         if len(ytest) > 0:
             
             # Normalized predictions in [0, 1]
-            plot_predictions(predictions=predictions_rnn, ytest=ytest, title="{} model predictions with {} taps for cycle index {}".format(
-                model_type, num_taps_rnn, predict_cycle_num))
+            #plot_predictions(predictions=predictions_rnn, ytest=ytest, title="{} model predictions with {} taps for cycle index {}".format(
+            #    model_type, num_taps_rnn, predict_cycle_num))
             
             # Unnormalized predictions in original scale
-            ytest_un = np.copy(ytest)
-            ytest_un[:,-1] = unnormalize(ytest[:,-1], Xmax, Xmin)
-            plot_predictions(predictions=unnormalize(predictions_rnn, Xmax, Xmin), ytest=ytest_un, title="{} model predictions (unnormalized) with {} taps for cycle index {}".format(
-                model_type, num_taps_rnn, predict_cycle_num))
+            #ytest_un = np.copy(ytest)
+            #ytest_un[:,-1] = unnormalize(ytest[:,-1], Xmax, Xmin)
+            #plot_predictions(predictions=unnormalize(predictions_rnn, Xmax, Xmin), ytest=ytest_un, title="{} model predictions (unnormalized) with {} taps for cycle index {}".format(
+            #    model_type, num_taps_rnn, predict_cycle_num))
             
             # Save prediction results in a txt file
             save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest[:,-1])
         else:
             
-            plot_future_predictions(data=data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=predictions_rnn,
-            title="Plot of original timeseries and future predictions for {} for cycle index {}".format(
-                model_type, predict_cycle_num))
+            #plot_future_predictions(data=data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=predictions_rnn,
+            #title="Plot of original timeseries and future predictions for {} for cycle index {}".format(
+            #    model_type, predict_cycle_num))
             
-            plot_future_predictions(data=unnormalized_data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=unnormalize(predictions_rnn, Xmax, Xmin),
-            title="Plot of original unnormalized timeseries and future predictions for {} for cycle index {}".format(
-                model_type, predict_cycle_num))
+            #plot_future_predictions(data=unnormalized_data, minimum_idx=minimum_idx, ytrain=ytrain, predictions=unnormalize(predictions_rnn, Xmax, Xmin),
+            #title="Plot of original unnormalized timeseries and future predictions for {} for cycle index {}".format(
+            #    model_type, predict_cycle_num))
             
             # Save prediction results in a txt file
             save_pred_results(output_file=output_file, predictions=predictions_rnn, te_data_signal=ytest)
@@ -115,9 +115,9 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
     elif use_grid_search == 1:
         
         orig_stdout = sys.stdout
-        f_tmp = open('{}_gs_logs.txt'.format(model_type), 'a')
+        f_tmp = open('{}_gs_cycle_{}_logs.txt'.format(model_type, predict_cycle_num), 'a')
         sys.stdout = f_tmp
-        gs_params = {"n_hidden":[30, 40, 50]
+        gs_params = {"n_hidden":[20, 30, 40, 50, 60]
                     }
         
         gs_list_of_options = create_list_of_dicts(options=options,
@@ -161,7 +161,7 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
 
             val_errors_list.append(gs_option)
             
-        with open('gsresults_cycle{}.json'.format(predict_cycle_num), 'w') as f:
+        with open('gsresults_{}_cycle{}.json'.format(model.model_type, predict_cycle_num), 'w') as f:
             f.write(json.dumps(val_errors_list, indent=2))
 
         sys.stdout = orig_stdout
