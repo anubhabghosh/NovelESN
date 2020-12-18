@@ -16,7 +16,7 @@
         "device":"cpu",
         "num_taps":22,
         "lr":1e-2,
-        "num_epochs":1000
+        "num_epochs":2000
     },
     
     "rnn":{
@@ -29,7 +29,7 @@
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":1500
+        "num_epochs":2000
     },
     
     "lstm":{
@@ -42,7 +42,7 @@
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":1500
+        "num_epochs":2000
     },
     
     "gru":{
@@ -55,5 +55,5 @@
         "batch_first":true,
         "lr":1e-2,
         "device":"cpu",
-        "num_epochs":1500
+        "num_epochs":2000
     }}
