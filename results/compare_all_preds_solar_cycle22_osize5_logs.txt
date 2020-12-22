@@ -1,0 +1,127 @@
+Model - ESN,  Training Error - 0.01229524,  Test Error, - 0.00253910
+***********************************************************************************************************
+The total number of params: 23 and the number of trainable params:23
+Epoch: 50/2000, Training MSE Loss:0.00174833, Val. MSE Loss:0.00180985, Time elapsed:0.00041903555393218994 secs 
+Epoch: 100/2000, Training MSE Loss:0.00055041, Val. MSE Loss:0.00059747, Time elapsed:0.00041700899600982666 secs 
+Epoch: 150/2000, Training MSE Loss:0.00050326, Val. MSE Loss:0.00053831, Time elapsed:0.0004164092242717743 secs 
+Epoch: 200/2000, Training MSE Loss:0.00045892, Val. MSE Loss:0.00048801, Time elapsed:0.00041720829904079437 secs 
+Epoch: 250/2000, Training MSE Loss:0.00041821, Val. MSE Loss:0.00044219, Time elapsed:0.0004176553338766098 secs 
+Epoch: 300/2000, Training MSE Loss:0.00038255, Val. MSE Loss:0.00040204, Time elapsed:0.00041689351201057434 secs 
+Epoch: 350/2000, Training MSE Loss:0.00035230, Val. MSE Loss:0.00036793, Time elapsed:0.00041823647916316986 secs 
+Epoch: 400/2000, Training MSE Loss:0.00032715, Val. MSE Loss:0.00033949, Time elapsed:0.0004170406609773636 secs 
+Epoch: 450/2000, Training MSE Loss:0.00030642, Val. MSE Loss:0.00031592, Time elapsed:0.00041712261736392975 secs 
+Epoch: 500/2000, Training MSE Loss:0.00028930, Val. MSE Loss:0.00029631, Time elapsed:0.0004168860614299774 secs 
+Epoch: 550/2000, Training MSE Loss:0.00027500, Val. MSE Loss:0.00027977, Time elapsed:0.0004172567278146744 secs 
+Epoch: 600/2000, Training MSE Loss:0.00026284, Val. MSE Loss:0.00026555, Time elapsed:0.0004164353013038635 secs 
+Epoch: 650/2000, Training MSE Loss:0.00025229, Val. MSE Loss:0.00025305, Time elapsed:0.0004191361367702484 secs 
+Epoch: 700/2000, Training MSE Loss:0.00024293, Val. MSE Loss:0.00024184, Time elapsed:0.0004159342497587204 secs 
+Epoch: 750/2000, Training MSE Loss:0.00023448, Val. MSE Loss:0.00023161, Time elapsed:0.0004261210560798645 secs 
+Epoch: 800/2000, Training MSE Loss:0.00022675, Val. MSE Loss:0.00022216, Time elapsed:0.0004194062203168869 secs 
+Epoch: 850/2000, Training MSE Loss:0.00021962, Val. MSE Loss:0.00021338, Time elapsed:0.0004171375185251236 secs 
+Epoch: 900/2000, Training MSE Loss:0.00021301, Val. MSE Loss:0.00020519, Time elapsed:0.000415729358792305 secs 
+Epoch: 950/2000, Training MSE Loss:0.00020686, Val. MSE Loss:0.00019754, Time elapsed:0.0004250798374414444 secs 
+Epoch: 1000/2000, Training MSE Loss:0.00020113, Val. MSE Loss:0.00019040, Time elapsed:0.0004164408892393112 secs 
+Epoch: 1050/2000, Training MSE Loss:0.00019580, Val. MSE Loss:0.00018375, Time elapsed:0.00041623786091804504 secs 
+Epoch: 1100/2000, Training MSE Loss:0.00019085, Val. MSE Loss:0.00017756, Time elapsed:0.00041499920189380646 secs 
+Epoch: 1150/2000, Training MSE Loss:0.00018624, Val. MSE Loss:0.00017182, Time elapsed:0.00042617134749889374 secs 
+Epoch: 1200/2000, Training MSE Loss:0.00018195, Val. MSE Loss:0.00016650, Time elapsed:0.00041750818490982056 secs 
+Epoch: 1250/2000, Training MSE Loss:0.00017796, Val. MSE Loss:0.00016157, Time elapsed:0.00041684694588184357 secs 
+Epoch: 1300/2000, Training MSE Loss:0.00017424, Val. MSE Loss:0.00015702, Time elapsed:0.00041630491614341736 secs 
+Epoch: 1350/2000, Training MSE Loss:0.00017077, Val. MSE Loss:0.00015281, Time elapsed:0.00042643211781978607 secs 
+Epoch: 1400/2000, Training MSE Loss:0.00016753, Val. MSE Loss:0.00014892, Time elapsed:0.00041768699884414673 secs 
+Epoch: 1450/2000, Training MSE Loss:0.00016448, Val. MSE Loss:0.00014533, Time elapsed:0.00041720084846019745 secs 
+Epoch: 1500/2000, Training MSE Loss:0.00016161, Val. MSE Loss:0.00014199, Time elapsed:0.000415705144405365 secs 
+Epoch: 1550/2000, Training MSE Loss:0.00015891, Val. MSE Loss:0.00013891, Time elapsed:0.0004303809255361557 secs 
+Epoch: 1600/2000, Training MSE Loss:0.00015634, Val. MSE Loss:0.00013603, Time elapsed:0.00041661784052848816 secs 
+Epoch: 1650/2000, Training MSE Loss:0.00015389, Val. MSE Loss:0.00013336, Time elapsed:0.0004173237830400467 secs 
+Epoch: 1700/2000, Training MSE Loss:0.00015155, Val. MSE Loss:0.00013086, Time elapsed:0.00041776150465011597 secs 
+Epoch: 1750/2000, Training MSE Loss:0.00014931, Val. MSE Loss:0.00012853, Time elapsed:0.00042706355452537537 secs 
+Epoch: 1800/2000, Training MSE Loss:0.00014714, Val. MSE Loss:0.00012633, Time elapsed:0.00041622668504714966 secs 
+Epoch: 1850/2000, Training MSE Loss:0.00014505, Val. MSE Loss:0.00012426, Time elapsed:0.0004158392548561096 secs 
+Epoch: 1900/2000, Training MSE Loss:0.00014302, Val. MSE Loss:0.00012231, Time elapsed:0.00041528046131134033 secs 
+Epoch: 1950/2000, Training MSE Loss:0.00014104, Val. MSE Loss:0.00012045, Time elapsed:0.0004281774163246155 secs 
+Epoch: 2000/2000, Training MSE Loss:0.00013912, Val. MSE Loss:0.00011869, Time elapsed:0.0004165973514318466 secs 
+Time elapsed measured in seconds:0.8773905411362648
+Model - AR,  P - 22,  Training Error - 0.00013912,  Validation Error - 0.00011869,  Test Error, - 0.01537117
+***********************************************************************************************************
+The total number of params: 8005 and the number of trainable params:8005
+Epoch: 1/2000, Training MSE Loss:0.074334621, Val. MSE Loss:0.173585922, Time elapsed:0.12463945336639881 secs 
+Epoch: 100/2000, Training MSE Loss:0.000689144, Val. MSE Loss:0.000655079, Time elapsed:12.224857535213232 secs 
+Epoch: 200/2000, Training MSE Loss:0.000617671, Val. MSE Loss:0.000568521, Time elapsed:24.447284245863557 secs 
+Epoch: 300/2000, Training MSE Loss:0.000586244, Val. MSE Loss:0.000548185, Time elapsed:36.70329053327441 secs 
+Epoch: 400/2000, Training MSE Loss:0.000557391, Val. MSE Loss:0.000519468, Time elapsed:48.97942236997187 secs 
+Epoch: 500/2000, Training MSE Loss:0.000505435, Val. MSE Loss:0.000464645, Time elapsed:61.09084874205291 secs 
+Epoch: 600/2000, Training MSE Loss:0.000480516, Val. MSE Loss:0.000420205, Time elapsed:73.3138256650418 secs 
+Epoch: 700/2000, Training MSE Loss:0.000486374, Val. MSE Loss:0.000423607, Time elapsed:85.55550638586283 secs 
+Epoch: 800/2000, Training MSE Loss:0.000462971, Val. MSE Loss:0.000405681, Time elapsed:97.82329661026597 secs 
+Epoch: 900/2000, Training MSE Loss:0.000492590, Val. MSE Loss:0.000420085, Time elapsed:109.9594655893743 secs 
+Epoch: 1000/2000, Training MSE Loss:0.000466580, Val. MSE Loss:0.000412687, Time elapsed:122.24735315702856 secs 
+Epoch: 1100/2000, Training MSE Loss:0.001189445, Val. MSE Loss:0.000568493, Time elapsed:134.5600445624441 secs 
+Epoch: 1200/2000, Training MSE Loss:0.000466041, Val. MSE Loss:0.000420465, Time elapsed:146.7868406344205 secs 
+Epoch: 1300/2000, Training MSE Loss:0.000445535, Val. MSE Loss:0.000401689, Time elapsed:158.9587956778705 secs 
+Epoch: 1400/2000, Training MSE Loss:0.000465948, Val. MSE Loss:0.000441991, Time elapsed:171.22090708091855 secs 
+Epoch: 1500/2000, Training MSE Loss:0.000418984, Val. MSE Loss:0.000402858, Time elapsed:183.5220495518297 secs 
+Epoch: 1600/2000, Training MSE Loss:0.000423082, Val. MSE Loss:0.000431771, Time elapsed:195.85617199726403 secs 
+Epoch: 1700/2000, Training MSE Loss:0.000403235, Val. MSE Loss:0.000406945, Time elapsed:208.0904413536191 secs 
+Epoch: 1800/2000, Training MSE Loss:0.000399097, Val. MSE Loss:0.000429488, Time elapsed:220.307941198349 secs 
+Epoch: 1900/2000, Training MSE Loss:0.000639589, Val. MSE Loss:0.000466381, Time elapsed:232.4433300383389 secs 
+Epoch: 2000/2000, Training MSE Loss:0.000379269, Val. MSE Loss:0.000403957, Time elapsed:244.7649593297392 secs 
+Time elapsed measured in seconds:244.7649939469993
+Model - rnn, Training Error - 0.00037926866207271814,  Validation Error - 0.0004039567429572344,  Test Error, - 0.004841679432349919
+***********************************************************************************************************
+The total number of params: 20205 and the number of trainable params:20205
+Epoch: 1/2000, Training MSE Loss:0.100876622, Val. MSE Loss:0.065919049, Time elapsed:0.20490271039307117 secs 
+Epoch: 100/2000, Training MSE Loss:0.000815047, Val. MSE Loss:0.000815854, Time elapsed:16.308281322941184 secs 
+Epoch: 200/2000, Training MSE Loss:0.000715003, Val. MSE Loss:0.000661760, Time elapsed:31.437828104943037 secs 
+Epoch: 300/2000, Training MSE Loss:0.000634880, Val. MSE Loss:0.000593297, Time elapsed:46.562449445948005 secs 
+Epoch: 400/2000, Training MSE Loss:0.000569207, Val. MSE Loss:0.000582227, Time elapsed:61.55836262926459 secs 
+Epoch: 500/2000, Training MSE Loss:0.000551545, Val. MSE Loss:0.000518588, Time elapsed:76.52898236550391 secs 
+Epoch: 600/2000, Training MSE Loss:0.000505382, Val. MSE Loss:0.000505908, Time elapsed:91.41071147657931 secs 
+Epoch: 700/2000, Training MSE Loss:0.000598425, Val. MSE Loss:0.000582895, Time elapsed:106.33726389333606 secs 
+Epoch: 800/2000, Training MSE Loss:0.000481468, Val. MSE Loss:0.000488042, Time elapsed:121.36677314154804 secs 
+Epoch: 900/2000, Training MSE Loss:0.000460619, Val. MSE Loss:0.000493279, Time elapsed:136.34598132409155 secs 
+Epoch: 1000/2000, Training MSE Loss:0.000490864, Val. MSE Loss:0.000452648, Time elapsed:151.37963671796024 secs 
+Epoch: 1100/2000, Training MSE Loss:0.000419757, Val. MSE Loss:0.000455682, Time elapsed:166.29595794156194 secs 
+Epoch: 1200/2000, Training MSE Loss:0.000409593, Val. MSE Loss:0.000422822, Time elapsed:181.28570863977075 secs 
+Epoch: 1300/2000, Training MSE Loss:0.000416185, Val. MSE Loss:0.000427799, Time elapsed:196.18493916280568 secs 
+Epoch: 1400/2000, Training MSE Loss:0.000404465, Val. MSE Loss:0.000426493, Time elapsed:211.26709174364805 secs 
+Epoch: 1500/2000, Training MSE Loss:0.000391347, Val. MSE Loss:0.000403416, Time elapsed:226.20466820895672 secs 
+Epoch: 1600/2000, Training MSE Loss:0.000402340, Val. MSE Loss:0.000405168, Time elapsed:241.29090514965355 secs 
+Epoch: 1700/2000, Training MSE Loss:0.000385087, Val. MSE Loss:0.000391567, Time elapsed:256.3247202709317 secs 
+Epoch: 1800/2000, Training MSE Loss:0.000383577, Val. MSE Loss:0.000386632, Time elapsed:271.36576762609184 secs 
+Epoch: 1900/2000, Training MSE Loss:0.000378419, Val. MSE Loss:0.000380108, Time elapsed:286.30092720873654 secs 
+Epoch: 2000/2000, Training MSE Loss:0.000441387, Val. MSE Loss:0.000438690, Time elapsed:301.27332865819335 secs 
+Time elapsed measured in seconds:301.2733550090343
+Model - lstm, Training Error - 0.00044138688826933503,  Validation Error - 0.00043869001092389226,  Test Error, - 0.016890294961860806
+***********************************************************************************************************
+The total number of params: 23505 and the number of trainable params:23505
+Epoch: 1/2000, Training MSE Loss:0.175515383, Val. MSE Loss:0.079747878, Time elapsed:0.1997322104871273 secs 
+Epoch: 100/2000, Training MSE Loss:0.000596219, Val. MSE Loss:0.000535119, Time elapsed:23.194995399564505 secs 
+Epoch: 200/2000, Training MSE Loss:0.000697408, Val. MSE Loss:0.000641682, Time elapsed:46.559029653668404 secs 
+Epoch: 300/2000, Training MSE Loss:0.000533746, Val. MSE Loss:0.000486547, Time elapsed:70.38789176754653 secs 
+Epoch: 400/2000, Training MSE Loss:0.000527326, Val. MSE Loss:0.000542451, Time elapsed:93.9991195909679 secs 
+Epoch: 500/2000, Training MSE Loss:0.000512662, Val. MSE Loss:0.000478412, Time elapsed:117.71942120417953 secs 
+Epoch: 600/2000, Training MSE Loss:0.000506036, Val. MSE Loss:0.000479186, Time elapsed:140.83581856824458 secs 
+Epoch: 700/2000, Training MSE Loss:0.000505253, Val. MSE Loss:0.000477708, Time elapsed:164.54297582805157 secs 
+Epoch: 800/2000, Training MSE Loss:0.000496953, Val. MSE Loss:0.000476185, Time elapsed:188.27112744748592 secs 
+Epoch: 900/2000, Training MSE Loss:0.000482497, Val. MSE Loss:0.000479064, Time elapsed:211.79504773765802 secs 
+Epoch: 1000/2000, Training MSE Loss:0.000489674, Val. MSE Loss:0.000489154, Time elapsed:235.15098986029625 secs 
+Epoch: 1100/2000, Training MSE Loss:0.000467057, Val. MSE Loss:0.000484370, Time elapsed:258.8276701439172 secs 
+Epoch: 1200/2000, Training MSE Loss:0.000454587, Val. MSE Loss:0.000481742, Time elapsed:282.2921718880534 secs 
+Epoch: 1300/2000, Training MSE Loss:0.000448053, Val. MSE Loss:0.000480983, Time elapsed:305.897240255028 secs 
+Epoch: 1400/2000, Training MSE Loss:0.000443029, Val. MSE Loss:0.000478603, Time elapsed:329.61817535944283 secs 
+Epoch: 1500/2000, Training MSE Loss:0.000446122, Val. MSE Loss:0.000479613, Time elapsed:353.1914256159216 secs 
+Epoch: 1600/2000, Training MSE Loss:0.000440533, Val. MSE Loss:0.000478907, Time elapsed:376.8360028397292 secs 
+Epoch: 1700/2000, Training MSE Loss:0.000436490, Val. MSE Loss:0.000474665, Time elapsed:400.1572170611471 secs 
+Epoch: 1800/2000, Training MSE Loss:0.000431853, Val. MSE Loss:0.000468894, Time elapsed:423.7030304390937 secs 
+Epoch: 1900/2000, Training MSE Loss:0.000489803, Val. MSE Loss:0.000488179, Time elapsed:447.36167705245316 secs 
+Epoch: 2000/2000, Training MSE Loss:0.000428481, Val. MSE Loss:0.000469198, Time elapsed:471.055803431198 secs 
+Time elapsed measured in seconds:471.05583596788347
+Model - gru, Training Error - 0.00042848114389926195,  Validation Error - 0.00046919783926568925,  Test Error, - 0.014567933666501538
+***********************************************************************************************************
+Original signal saved
+ESN signal saved
+Linear_AR signal saved
+RNN signal saved
+LSTM signal saved
+GRU signal saved
