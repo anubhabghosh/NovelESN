@@ -182,7 +182,15 @@ def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
 def concat_data(x, col=1):
     """Concatenate all the `col` column of the element"""
     if col == 1:
-        return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
+        tmp = [xx[:, col].reshape(1, -1) for xx in x]
+        #print([t.shape for t in tmp])
+        if tmp[-1].shape[1] < tmp[0].shape[1]:
+            npad = tmp[0].shape[1] - tmp[-1].shape[1]
+            tmp[-1] = np.concatenate((tmp[-1], np.zeros((1, npad))), axis=1)
+            #print([t.shape for t in tmp])
+            return np.concatenate(tmp, axis=0)
+        else:
+            return np.concatenate([xx[:, col].reshape(1, -1) for xx in x], axis=0)
     elif col == -1:
         return np.concatenate([xx[:, :].reshape(1, -1) for xx in x], axis=0)
 

@@ -68,6 +68,10 @@ def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_dat
     return predictions_rnn, test_error, val_error, tr_error
 
 def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, tau=1, output_file=None, use_grid_search=0, Xmax=None, Xmin=None):
+    
+    #tau_chosen = 1 #Usual case
+    #tau_chosen = options[model_type]["output_size"]
+    #print("Tau chosen {}".format(tau_chosen))
 
     # In case parameter tuning is not carried out
     if use_grid_search == 0:
@@ -77,7 +81,8 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
         
         #NOTE: Obtain the data and targets by heuristically setting p
         num_taps_rnn = 22
-        X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = 1, p=num_taps_rnn)
+        
+        X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = tau, p=num_taps_rnn)
 
         # Get xtrain, ytrain, ytest
         xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
@@ -147,7 +152,7 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             #NOTE: Obtain the data and targets by heuristically setting p
             num_taps_rnn = 22
 
-            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = 1, p=num_taps_rnn)
+            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = tau, p=num_taps_rnn)
 
             # Get xtrain, ytrain, ytest
             xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)

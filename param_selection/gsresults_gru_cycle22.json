@@ -1,7 +1,7 @@
 [
   {
     "input_size": 1,
-    "output_size": 1,
+    "output_size": 5,
     "n_hidden": 20,
     "n_layers": 2,
     "num_directions": 1,
@@ -9,13 +9,13 @@
     "batch_first": true,
     "lr": 0.01,
     "device": "cpu",
-    "num_epochs": 1500,
-    "Validation_Error": 0.034511566162109375,
-    "Training_Error": 8.021674148039892e-05
+    "num_epochs": 2000,
+    "Validation_Error": 0.00048699957551434636,
+    "Training_Error": 0.00047253508819267154
   },
   {
     "input_size": 1,
-    "output_size": 1,
+    "output_size": 5,
     "n_hidden": 30,
     "n_layers": 2,
     "num_directions": 1,
@@ -23,13 +23,13 @@
     "batch_first": true,
     "lr": 0.01,
     "device": "cpu",
-    "num_epochs": 1500,
-    "Validation_Error": 0.03259458392858505,
-    "Training_Error": 8.060442632995546e-05
+    "num_epochs": 2000,
+    "Validation_Error": 0.0004701691505033523,
+    "Training_Error": 0.00042852916521951556
   },
   {
     "input_size": 1,
-    "output_size": 1,
+    "output_size": 5,
     "n_hidden": 40,
     "n_layers": 2,
     "num_directions": 1,
@@ -37,13 +37,13 @@
     "batch_first": true,
     "lr": 0.01,
     "device": "cpu",
-    "num_epochs": 1500,
-    "Validation_Error": 0.051984820514917374,
-    "Training_Error": 8.65561087266542e-05
+    "num_epochs": 2000,
+    "Validation_Error": 0.00045800089719705284,
+    "Training_Error": 0.00042688954272307456
   },
   {
     "input_size": 1,
-    "output_size": 1,
+    "output_size": 5,
     "n_hidden": 50,
     "n_layers": 2,
     "num_directions": 1,
@@ -51,13 +51,13 @@
     "batch_first": true,
     "lr": 0.01,
     "device": "cpu",
-    "num_epochs": 1500,
-    "Validation_Error": 0.024204283952713013,
-    "Training_Error": 8.00412381067872e-05
+    "num_epochs": 2000,
+    "Validation_Error": 0.0004016198217868805,
+    "Training_Error": 0.00038925459375604987
   },
   {
     "input_size": 1,
-    "output_size": 1,
+    "output_size": 5,
     "n_hidden": 60,
     "n_layers": 2,
     "num_directions": 1,
@@ -65,8 +65,8 @@
     "batch_first": true,
     "lr": 0.01,
     "device": "cpu",
-    "num_epochs": 1500,
-    "Validation_Error": 0.027051158249378204,
-    "Training_Error": 8.055445505306125e-05
+    "num_epochs": 2000,
+    "Validation_Error": 0.0003525166539475322,
+    "Training_Error": 0.0003457165730651468
   }
 ]

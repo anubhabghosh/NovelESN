@@ -48,7 +48,7 @@ class NDArrayEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
-        return JSONEncoder.default(self, obj)
+        return json.JSONEncoder.default(self, obj)
 
 def main():
     
@@ -94,13 +94,19 @@ def main():
     unnormalized_data = copy.deepcopy(data)
     data[:, 1], Xmax, Xmin = normalize(X=data[:, 1], feature_space=(0, 1))
     minimum_idx = get_minimum(data, dataset)
-
+    
+    #tau_chosen = 1 # Usually
+    
     # In case running for a single model
     #TODO: Ensure that 'tr_verbose' is a calling parameter and usage is according to 'compare_all_models' flag
     #      Right now, the plot commands are commented out
     #TODO: Fix save model feature in case of comparison of all models
     if compare_all_models == 0:
-
+        
+        if model_type in ["linear_ar", "rnn", "lstm", "gru"]:
+            tau_chosen = options[model_type]["output_size"]
+            print("Tau chosen {}".format(tau_chosen))
+        
         output_file = get_pred_output_file(output_file, model_type)
         if model_type == "esn":
             predictions_esn = train_model_ESN(options, model_type, data, minimum_idx, predict_cycle_num=predict_cycle_num, 
@@ -108,41 +114,49 @@ def main():
 
         elif model_type == "linear_ar":
             predictions_ar = train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num=predict_cycle_num, 
-                                            tau=1, output_file=output_file, use_grid_search=use_grid_search)
+                                            tau=tau_chosen, output_file=output_file, use_grid_search=use_grid_search)
 
         elif model_type in ["rnn", "lstm", "gru"]:
             predictions_rnn = train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num=predict_cycle_num, 
-                                            tau=1, output_file=output_file, use_grid_search=use_grid_search, Xmax=Xmax, Xmin=Xmin)
+                                            tau=tau_chosen, output_file=output_file, use_grid_search=use_grid_search, Xmax=Xmax, Xmin=Xmin)
 
     # In case running for all models
     elif compare_all_models == 1:
         
+        tau_chosen = options["gru"]["output_size"]
         orig_stdout = sys.stdout
-        f_tmp = open('compare_all_preds_{}_cycle{}_logs.txt'.format(dataset, predict_cycle_num), 'w')
+        f_tmp = open('./results/compare_all_preds_{}_cycle{}_osize{}_logs_eps{}.txt'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w')
         sys.stdout = f_tmp
         
+        #tau_chosen = options["gru"]["output_size"]
         predictions_esn, ytest = train_model_ESN(options, "esn", data, minimum_idx, predict_cycle_num=predict_cycle_num, 
                                         tau=1, output_file=get_pred_output_file(output_file, "esn"))
         predictions_ar = train_model_AR(options, "linear_ar", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
                                         output_file=get_pred_output_file(output_file, "linear_ar"), use_grid_search=use_grid_search)
-        predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
+        predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=tau_chosen, 
                                                 output_file=get_pred_output_file(output_file, "rnn"), use_grid_search=use_grid_search)
-        predictions_lstm = train_model_RNN(options, "lstm", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
+        predictions_lstm = train_model_RNN(options, "lstm", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=tau_chosen, 
                                         output_file=get_pred_output_file(output_file, "lstm"), use_grid_search=use_grid_search,
                                         Xmax=Xmax, Xmin=Xmin)
-        predictions_gru = train_model_RNN(options, "gru", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
+        predictions_gru = train_model_RNN(options, "gru", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=tau_chosen, 
                                         output_file=get_pred_output_file(output_file, "gru"), use_grid_search=use_grid_search,
                                         Xmax=Xmax, Xmin=Xmin)
         
         compare_model_preds = {}
-        compare_model_preds["original_test"] = list(ytest)
-        compare_model_preds["pred_esn"] = list(predictions_esn)
-        compare_model_preds["pred_ar"] = list(predictions_ar)
-        compare_model_preds["pred_rnn"] = list(predictions_vanilla_rnn)
-        compare_model_preds["pred_lstm"] = list(predictions_lstm)
-        compare_model_preds["pred_gru"] = list(predictions_gru)
+        compare_model_preds["original_test"] = list(np.float64(ytest))
+        print("Original signal saved")
+        compare_model_preds["pred_esn"] = list(np.float64(predictions_esn))
+        print("ESN signal saved")
+        compare_model_preds["pred_ar"] = list(np.float64(predictions_ar))
+        print("Linear_AR signal saved")
+        compare_model_preds["pred_rnn"] = list(np.float64(predictions_vanilla_rnn))
+        print("RNN signal saved")
+        compare_model_preds["pred_lstm"] = list(np.float64(predictions_lstm))
+        print("LSTM signal saved")
+        compare_model_preds["pred_gru"] = list(np.float64(predictions_gru))
+        print("GRU signal saved")
 
-        with open('compare_all_preds_{}_cycle{}.json'.format(dataset, predict_cycle_num), 'w') as f:
+        with open('./results/compare_all_preds_{}_cycle{}_osize{}_eps{}.json'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w') as f:
             f.write(json.dumps(compare_model_preds, cls=NDArrayEncoder, indent=2))
 
         # Plot the LSTM, GRU predictions

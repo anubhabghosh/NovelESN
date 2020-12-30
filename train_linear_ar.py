@@ -206,7 +206,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         else:
             Error_dict["Test_error"] = []
 
-        with open('./log/grid_search_results_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
+        with open('./gsearch_results_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
             json.dump(Error_dict, fp, indent=2)
         
         # Saving result files properly

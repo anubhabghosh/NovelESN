@@ -181,8 +181,11 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
 
         with torch.no_grad():
             
+            '''
             _, P, _ = val_inputs.shape
             val_predictions = predict_rnn(model=model, eval_input=tr_inputs[-1, :, :].reshape((1, P, -1)), n_predict=len(val_inputs))
+            print(val_predictions.shape)
+            print(val_targets.shape)
             val_loss = criterion(torch.FloatTensor(val_predictions).reshape((-1, 1)), val_targets)
             val_losses.append(val_loss.item())
             '''
@@ -190,7 +193,7 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
             val_predictions = model.forward(X_val)
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
-            '''
+            
 
         endtime = timer()
         # Measure wallclock time
@@ -213,16 +216,19 @@ def predict_rnn(model, eval_input, n_predict):
     model.eval()
     with torch.no_grad():
 
-        for _ in range(n_predict):
+        for _ in range(n_predict // model.output_size + 1):
             
             X_eval = Variable(eval_input, requires_grad=False).type(torch.FloatTensor)
             val_prediction = model.forward(X_eval)
             eval_predictions.append(val_prediction)
-            eval_input = torch.roll(eval_input, -1)
+            #eval_input = torch.roll(eval_input, -1)
+            eval_input = torch.roll(eval_input, -model.output_size)
             if eval_input.shape[1] is not None:
-                eval_input[:, -1] = val_prediction
+                #eval_input[:, -1] = val_prediction
+                eval_input[:, -model.output_size:] = val_prediction.reshape((1, -1, 1))
             else:
-                eval_input[-1] = val_prediction
+                eval_input[-model.output_size:] = val_prediction.reshape((1, -1, 1))
+                #eval_input[-1] = val_prediction
             '''
             X_eval = Variable(torch.Tensor(eval_input), requires_grad=False).type(torch.FloatTensor)
             val_prediction = model.forward(X_eval)
@@ -235,6 +241,7 @@ def predict_rnn(model, eval_input, n_predict):
             '''
     #eval_predictions = np.row_stack(eval_predictions)
     eval_predictions = torch.stack(eval_predictions).numpy().reshape((-1, 1))
+    eval_predictions = eval_predictions.flatten()[:n_predict]
     return eval_predictions
 
 

@@ -44,7 +44,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
     )
 
     # Initialise optimization parameters
-    optimizer = optim.Adam(model.parameters(), lr=1e-1)
+    optimizer = optim.Adam(model.parameters(), lr=model.lr)
     criterion = model.lossfn
     model.net.train()
     model.net = push_model(model.net, device=model.device)
@@ -66,7 +66,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
         losses.append(tr_loss.item())
 
         with torch.no_grad():
-            
+            '''
             _, P = val_inputs.shape
             val_predictions = predict_armodel(model=model, eval_input=tr_inputs[-1, :], n_predict=len(val_inputs))
             val_loss = criterion(torch.FloatTensor(val_predictions).reshape((-1, 1)), val_targets)
@@ -76,7 +76,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
             val_predictions = model(X_val)
             val_loss = criterion(val_predictions, val_targets)
             val_losses.append(val_loss.item())
-            '''
+            
         
         endtime = timer()
         # Measure wallclock time

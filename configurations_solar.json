@@ -12,6 +12,7 @@
     "linear_ar":{
         "batchsize":64,
         "lossfn_type":"mse",
+	"output_size":1,
         "init_net":true,
         "device":"cpu",
         "num_taps":22,
@@ -21,39 +22,39 @@
     
     "rnn":{
         "input_size":1,
-        "output_size":1,
+        "output_size":5,
         "n_hidden":50,
         "n_layers":2,
         "num_directions":1,
         "model_type":"rnn",
         "batch_first":true,
-        "lr":1e-2,
+        "lr":1e-3,
         "device":"cpu",
-        "num_epochs":2000
+        "num_epochs":4000
     },
     
     "lstm":{
         "input_size":1,
-        "output_size":1,
+        "output_size":5,
         "n_hidden":40,
         "n_layers":2,
         "num_directions":1,
         "model_type":"lstm",
         "batch_first":true,
-        "lr":1e-2,
+        "lr":1e-3,
         "device":"cpu",
-        "num_epochs":2000
+        "num_epochs":4000
     },
     
     "gru":{
         "input_size":1,
-        "output_size":1,
-        "n_hidden":50,
+        "output_size":5,
+        "n_hidden":60,
         "n_layers":2,
         "num_directions":1,
         "model_type":"gru",
         "batch_first":true,
-        "lr":1e-2,
+        "lr":1e-3,
         "device":"cpu",
-        "num_epochs":2000
+        "num_epochs":4000
     }}
