@@ -180,12 +180,11 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
         losses.append(tr_loss.item())
 
         with torch.no_grad():
-            
             '''
             _, P, _ = val_inputs.shape
             val_predictions = predict_rnn(model=model, eval_input=tr_inputs[-1, :, :].reshape((1, P, -1)), n_predict=len(val_inputs))
-            print(val_predictions.shape)
-            print(val_targets.shape)
+            print("Prediction size:{}".format(val_predictions.shape))
+            print("target size:{}".format(val_targets.shape))
             val_loss = criterion(torch.FloatTensor(val_predictions).reshape((-1, 1)), val_targets)
             val_losses.append(val_loss.item())
             '''
