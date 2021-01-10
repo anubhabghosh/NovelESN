@@ -96,6 +96,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
 
     return losses, val_losses, model
 
+'''
 def predict_armodel(model, eval_input, n_predict):
     p = eval_input.shape[0]
     out=np.zeros(p+n_predict)
@@ -107,6 +108,33 @@ def predict_armodel(model, eval_input, n_predict):
             val_prediction = model(X_eval)
             out[p+i] = val_prediction.numpy()
     return out[p:]
+'''
+
+def predict_armodel(model, eval_input, n_predict):
+
+    eval_predictions = []
+    eval_input = torch.Tensor(eval_input)
+    model.eval()
+    with torch.no_grad():
+
+        for _ in range(n_predict // model.output_size + 1):
+            
+            X_eval = Variable(eval_input, requires_grad=False).type(torch.FloatTensor)
+            val_prediction = model.forward(X_eval)
+            eval_predictions.append(val_prediction)
+            #eval_input = torch.roll(eval_input, -1)
+            eval_input = torch.roll(eval_input, -model.output_size)
+            if eval_input.shape[1] is not None:
+                #eval_input[:, -1] = val_prediction
+                eval_input[:, -model.output_size:] = val_prediction.reshape((1, -1, 1))
+            else:
+                eval_input[-model.output_size:] = val_prediction.reshape((1, -1, 1))
+                #eval_input[-1] = val_prediction
+        
+    #eval_predictions = np.row_stack(eval_predictions)
+    eval_predictions = torch.stack(eval_predictions).numpy().reshape((-1, 1))
+    eval_predictions = eval_predictions.flatten()[:n_predict]
+    return eval_predictions
 
 def plot_timeseries(ts_data, tr_data=None, predicted_data=None, eval=False):
 

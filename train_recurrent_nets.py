@@ -119,10 +119,15 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
 
     elif use_grid_search == 1:
         
+        logfile = './param_selection/{}_gs_cycle_{}_logs.txt'.format(model_type, predict_cycle_num)
+        jsonfile = './param_selection/gsresults_{}_cycle{}.json'.format(model_type, predict_cycle_num)
+
         orig_stdout = sys.stdout
-        f_tmp = open('{}_gs_cycle_{}_logs.txt'.format(model_type, predict_cycle_num), 'a')
+        f_tmp = open(logfile, 'w')
         sys.stdout = f_tmp
-        gs_params = {"n_hidden":[20, 30, 40, 50, 60]
+        gs_params = {"n_hidden":[20, 30, 40, 50, 60],
+                     "output_size":[1,5,10],
+                     "num_epochs":[4000]
                     }
         
         gs_list_of_options = create_list_of_dicts(options=options,
@@ -166,7 +171,7 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
 
             val_errors_list.append(gs_option)
             
-        with open('gsresults_{}_cycle{}.json'.format(model.model_type, predict_cycle_num), 'w') as f:
+        with open(jsonfile, 'w') as f:
             f.write(json.dumps(val_errors_list, indent=2))
 
         sys.stdout = orig_stdout
