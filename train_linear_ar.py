@@ -65,7 +65,7 @@ def grid_search_AR_single_cycle(data, solar_indices, model_type, options, params
         assert (p > 0) == True, print("Invalid order specified as parameter")
         print("Parameter set used:\n{}".format(param_options))
         
-        X, Y = get_msah_training_dataset(data, minimum_idx=solar_indices,tau=1, p=p)
+        X, Y = get_msah_training_dataset(data, minimum_idx=solar_indices,tau=options[model_type]["output_size"], p=p)
         xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
         options[model_type]["num_taps"] = p
         model = load_model_with_opts(options, model_type)
@@ -135,7 +135,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
     if use_grid_search == 0:
         
         model = load_model_with_opts(options, model_type)
-        X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau=1, p=options[model_type]["num_taps"])
+        X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau=options[model_type]["output_size"], p=options[model_type]["num_taps"])
         # predict cycle index = entered predict cycle num - 1
         xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)
         # pred of q values
@@ -189,7 +189,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
             
             options[model_type]["num_taps"] = optimal_num_taps
             model = load_model_with_opts(options, model_type)
-            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=1, p=optimal_num_taps)
+            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx,tau=options[model_type]["output_size"], p=optimal_num_taps)
             xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num_array[i])
             # pred of q values
             predictions_ar, test_error, val_error, tr_error = train_and_predict_AR(model, xtrain, ytrain, ytest, 
