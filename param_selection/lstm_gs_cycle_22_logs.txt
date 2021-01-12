@@ -1,148 +1,227 @@
-Grid Search to be carried over following 5 configs:
+Grid Search to be carried over following 15 configs:
 
 Config:1 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 20, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
-The total number of params: 5305 and the number of trainable params:5305
-Epoch: 1/2000, Training MSE Loss:0.145172000, Val. MSE Loss:0.120927893, Time elapsed:0.20234005898237228 secs 
-Epoch: 100/2000, Training MSE Loss:0.000897147, Val. MSE Loss:0.000916825, Time elapsed:16.59727593511343 secs 
-Epoch: 200/2000, Training MSE Loss:0.000735965, Val. MSE Loss:0.000632218, Time elapsed:36.37748417071998 secs 
-Epoch: 300/2000, Training MSE Loss:0.000668787, Val. MSE Loss:0.000580329, Time elapsed:55.926878832280636 secs 
-Epoch: 400/2000, Training MSE Loss:0.000620876, Val. MSE Loss:0.000559032, Time elapsed:89.88642270490527 secs 
-Epoch: 500/2000, Training MSE Loss:0.000554462, Val. MSE Loss:0.000538211, Time elapsed:122.21293128281832 secs 
-Grid Search to be carried over following 5 configs:
-
-Config:1 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 20, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
-The total number of params: 5305 and the number of trainable params:5305
-Epoch: 1/2000, Training MSE Loss:0.108131863, Val. MSE Loss:0.092734613, Time elapsed:0.19362256675958633 secs 
-Epoch: 100/2000, Training MSE Loss:0.000984263, Val. MSE Loss:0.000952904, Time elapsed:16.740879444405437 secs 
-Epoch: 200/2000, Training MSE Loss:0.000846024, Val. MSE Loss:0.000715929, Time elapsed:33.54951564222574 secs 
-Epoch: 300/2000, Training MSE Loss:0.000643359, Val. MSE Loss:0.000588855, Time elapsed:54.11099643073976 secs 
-Epoch: 400/2000, Training MSE Loss:0.000596629, Val. MSE Loss:0.000569165, Time elapsed:88.26529886573553 secs 
-Epoch: 500/2000, Training MSE Loss:0.000534328, Val. MSE Loss:0.000518282, Time elapsed:123.41324126720428 secs 
-Epoch: 600/2000, Training MSE Loss:0.000496483, Val. MSE Loss:0.000499804, Time elapsed:160.31496083922684 secs 
-Epoch: 700/2000, Training MSE Loss:0.000482570, Val. MSE Loss:0.000486491, Time elapsed:193.71285492368042 secs 
-Epoch: 800/2000, Training MSE Loss:0.000469880, Val. MSE Loss:0.000482515, Time elapsed:228.80591134913266 secs 
-Epoch: 900/2000, Training MSE Loss:0.000462734, Val. MSE Loss:0.000483219, Time elapsed:262.6695815473795 secs 
-Epoch: 1000/2000, Training MSE Loss:0.000455802, Val. MSE Loss:0.000483743, Time elapsed:299.75611989200115 secs 
-Epoch: 1100/2000, Training MSE Loss:0.000457624, Val. MSE Loss:0.000474516, Time elapsed:338.2199394106865 secs 
-Epoch: 1200/2000, Training MSE Loss:0.000447545, Val. MSE Loss:0.000478694, Time elapsed:377.6305157877505 secs 
-Epoch: 1300/2000, Training MSE Loss:0.000454061, Val. MSE Loss:0.000477428, Time elapsed:414.7054033000022 secs 
-Epoch: 1400/2000, Training MSE Loss:0.000441641, Val. MSE Loss:0.000469155, Time elapsed:455.0778650827706 secs 
-Epoch: 1500/2000, Training MSE Loss:0.000460182, Val. MSE Loss:0.000541131, Time elapsed:493.87312896735966 secs 
-Epoch: 1600/2000, Training MSE Loss:0.000436724, Val. MSE Loss:0.000460854, Time elapsed:534.3131836019456 secs 
-Epoch: 1700/2000, Training MSE Loss:0.000470787, Val. MSE Loss:0.000534627, Time elapsed:572.5829776413739 secs 
-Epoch: 1800/2000, Training MSE Loss:0.000429466, Val. MSE Loss:0.000449302, Time elapsed:613.098300203681 secs 
-Epoch: 1900/2000, Training MSE Loss:0.000792776, Val. MSE Loss:0.001140372, Time elapsed:650.0089334528893 secs 
-Epoch: 2000/2000, Training MSE Loss:0.000470840, Val. MSE Loss:0.000458794, Time elapsed:691.3044344391674 secs 
-Time elapsed measured in seconds:691.3044804893434
-Model - lstm, Training Error - 0.0004708402557298541,  Validation Error - 0.00045879444223828614,  Test Error, - 0.011569422700761167
+{'input_size': 1, 'output_size': 1, 'n_hidden': 20, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 5221 and the number of trainable params:5221
+Epoch: 1/4000, Training MSE Loss:0.057403553, Val. MSE Loss:0.061932091, Time elapsed:0.18657592497766018 secs 
+Epoch: 500/4000, Training MSE Loss:0.000356524, Val. MSE Loss:0.000319124, Time elapsed:79.26945709064603 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000246036, Val. MSE Loss:0.000212240, Time elapsed:158.64279338531196 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000196316, Val. MSE Loss:0.000169263, Time elapsed:238.08125118352473 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000149924, Val. MSE Loss:0.000131081, Time elapsed:317.64980952069163 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000116902, Val. MSE Loss:0.000105393, Time elapsed:396.8803578261286 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000096247, Val. MSE Loss:0.000090785, Time elapsed:476.0894862320274 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000093534, Val. MSE Loss:0.000094833, Time elapsed:555.360429212451 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000082113, Val. MSE Loss:0.000081936, Time elapsed:634.2442897483706 secs 
+Time elapsed measured in seconds:634.2443208675832
+Model - lstm, Training Error - 8.211338717956096e-05,  Validation Error - 8.193631947506219e-05,  Test Error, - 0.015871946167704043
 ***********************************************************************************************************
 Config:2 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 30, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
-The total number of params: 11555 and the number of trainable params:11555
-Epoch: 1/2000, Training MSE Loss:0.181092635, Val. MSE Loss:0.144197062, Time elapsed:0.5870346445590258 secs 
-Epoch: 100/2000, Training MSE Loss:0.001034243, Val. MSE Loss:0.000917514, Time elapsed:49.807127345353365 secs 
-Epoch: 200/2000, Training MSE Loss:0.000721741, Val. MSE Loss:0.000648839, Time elapsed:100.33114272356033 secs 
-Epoch: 300/2000, Training MSE Loss:0.000650621, Val. MSE Loss:0.000602265, Time elapsed:148.62627097964287 secs 
-Epoch: 400/2000, Training MSE Loss:0.000598059, Val. MSE Loss:0.000583591, Time elapsed:195.46733464859426 secs 
-Epoch: 500/2000, Training MSE Loss:0.000557431, Val. MSE Loss:0.000558452, Time elapsed:245.03635733015835 secs 
-Epoch: 600/2000, Training MSE Loss:0.000519181, Val. MSE Loss:0.000529756, Time elapsed:297.15936839580536 secs 
-Epoch: 700/2000, Training MSE Loss:0.000513844, Val. MSE Loss:0.000509430, Time elapsed:340.4141226802021 secs 
-Epoch: 800/2000, Training MSE Loss:0.000472935, Val. MSE Loss:0.000502975, Time elapsed:378.8494119681418 secs 
-Epoch: 900/2000, Training MSE Loss:0.000465016, Val. MSE Loss:0.000519129, Time elapsed:405.69768162816763 secs 
-Epoch: 1000/2000, Training MSE Loss:0.000450842, Val. MSE Loss:0.000502712, Time elapsed:432.7637023162097 secs 
-Epoch: 1100/2000, Training MSE Loss:0.000444442, Val. MSE Loss:0.000494368, Time elapsed:459.95296980440617 secs 
-Epoch: 1200/2000, Training MSE Loss:0.000454855, Val. MSE Loss:0.000460110, Time elapsed:487.0525879841298 secs 
-Epoch: 1300/2000, Training MSE Loss:0.000409502, Val. MSE Loss:0.000432228, Time elapsed:513.4109721761197 secs 
-Epoch: 1400/2000, Training MSE Loss:0.000427323, Val. MSE Loss:0.000449679, Time elapsed:540.2455862406641 secs 
-Epoch: 1500/2000, Training MSE Loss:0.000489761, Val. MSE Loss:0.000440079, Time elapsed:566.3685635644943 secs 
-Epoch: 1600/2000, Training MSE Loss:0.000421163, Val. MSE Loss:0.000433187, Time elapsed:593.5142503045499 secs 
-Epoch: 1700/2000, Training MSE Loss:0.000587966, Val. MSE Loss:0.000581493, Time elapsed:620.6680118236691 secs 
-Epoch: 1800/2000, Training MSE Loss:0.000383767, Val. MSE Loss:0.000391982, Time elapsed:647.3600179553032 secs 
-Epoch: 1900/2000, Training MSE Loss:0.000402606, Val. MSE Loss:0.000391821, Time elapsed:674.3840352725238 secs 
-Epoch: 2000/2000, Training MSE Loss:0.000402733, Val. MSE Loss:0.000395097, Time elapsed:701.5901677645743 secs 
-Time elapsed measured in seconds:701.5901988800615
-Model - lstm, Training Error - 0.0004027329559903592,  Validation Error - 0.00039509727503173053,  Test Error, - 0.03035205254720802
+{'input_size': 1, 'output_size': 5, 'n_hidden': 20, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 5305 and the number of trainable params:5305
+Epoch: 1/4000, Training MSE Loss:0.128632814, Val. MSE Loss:0.135483518, Time elapsed:0.16372016444802284 secs 
+Epoch: 500/4000, Training MSE Loss:0.000951029, Val. MSE Loss:0.000914910, Time elapsed:79.17928581498563 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000746693, Val. MSE Loss:0.000879909, Time elapsed:158.46910657174885 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000630058, Val. MSE Loss:0.000637543, Time elapsed:238.21426335163414 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000575566, Val. MSE Loss:0.000577764, Time elapsed:317.73269775882363 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000526961, Val. MSE Loss:0.000522803, Time elapsed:397.17980553768575 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000483345, Val. MSE Loss:0.000478324, Time elapsed:476.49492424726486 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000449195, Val. MSE Loss:0.000444743, Time elapsed:555.8001046180725 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000424925, Val. MSE Loss:0.000422488, Time elapsed:635.1294380668551 secs 
+Time elapsed measured in seconds:635.1294742133468
+Model - lstm, Training Error - 0.00042492515058256686,  Validation Error - 0.00042248840327374637,  Test Error, - 0.01062500101262525
 ***********************************************************************************************************
 Config:3 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 40, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
-The total number of params: 20205 and the number of trainable params:20205
-Epoch: 1/2000, Training MSE Loss:0.081448212, Val. MSE Loss:0.059814028, Time elapsed:0.42071926407516 secs 
-Epoch: 100/2000, Training MSE Loss:0.000774471, Val. MSE Loss:0.000677801, Time elapsed:31.53269026055932 secs 
-Epoch: 200/2000, Training MSE Loss:0.000668016, Val. MSE Loss:0.000588689, Time elapsed:62.91347718052566 secs 
-Epoch: 300/2000, Training MSE Loss:0.000600805, Val. MSE Loss:0.000545249, Time elapsed:94.02347250841558 secs 
-Epoch: 400/2000, Training MSE Loss:0.000593451, Val. MSE Loss:0.000554216, Time elapsed:125.5610903762281 secs 
-Epoch: 500/2000, Training MSE Loss:0.000501882, Val. MSE Loss:0.000515398, Time elapsed:157.2233279198408 secs 
-Epoch: 600/2000, Training MSE Loss:0.000565279, Val. MSE Loss:0.000675908, Time elapsed:189.2900396157056 secs 
-Epoch: 700/2000, Training MSE Loss:0.000459999, Val. MSE Loss:0.000491928, Time elapsed:220.7220753338188 secs 
-Epoch: 800/2000, Training MSE Loss:0.000454392, Val. MSE Loss:0.000482944, Time elapsed:251.67083982378244 secs 
-Epoch: 900/2000, Training MSE Loss:0.000451602, Val. MSE Loss:0.000475945, Time elapsed:283.59094261936843 secs 
-Epoch: 1000/2000, Training MSE Loss:0.000465971, Val. MSE Loss:0.000470345, Time elapsed:314.67769042775035 secs 
-Epoch: 1100/2000, Training MSE Loss:0.000436296, Val. MSE Loss:0.000466901, Time elapsed:345.7225528676063 secs 
-Epoch: 1200/2000, Training MSE Loss:0.000432426, Val. MSE Loss:0.000465129, Time elapsed:377.1729051321745 secs 
-Epoch: 1300/2000, Training MSE Loss:0.000431274, Val. MSE Loss:0.000456234, Time elapsed:408.787386668846 secs 
-Epoch: 1400/2000, Training MSE Loss:0.000473646, Val. MSE Loss:0.000450137, Time elapsed:440.07437651604414 secs 
-Epoch: 1500/2000, Training MSE Loss:0.000397212, Val. MSE Loss:0.000405503, Time elapsed:471.41546051204205 secs 
-Epoch: 1600/2000, Training MSE Loss:0.000386724, Val. MSE Loss:0.000377534, Time elapsed:502.6956662554294 secs 
-Epoch: 1700/2000, Training MSE Loss:0.000380496, Val. MSE Loss:0.000374135, Time elapsed:534.1432208158076 secs 
-Epoch: 1800/2000, Training MSE Loss:0.000366409, Val. MSE Loss:0.000372873, Time elapsed:565.7893381714821 secs 
-Epoch: 1900/2000, Training MSE Loss:0.000366654, Val. MSE Loss:0.000351217, Time elapsed:597.2913518920541 secs 
-Epoch: 2000/2000, Training MSE Loss:0.000379343, Val. MSE Loss:0.000387385, Time elapsed:628.5031660515815 secs 
-Time elapsed measured in seconds:628.503199307248
-Model - lstm, Training Error - 0.0003793426149059087,  Validation Error - 0.0003873847599606961,  Test Error, - 0.010403906294824824
+{'input_size': 1, 'output_size': 10, 'n_hidden': 20, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 5410 and the number of trainable params:5410
+Epoch: 1/4000, Training MSE Loss:0.171824709, Val. MSE Loss:0.179256275, Time elapsed:0.14793516136705875 secs 
+Epoch: 500/4000, Training MSE Loss:0.002591491, Val. MSE Loss:0.002511773, Time elapsed:79.32441102154553 secs 
+Epoch: 1000/4000, Training MSE Loss:0.001605366, Val. MSE Loss:0.001684687, Time elapsed:158.85746174119413 secs 
+Epoch: 1500/4000, Training MSE Loss:0.001423486, Val. MSE Loss:0.001466149, Time elapsed:238.04102884419262 secs 
+Epoch: 2000/4000, Training MSE Loss:0.001299891, Val. MSE Loss:0.001327015, Time elapsed:317.35208925791085 secs 
+Epoch: 2500/4000, Training MSE Loss:0.001206660, Val. MSE Loss:0.001238534, Time elapsed:396.73278134688735 secs 
+Epoch: 3000/4000, Training MSE Loss:0.001142756, Val. MSE Loss:0.001180322, Time elapsed:475.8978383708745 secs 
+Epoch: 3500/4000, Training MSE Loss:0.001101877, Val. MSE Loss:0.001138849, Time elapsed:555.377509046346 secs 
+Epoch: 4000/4000, Training MSE Loss:0.001089677, Val. MSE Loss:0.001116322, Time elapsed:634.631560176611 secs 
+Time elapsed measured in seconds:634.631590783596
+Model - lstm, Training Error - 0.0010896773310378194,  Validation Error - 0.001116322004236281,  Test Error, - 0.01152907370415343
 ***********************************************************************************************************
 Config:4 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 50, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
-The total number of params: 31255 and the number of trainable params:31255
-Epoch: 1/2000, Training MSE Loss:0.084055498, Val. MSE Loss:0.056116261, Time elapsed:1.0342513862997293 secs 
-Epoch: 100/2000, Training MSE Loss:0.000781317, Val. MSE Loss:0.000724941, Time elapsed:82.89472312666476 secs 
-Epoch: 200/2000, Training MSE Loss:0.000671710, Val. MSE Loss:0.000603144, Time elapsed:165.51255091279745 secs 
-Epoch: 300/2000, Training MSE Loss:0.000595595, Val. MSE Loss:0.000582860, Time elapsed:248.2381286714226 secs 
-Epoch: 400/2000, Training MSE Loss:0.000539949, Val. MSE Loss:0.000541121, Time elapsed:331.35524522699416 secs 
-Epoch: 500/2000, Training MSE Loss:0.000501034, Val. MSE Loss:0.000512262, Time elapsed:415.22378006763756 secs 
-Epoch: 600/2000, Training MSE Loss:0.000475131, Val. MSE Loss:0.000490863, Time elapsed:498.60718852467835 secs 
-Epoch: 700/2000, Training MSE Loss:0.000465822, Val. MSE Loss:0.000486643, Time elapsed:582.4140768162906 secs 
-Epoch: 800/2000, Training MSE Loss:0.000475260, Val. MSE Loss:0.000530149, Time elapsed:667.4402413275093 secs 
-Epoch: 900/2000, Training MSE Loss:0.000522427, Val. MSE Loss:0.000482425, Time elapsed:751.9286839924753 secs 
-Epoch: 1000/2000, Training MSE Loss:0.000446762, Val. MSE Loss:0.000424720, Time elapsed:835.451072184369 secs 
-Epoch: 1100/2000, Training MSE Loss:0.000410976, Val. MSE Loss:0.000448965, Time elapsed:917.8324923664331 secs 
-Epoch: 1200/2000, Training MSE Loss:0.000381958, Val. MSE Loss:0.000393457, Time elapsed:998.8877604529262 secs 
-Epoch: 1300/2000, Training MSE Loss:0.000388879, Val. MSE Loss:0.000391849, Time elapsed:1080.1476092841476 secs 
-Epoch: 1400/2000, Training MSE Loss:0.000371323, Val. MSE Loss:0.000367383, Time elapsed:1160.2518748603761 secs 
-Epoch: 1500/2000, Training MSE Loss:0.000436591, Val. MSE Loss:0.000499699, Time elapsed:1241.4626849796623 secs 
-Epoch: 1600/2000, Training MSE Loss:0.000370617, Val. MSE Loss:0.000387865, Time elapsed:1323.295666988939 secs 
-Epoch: 1700/2000, Training MSE Loss:0.000386922, Val. MSE Loss:0.000371553, Time elapsed:1405.7486291490495 secs 
-Epoch: 1800/2000, Training MSE Loss:0.000344428, Val. MSE Loss:0.000340311, Time elapsed:1452.5112188439816 secs 
-Epoch: 1900/2000, Training MSE Loss:0.000342280, Val. MSE Loss:0.000348049, Time elapsed:1490.782705007121 secs 
-Epoch: 2000/2000, Training MSE Loss:0.000349970, Val. MSE Loss:0.000383572, Time elapsed:1529.125018754974 secs 
-Time elapsed measured in seconds:1529.1250522006303
-Model - lstm, Training Error - 0.00034997035982087255,  Validation Error - 0.0003835723618976772,  Test Error, - 0.013256151257762005
+{'input_size': 1, 'output_size': 1, 'n_hidden': 30, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 11431 and the number of trainable params:11431
+Epoch: 1/4000, Training MSE Loss:0.174122468, Val. MSE Loss:0.177482799, Time elapsed:0.23956895805895329 secs 
+Epoch: 500/4000, Training MSE Loss:0.000429927, Val. MSE Loss:0.000380156, Time elapsed:107.97352788224816 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000254834, Val. MSE Loss:0.000231921, Time elapsed:215.81516338326037 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000167943, Val. MSE Loss:0.000151682, Time elapsed:323.6576863285154 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000120080, Val. MSE Loss:0.000114626, Time elapsed:431.42549611255527 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000095642, Val. MSE Loss:0.000096528, Time elapsed:539.0135503802449 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000084672, Val. MSE Loss:0.000087034, Time elapsed:646.7529165577143 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000079982, Val. MSE Loss:0.000083612, Time elapsed:754.9061809387058 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000079035, Val. MSE Loss:0.000083592, Time elapsed:862.6091652754694 secs 
+Time elapsed measured in seconds:862.6092067565769
+Model - lstm, Training Error - 7.903485675342381e-05,  Validation Error - 8.359172352356836e-05,  Test Error, - 0.008590310635432839
 ***********************************************************************************************************
 Config:5 is 
-{'input_size': 1, 'output_size': 5, 'n_hidden': 60, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.01, 'device': 'cpu', 'num_epochs': 2000}
+{'input_size': 1, 'output_size': 5, 'n_hidden': 30, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 11555 and the number of trainable params:11555
+Epoch: 1/4000, Training MSE Loss:0.125775084, Val. MSE Loss:0.131824180, Time elapsed:0.2219253797084093 secs 
+Epoch: 500/4000, Training MSE Loss:0.001543494, Val. MSE Loss:0.001433043, Time elapsed:107.97351471707225 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000714772, Val. MSE Loss:0.000683197, Time elapsed:215.96699171699584 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000636846, Val. MSE Loss:0.000642367, Time elapsed:323.8168794773519 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000567806, Val. MSE Loss:0.000578175, Time elapsed:431.60211298055947 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000514732, Val. MSE Loss:0.000511340, Time elapsed:539.548266146332 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000462341, Val. MSE Loss:0.000455395, Time elapsed:647.5843677781522 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000428944, Val. MSE Loss:0.000415820, Time elapsed:756.3690614923835 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000413007, Val. MSE Loss:0.000396430, Time elapsed:864.8468704279512 secs 
+Time elapsed measured in seconds:864.8469039965421
+Model - lstm, Training Error - 0.0004130072775296867,  Validation Error - 0.0003964304050896317,  Test Error, - 0.011510177412486057
+***********************************************************************************************************
+Config:6 is 
+{'input_size': 1, 'output_size': 10, 'n_hidden': 30, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 11710 and the number of trainable params:11710
+Epoch: 1/4000, Training MSE Loss:0.154330835, Val. MSE Loss:0.160545170, Time elapsed:0.20836733281612396 secs 
+Epoch: 500/4000, Training MSE Loss:0.002338376, Val. MSE Loss:0.002736437, Time elapsed:108.33728722669184 secs 
+Epoch: 1000/4000, Training MSE Loss:0.001670698, Val. MSE Loss:0.001764178, Time elapsed:216.84926749952137 secs 
+Epoch: 1500/4000, Training MSE Loss:0.001395692, Val. MSE Loss:0.001542207, Time elapsed:325.5031010750681 secs 
+Epoch: 2000/4000, Training MSE Loss:0.001270903, Val. MSE Loss:0.001398157, Time elapsed:434.0168723836541 secs 
+Epoch: 2500/4000, Training MSE Loss:0.001288303, Val. MSE Loss:0.001286918, Time elapsed:542.7138553727418 secs 
+Epoch: 3000/4000, Training MSE Loss:0.001104287, Val. MSE Loss:0.001154165, Time elapsed:651.4677322395146 secs 
+Epoch: 3500/4000, Training MSE Loss:0.001061521, Val. MSE Loss:0.001109268, Time elapsed:760.3988872803748 secs 
+Epoch: 4000/4000, Training MSE Loss:0.001118879, Val. MSE Loss:0.001138374, Time elapsed:869.0912547111511 secs 
+Time elapsed measured in seconds:869.0912836156785
+Model - lstm, Training Error - 0.001118879416026175,  Validation Error - 0.0011383743258193135,  Test Error, - 0.043457116931844515
+***********************************************************************************************************
+Config:7 is 
+{'input_size': 1, 'output_size': 1, 'n_hidden': 40, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 20041 and the number of trainable params:20041
+Epoch: 1/4000, Training MSE Loss:0.131590396, Val. MSE Loss:0.132207468, Time elapsed:0.2423551194369793 secs 
+Epoch: 500/4000, Training MSE Loss:0.000340212, Val. MSE Loss:0.000300476, Time elapsed:123.2440084386617 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000205783, Val. MSE Loss:0.000176278, Time elapsed:246.86076945066452 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000149835, Val. MSE Loss:0.000131464, Time elapsed:370.1107978206128 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000113104, Val. MSE Loss:0.000105410, Time elapsed:492.91989292390645 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000091976, Val. MSE Loss:0.000091108, Time elapsed:615.6370281986892 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000082745, Val. MSE Loss:0.000083769, Time elapsed:738.5976395625621 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000080256, Val. MSE Loss:0.000083277, Time elapsed:861.7178506217897 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000079917, Val. MSE Loss:0.000083141, Time elapsed:984.5893657505512 secs 
+Time elapsed measured in seconds:984.5893891919404
+Model - lstm, Training Error - 7.991681195562705e-05,  Validation Error - 8.314119622809812e-05,  Test Error, - 0.02407838916614456
+***********************************************************************************************************
+Config:8 is 
+{'input_size': 1, 'output_size': 5, 'n_hidden': 40, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 20205 and the number of trainable params:20205
+Epoch: 1/4000, Training MSE Loss:0.185088649, Val. MSE Loss:0.192242786, Time elapsed:0.2312579806894064 secs 
+Epoch: 500/4000, Training MSE Loss:0.001281013, Val. MSE Loss:0.001005773, Time elapsed:123.30227254889905 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000664757, Val. MSE Loss:0.000688869, Time elapsed:246.03820750303566 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000588418, Val. MSE Loss:0.000619516, Time elapsed:369.0056609194726 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000515503, Val. MSE Loss:0.000527753, Time elapsed:492.0075561273843 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000491129, Val. MSE Loss:0.000467957, Time elapsed:615.2193192876875 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000430743, Val. MSE Loss:0.000429312, Time elapsed:738.3932007402182 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000411930, Val. MSE Loss:0.000412695, Time elapsed:861.4869049079716 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000399425, Val. MSE Loss:0.000402260, Time elapsed:984.5957324840128 secs 
+Time elapsed measured in seconds:984.5957658626139
+Model - lstm, Training Error - 0.00039942501462064683,  Validation Error - 0.0004022601351607591,  Test Error, - 0.00968267064218558
+***********************************************************************************************************
+Config:9 is 
+{'input_size': 1, 'output_size': 10, 'n_hidden': 40, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 20410 and the number of trainable params:20410
+Epoch: 1/4000, Training MSE Loss:0.174509749, Val. MSE Loss:0.180565014, Time elapsed:0.2557898014783859 secs 
+Epoch: 500/4000, Training MSE Loss:0.002670746, Val. MSE Loss:0.002581904, Time elapsed:123.17100408487022 secs 
+Epoch: 1000/4000, Training MSE Loss:0.001506437, Val. MSE Loss:0.001697018, Time elapsed:246.6630870755762 secs 
+Epoch: 1500/4000, Training MSE Loss:0.001332894, Val. MSE Loss:0.001494295, Time elapsed:369.8790522683412 secs 
+Epoch: 2000/4000, Training MSE Loss:0.001206057, Val. MSE Loss:0.001321621, Time elapsed:493.244928618893 secs 
+Epoch: 2500/4000, Training MSE Loss:0.001114314, Val. MSE Loss:0.001187161, Time elapsed:616.6665960047394 secs 
+Epoch: 3000/4000, Training MSE Loss:0.001065306, Val. MSE Loss:0.001159610, Time elapsed:739.9989496450871 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000986633, Val. MSE Loss:0.001077497, Time elapsed:863.5369437392801 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000933195, Val. MSE Loss:0.001054080, Time elapsed:987.2136208601296 secs 
+Time elapsed measured in seconds:987.2136542703956
+Model - lstm, Training Error - 0.0009331947076134384,  Validation Error - 0.0010540797375142574,  Test Error, - 0.009904332789277692
+***********************************************************************************************************
+Config:10 is 
+{'input_size': 1, 'output_size': 1, 'n_hidden': 50, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 31051 and the number of trainable params:31051
+Epoch: 1/4000, Training MSE Loss:0.084360585, Val. MSE Loss:0.085070096, Time elapsed:0.3868700172752142 secs 
+Epoch: 500/4000, Training MSE Loss:0.000284842, Val. MSE Loss:0.000246223, Time elapsed:192.9801864977926 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000168108, Val. MSE Loss:0.000142586, Time elapsed:386.3145801220089 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000126749, Val. MSE Loss:0.000116350, Time elapsed:564.4395256564021 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000094275, Val. MSE Loss:0.000094040, Time elapsed:706.536268254742 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000082561, Val. MSE Loss:0.000085255, Time elapsed:848.4769933670759 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000080173, Val. MSE Loss:0.000084181, Time elapsed:991.1762603633106 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000079612, Val. MSE Loss:0.000083959, Time elapsed:1133.4492204431444 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000078432, Val. MSE Loss:0.000082596, Time elapsed:1275.7084350492805 secs 
+Time elapsed measured in seconds:1275.708458635956
+Model - lstm, Training Error - 7.843211642466486e-05,  Validation Error - 8.259585592895746e-05,  Test Error, - 0.010687248316040655
+***********************************************************************************************************
+Config:11 is 
+{'input_size': 1, 'output_size': 5, 'n_hidden': 50, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 31255 and the number of trainable params:31255
+Epoch: 1/4000, Training MSE Loss:0.171582013, Val. MSE Loss:0.177336812, Time elapsed:0.2613801136612892 secs 
+Epoch: 500/4000, Training MSE Loss:0.000771371, Val. MSE Loss:0.000759107, Time elapsed:142.88906892575324 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000626393, Val. MSE Loss:0.000679699, Time elapsed:286.17915954627097 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000561698, Val. MSE Loss:0.000609345, Time elapsed:428.19288025796413 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000497803, Val. MSE Loss:0.000528658, Time elapsed:569.8941835295409 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000456391, Val. MSE Loss:0.000469694, Time elapsed:712.233030995354 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000426034, Val. MSE Loss:0.000425114, Time elapsed:855.69560335204 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000405461, Val. MSE Loss:0.000396808, Time elapsed:998.5846841223538 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000392150, Val. MSE Loss:0.000381540, Time elapsed:1140.2970477305353 secs 
+Time elapsed measured in seconds:1140.2970973756164
+Model - lstm, Training Error - 0.0003921502793673426,  Validation Error - 0.0003815398958977312,  Test Error, - 0.014113613768427326
+***********************************************************************************************************
+Config:12 is 
+{'input_size': 1, 'output_size': 10, 'n_hidden': 50, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 31510 and the number of trainable params:31510
+Epoch: 1/4000, Training MSE Loss:0.138735041, Val. MSE Loss:0.143359870, Time elapsed:0.2798510864377022 secs 
+Epoch: 500/4000, Training MSE Loss:0.002370521, Val. MSE Loss:0.002335423, Time elapsed:141.551842270419 secs 
+Epoch: 1000/4000, Training MSE Loss:0.001437108, Val. MSE Loss:0.001660298, Time elapsed:283.68102578260005 secs 
+Epoch: 1500/4000, Training MSE Loss:0.001260242, Val. MSE Loss:0.001424994, Time elapsed:425.95991523750126 secs 
+Epoch: 2000/4000, Training MSE Loss:0.001175415, Val. MSE Loss:0.001283375, Time elapsed:568.1646645981818 secs 
+Epoch: 2500/4000, Training MSE Loss:0.001058705, Val. MSE Loss:0.001117655, Time elapsed:711.4311456289142 secs 
+Epoch: 3000/4000, Training MSE Loss:0.001001420, Val. MSE Loss:0.001039517, Time elapsed:853.0652418676764 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000964942, Val. MSE Loss:0.001033654, Time elapsed:995.1267562676221 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000934838, Val. MSE Loss:0.001016135, Time elapsed:1136.4046926852316 secs 
+Time elapsed measured in seconds:1136.4047237504274
+Model - lstm, Training Error - 0.000934838317334652,  Validation Error - 0.0010161352111026645,  Test Error, - 0.008005592428009094
+***********************************************************************************************************
+Config:13 is 
+{'input_size': 1, 'output_size': 1, 'n_hidden': 60, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 44461 and the number of trainable params:44461
+Epoch: 1/4000, Training MSE Loss:0.139958739, Val. MSE Loss:0.137000486, Time elapsed:0.3417485076934099 secs 
+Epoch: 500/4000, Training MSE Loss:0.000303299, Val. MSE Loss:0.000280644, Time elapsed:169.3111680932343 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000257476, Val. MSE Loss:0.000361447, Time elapsed:338.666151098907 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000158208, Val. MSE Loss:0.000143450, Time elapsed:506.2391257416457 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000114238, Val. MSE Loss:0.000108914, Time elapsed:674.5632207486778 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000094337, Val. MSE Loss:0.000094397, Time elapsed:842.9307669214904 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000085288, Val. MSE Loss:0.000085383, Time elapsed:1011.7561882380396 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000082662, Val. MSE Loss:0.000085225, Time elapsed:1180.3362534083426 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000079375, Val. MSE Loss:0.000082762, Time elapsed:1348.189482036978 secs 
+Time elapsed measured in seconds:1348.189513867721
+Model - lstm, Training Error - 7.937452755868435e-05,  Validation Error - 8.276214066427201e-05,  Test Error, - 0.013148446821326558
+***********************************************************************************************************
+Config:14 is 
+{'input_size': 1, 'output_size': 5, 'n_hidden': 60, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
 The total number of params: 44705 and the number of trainable params:44705
-Epoch: 1/2000, Training MSE Loss:0.135831013, Val. MSE Loss:0.089488603, Time elapsed:0.46839639358222485 secs 
-Epoch: 100/2000, Training MSE Loss:0.000975689, Val. MSE Loss:0.000939476, Time elapsed:45.8527026809752 secs 
-Epoch: 200/2000, Training MSE Loss:0.000743152, Val. MSE Loss:0.000686430, Time elapsed:91.60632622428238 secs 
-Epoch: 300/2000, Training MSE Loss:0.000670546, Val. MSE Loss:0.000654655, Time elapsed:137.55021365359426 secs 
-Epoch: 400/2000, Training MSE Loss:0.000539940, Val. MSE Loss:0.000553611, Time elapsed:183.18234182149172 secs 
-Epoch: 500/2000, Training MSE Loss:0.000488253, Val. MSE Loss:0.000506485, Time elapsed:228.90590280666947 secs 
-Epoch: 600/2000, Training MSE Loss:0.000502737, Val. MSE Loss:0.000479900, Time elapsed:274.5413066688925 secs 
-Epoch: 700/2000, Training MSE Loss:0.000473454, Val. MSE Loss:0.000496403, Time elapsed:320.57419999688864 secs 
-Epoch: 800/2000, Training MSE Loss:0.000457779, Val. MSE Loss:0.000487429, Time elapsed:366.2222457397729 secs 
-Epoch: 900/2000, Training MSE Loss:0.000453947, Val. MSE Loss:0.000509502, Time elapsed:412.04230759851635 secs 
-Epoch: 1000/2000, Training MSE Loss:0.000437910, Val. MSE Loss:0.000467051, Time elapsed:446.5092582181096 secs 
-Epoch: 1100/2000, Training MSE Loss:0.000427493, Val. MSE Loss:0.000450193, Time elapsed:480.83333792351186 secs 
-Epoch: 1200/2000, Training MSE Loss:0.000408861, Val. MSE Loss:0.000424025, Time elapsed:515.19609342888 secs 
-Epoch: 1300/2000, Training MSE Loss:0.000405707, Val. MSE Loss:0.000421448, Time elapsed:549.3120083510876 secs 
-Epoch: 1400/2000, Training MSE Loss:0.000389132, Val. MSE Loss:0.000405728, Time elapsed:583.4905346501619 secs 
-Epoch: 1500/2000, Training MSE Loss:0.000381892, Val. MSE Loss:0.000391780, Time elapsed:617.5501258336008 secs 
-Epoch: 1600/2000, Training MSE Loss:0.000398193, Val. MSE Loss:0.000396367, Time elapsed:651.9659867379814 secs 
-Epoch: 1700/2000, Training MSE Loss:0.000373375, Val. MSE Loss:0.000372930, Time elapsed:686.2301856447011 secs 
-Epoch: 1800/2000, Training MSE Loss:0.000369903, Val. MSE Loss:0.000364548, Time elapsed:720.3086661957204 secs 
-Epoch: 1900/2000, Training MSE Loss:0.000375165, Val. MSE Loss:0.000370688, Time elapsed:754.2910152412951 secs 
-Epoch: 2000/2000, Training MSE Loss:0.000362749, Val. MSE Loss:0.000356596, Time elapsed:788.1547437012196 secs 
-Time elapsed measured in seconds:788.1547712124884
-Model - lstm, Training Error - 0.0003627490368671715,  Validation Error - 0.0003565961087588221,  Test Error, - 0.004073434156900545
+Epoch: 1/4000, Training MSE Loss:0.138772056, Val. MSE Loss:0.143500865, Time elapsed:0.34167555533349514 secs 
+Epoch: 500/4000, Training MSE Loss:0.000881362, Val. MSE Loss:0.000833980, Time elapsed:171.83041368983686 secs 
+Epoch: 1000/4000, Training MSE Loss:0.000613695, Val. MSE Loss:0.000598279, Time elapsed:343.2142272423953 secs 
+Epoch: 1500/4000, Training MSE Loss:0.000512498, Val. MSE Loss:0.000508653, Time elapsed:515.1812280602753 secs 
+Epoch: 2000/4000, Training MSE Loss:0.000437720, Val. MSE Loss:0.000422477, Time elapsed:686.2569706160575 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000414389, Val. MSE Loss:0.000395718, Time elapsed:856.8478030283004 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000400919, Val. MSE Loss:0.000389946, Time elapsed:1027.9416962806135 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000388708, Val. MSE Loss:0.000369065, Time elapsed:1199.2982431743294 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000379396, Val. MSE Loss:0.000359897, Time elapsed:1369.7022235374898 secs 
+Time elapsed measured in seconds:1369.7022668756545
+Model - lstm, Training Error - 0.0003793963696807623,  Validation Error - 0.0003598968614824116,  Test Error, - 0.013539612977569438
+***********************************************************************************************************
+Config:15 is 
+{'input_size': 1, 'output_size': 10, 'n_hidden': 60, 'n_layers': 2, 'num_directions': 1, 'model_type': 'lstm', 'batch_first': True, 'lr': 0.001, 'device': 'cpu', 'num_epochs': 4000}
+The total number of params: 45010 and the number of trainable params:45010
+Epoch: 1/4000, Training MSE Loss:0.149134189, Val. MSE Loss:0.153281301, Time elapsed:0.32376070506870747 secs 
+Epoch: 500/4000, Training MSE Loss:0.001937786, Val. MSE Loss:0.002159091, Time elapsed:167.8367509227246 secs 
+Epoch: 1000/4000, Training MSE Loss:0.001386737, Val. MSE Loss:0.001507531, Time elapsed:335.58554634079337 secs 
+Epoch: 1500/4000, Training MSE Loss:0.001196679, Val. MSE Loss:0.001263556, Time elapsed:502.986677326262 secs 
+Epoch: 2000/4000, Training MSE Loss:0.001089255, Val. MSE Loss:0.001142714, Time elapsed:670.3951744679362 secs 
+Epoch: 2500/4000, Training MSE Loss:0.000998780, Val. MSE Loss:0.001023229, Time elapsed:837.5171695239842 secs 
+Epoch: 3000/4000, Training MSE Loss:0.000967798, Val. MSE Loss:0.001220225, Time elapsed:1004.8184299822897 secs 
+Epoch: 3500/4000, Training MSE Loss:0.000932314, Val. MSE Loss:0.001344187, Time elapsed:1171.2663249708712 secs 
+Epoch: 4000/4000, Training MSE Loss:0.000853958, Val. MSE Loss:0.000995281, Time elapsed:1338.6893921904266 secs 
+Time elapsed measured in seconds:1338.6894228830934
+Model - lstm, Training Error - 0.0008539579575881362,  Validation Error - 0.0009952813852578402,  Test Error, - 0.0053439680287437836
 ***********************************************************************************************************

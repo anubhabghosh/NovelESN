@@ -157,7 +157,7 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             #NOTE: Obtain the data and targets by heuristically setting p
             num_taps_rnn = 22
 
-            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = tau, p=num_taps_rnn)
+            X, Y = get_msah_training_dataset(data, minimum_idx=minimum_idx, tau = model.output_size, p=num_taps_rnn)
 
             # Get xtrain, ytrain, ytest
             xtrain, ytrain, ytest = get_cycle(X, Y, icycle=predict_cycle_num)

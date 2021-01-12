@@ -13,10 +13,11 @@ from timeit import default_timer as timer
 # Create an AR model for prediction
 class Linear_AR(nn.Module):
 
-    def __init__(self, num_taps, lossfn_type, lr, num_epochs, init_net=True, device='cpu'):
+    def __init__(self, num_taps, lossfn_type, lr, num_epochs, output_size, init_net=True, device='cpu'):
         super(Linear_AR, self).__init__()
         
         self.num_taps = num_taps
+        self.output_size = output_size
         if lossfn_type.lower() == "mse":
             self.lossfn = nn.MSELoss()
         self.lr = lr
@@ -83,7 +84,7 @@ def train_armodel(model, nepochs, inputs, targets, tr_split=0.8, tr_verbose=Fals
         time_per_epoch = endtime - starttime
         total_time += time_per_epoch
 
-        if tr_verbose == True and (((epoch + 1) % 50) == 0):
+        if tr_verbose == True and (((epoch + 1) % 200) == 0):
         #if (((epoch + 1) % 100) == 0 or epoch == 0):
             print("Epoch: {}/{}, Training MSE Loss:{:.8f}, Val. MSE Loss:{:.8f}, Time elapsed:{} secs ".format(
                 epoch+1, nepochs, tr_loss, val_loss, time_per_epoch))
@@ -124,11 +125,13 @@ def predict_armodel(model, eval_input, n_predict):
             eval_predictions.append(val_prediction)
             #eval_input = torch.roll(eval_input, -1)
             eval_input = torch.roll(eval_input, -model.output_size)
-            if eval_input.shape[1] is not None:
+            
+            #if eval_input.shape[1] is not None:
                 #eval_input[:, -1] = val_prediction
-                eval_input[:, -model.output_size:] = val_prediction.reshape((1, -1, 1))
-            else:
-                eval_input[-model.output_size:] = val_prediction.reshape((1, -1, 1))
+            #    eval_input[:, -model.output_size:] = val_prediction.reshape((1, -1, 1))
+            #else:
+            #    eval_input[-model.output_size:] = val_prediction.reshape((1, -1, 1))
+            eval_input[-model.output_size:] = val_prediction.reshape((1, -1))
                 #eval_input[-1] = val_prediction
         
     #eval_predictions = np.row_stack(eval_predictions)

@@ -131,7 +131,7 @@ def main():
         #tau_chosen = options["gru"]["output_size"]
         predictions_esn, ytest = train_model_ESN(options, "esn", data, minimum_idx, predict_cycle_num=predict_cycle_num, 
                                         tau=1, output_file=get_pred_output_file(output_file, "esn"))
-        predictions_ar = train_model_AR(options, "linear_ar", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=1, 
+        predictions_ar = train_model_AR(options, "linear_ar", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=tau_chosen, 
                                         output_file=get_pred_output_file(output_file, "linear_ar"), use_grid_search=use_grid_search)
         predictions_vanilla_rnn = train_model_RNN(options, "rnn", data, minimum_idx, predict_cycle_num=predict_cycle_num, tau=tau_chosen, 
                                                 output_file=get_pred_output_file(output_file, "rnn"), use_grid_search=use_grid_search)

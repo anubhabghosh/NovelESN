@@ -162,7 +162,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         num_total_cycles = len(np.diff(minimum_idx))
         #predict_cycle_num_array = list(np.arange(num_total_cycles-nval, num_total_cycles))
         predict_cycle_num_array = [predict_cycle_num]
-        params = {"num_taps":list(np.arange(10, 40, 5))} # For Dynamo
+        params = {"num_taps":list(np.arange(10, 40, 1))} # For Dynamo
         #params = {"num_taps":list(np.arange(5, 50, 2))} # For Solar
         #TODO: Fix array nature of optimal_num_taps_all
         optimal_num_taps_all, training_errors_all, val_errors_all, test_errors_all = grid_search_AR_all_cycles(data=data,
@@ -212,7 +212,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         else:
             Error_dict["Test_error"] = []
 
-        with open('./param_selection/gsearch_results_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
+        with open('./param_selection/gsresults_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
             json.dump(Error_dict, fp, indent=2)
         
         # Saving result files properly

@@ -199,7 +199,7 @@ def train_rnn(model, nepochs, tr_inputs, tr_targets, val_inputs, val_targets, tr
         time_elapsed = endtime - starttime
         
         #if tr_verbose == True and (((epoch + 1) % 50) == 0 or epoch == 0):
-        if (((epoch + 1) % 100) == 0 or epoch == 0):
+        if (((epoch + 1) % 500) == 0 or epoch == 0):
             print("Epoch: {}/{}, Training MSE Loss:{:.9f}, Val. MSE Loss:{:.9f}, Time elapsed:{} secs ".format(epoch+1, 
             model.num_epochs, tr_loss, val_loss, time_elapsed))
 

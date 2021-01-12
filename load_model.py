@@ -31,6 +31,7 @@ def load_model_with_opts(options, model_type):
                         num_taps=options[model_type]["num_taps"],
                         lossfn_type=options[model_type]["lossfn_type"],
                         lr=options[model_type]["lr"],
+                        output_size=options[model_type]["output_size"],
                         num_epochs=options[model_type]["num_epochs"],
                         init_net=options[model_type]["init_net"],
                         device=options[model_type]["device"] 
