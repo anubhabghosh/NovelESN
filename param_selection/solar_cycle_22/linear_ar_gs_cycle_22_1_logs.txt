@@ -1,0 +1,204 @@
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 10, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 55 and the number of trainable params:55
+Time elapsed measured in seconds:2.4476439021527767
+Model - AR,  P - 10,  Training Error - 0.00060086,  Validation Error - 0.00058111,  Test Error, - 0.01591530
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 11, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 60 and the number of trainable params:60
+Time elapsed measured in seconds:2.6814662981778383
+Model - AR,  P - 11,  Training Error - 0.00057375,  Validation Error - 0.00055782,  Test Error, - 0.01636256
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 12, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 65 and the number of trainable params:65
+Time elapsed measured in seconds:2.394940882921219
+Model - AR,  P - 12,  Training Error - 0.00058347,  Validation Error - 0.00056612,  Test Error, - 0.01508218
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 13, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 70 and the number of trainable params:70
+Time elapsed measured in seconds:2.748948395252228
+Model - AR,  P - 13,  Training Error - 0.00058972,  Validation Error - 0.00057110,  Test Error, - 0.01692064
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 14, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 75 and the number of trainable params:75
+Time elapsed measured in seconds:2.79266457259655
+Model - AR,  P - 14,  Training Error - 0.00056626,  Validation Error - 0.00054068,  Test Error, - 0.01602654
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 15, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 80 and the number of trainable params:80
+Time elapsed measured in seconds:2.7368391193449497
+Model - AR,  P - 15,  Training Error - 0.00055218,  Validation Error - 0.00052242,  Test Error, - 0.02659115
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 16, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 85 and the number of trainable params:85
+Time elapsed measured in seconds:2.7610123809427023
+Model - AR,  P - 16,  Training Error - 0.00052339,  Validation Error - 0.00049603,  Test Error, - 0.01429848
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 17, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 90 and the number of trainable params:90
+Time elapsed measured in seconds:2.7583313789218664
+Model - AR,  P - 17,  Training Error - 0.00050670,  Validation Error - 0.00045910,  Test Error, - 0.01556917
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 18, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 95 and the number of trainable params:95
+Time elapsed measured in seconds:2.8070863597095013
+Model - AR,  P - 18,  Training Error - 0.00054271,  Validation Error - 0.00050019,  Test Error, - 0.01220926
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 19, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 100 and the number of trainable params:100
+Time elapsed measured in seconds:2.8245721012353897
+Model - AR,  P - 19,  Training Error - 0.00052879,  Validation Error - 0.00046721,  Test Error, - 0.01531251
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 20, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 105 and the number of trainable params:105
+Time elapsed measured in seconds:2.4204616490751505
+Model - AR,  P - 20,  Training Error - 0.00052974,  Validation Error - 0.00046044,  Test Error, - 0.02292961
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 21, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 110 and the number of trainable params:110
+Time elapsed measured in seconds:2.7261830922216177
+Model - AR,  P - 21,  Training Error - 0.00052456,  Validation Error - 0.00045506,  Test Error, - 0.01493903
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 22, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 115 and the number of trainable params:115
+Time elapsed measured in seconds:2.4690176136791706
+Model - AR,  P - 22,  Training Error - 0.00051258,  Validation Error - 0.00044611,  Test Error, - 0.01505851
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 23, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 120 and the number of trainable params:120
+Time elapsed measured in seconds:2.743766462430358
+Model - AR,  P - 23,  Training Error - 0.00053458,  Validation Error - 0.00046504,  Test Error, - 0.01527554
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 24, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 125 and the number of trainable params:125
+Time elapsed measured in seconds:2.4730148408561945
+Model - AR,  P - 24,  Training Error - 0.00051589,  Validation Error - 0.00045019,  Test Error, - 0.01487116
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 25, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 130 and the number of trainable params:130
+Time elapsed measured in seconds:2.7753004133701324
+Model - AR,  P - 25,  Training Error - 0.00049965,  Validation Error - 0.00044012,  Test Error, - 0.01609472
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 26, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 135 and the number of trainable params:135
+Time elapsed measured in seconds:2.800496730953455
+Model - AR,  P - 26,  Training Error - 0.00048893,  Validation Error - 0.00042924,  Test Error, - 0.01516515
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 27, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 140 and the number of trainable params:140
+Time elapsed measured in seconds:2.7996929865330458
+Model - AR,  P - 27,  Training Error - 0.00050275,  Validation Error - 0.00044108,  Test Error, - 0.01547568
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 28, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 145 and the number of trainable params:145
+Time elapsed measured in seconds:2.836949121206999
+Model - AR,  P - 28,  Training Error - 0.00049789,  Validation Error - 0.00043295,  Test Error, - 0.01584511
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 29, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 150 and the number of trainable params:150
+Time elapsed measured in seconds:2.7936953883618116
+Model - AR,  P - 29,  Training Error - 0.00050453,  Validation Error - 0.00044020,  Test Error, - 0.01527033
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 30, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 155 and the number of trainable params:155
+Time elapsed measured in seconds:2.7937862928956747
+Model - AR,  P - 30,  Training Error - 0.00048492,  Validation Error - 0.00041906,  Test Error, - 0.01601276
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 31, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 160 and the number of trainable params:160
+Time elapsed measured in seconds:2.7946837916970253
+Model - AR,  P - 31,  Training Error - 0.00053268,  Validation Error - 0.00044800,  Test Error, - 0.02003285
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 32, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 165 and the number of trainable params:165
+Time elapsed measured in seconds:2.5284880828112364
+Model - AR,  P - 32,  Training Error - 0.00051163,  Validation Error - 0.00044074,  Test Error, - 0.01584149
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 33, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 170 and the number of trainable params:170
+Time elapsed measured in seconds:2.7787873540073633
+Model - AR,  P - 33,  Training Error - 0.00056763,  Validation Error - 0.00052699,  Test Error, - 0.56375085
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 34, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 175 and the number of trainable params:175
+Time elapsed measured in seconds:2.535666422918439
+Model - AR,  P - 34,  Training Error - 0.00054030,  Validation Error - 0.00047013,  Test Error, - 0.02280905
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 35, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 180 and the number of trainable params:180
+Time elapsed measured in seconds:2.776276743039489
+Model - AR,  P - 35,  Training Error - 0.00048947,  Validation Error - 0.00042086,  Test Error, - 0.01559065
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 36, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 185 and the number of trainable params:185
+Time elapsed measured in seconds:2.5508647710084915
+Model - AR,  P - 36,  Training Error - 0.00050043,  Validation Error - 0.00043240,  Test Error, - 0.01552067
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 37, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 190 and the number of trainable params:190
+Time elapsed measured in seconds:2.8239842168986797
+Model - AR,  P - 37,  Training Error - 0.00049739,  Validation Error - 0.00043659,  Test Error, - 0.01536867
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 38, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 195 and the number of trainable params:195
+Time elapsed measured in seconds:2.867041001096368
+Model - AR,  P - 38,  Training Error - 0.00049269,  Validation Error - 0.00042342,  Test Error, - 0.01503343
+***********************************************************************************************************
+Parameter set used:
+{'batchsize': 64, 'lossfn_type': 'mse', 'output_size': 5, 'init_net': True, 'device': 'cpu', 'num_taps': 39, 'lr': 0.01, 'num_epochs': 4000}
+The total number of params: 200 and the number of trainable params:200
+Time elapsed measured in seconds:2.892345316708088
+Model - AR,  P - 39,  Training Error - 0.00052102,  Validation Error - 0.00042564,  Test Error, - 0.01809438
+***********************************************************************************************************
+The total number of params: 155 and the number of trainable params:155
+Epoch: 200/4000, Training MSE Loss:0.00180321, Val. MSE Loss:0.00185665, Time elapsed:0.0006985161453485489 secs 
+Epoch: 400/4000, Training MSE Loss:0.00118550, Val. MSE Loss:0.00124473, Time elapsed:0.000700613483786583 secs 
+Epoch: 600/4000, Training MSE Loss:0.00095293, Val. MSE Loss:0.00095490, Time elapsed:0.0007482971996068954 secs 
+Epoch: 800/4000, Training MSE Loss:0.00082807, Val. MSE Loss:0.00078803, Time elapsed:0.0007180683314800262 secs 
+Epoch: 1000/4000, Training MSE Loss:0.00075280, Val. MSE Loss:0.00069013, Time elapsed:0.0007173586636781693 secs 
+Epoch: 1200/4000, Training MSE Loss:0.00070233, Val. MSE Loss:0.00062879, Time elapsed:0.0007335487753152847 secs 
+Epoch: 1400/4000, Training MSE Loss:0.00066522, Val. MSE Loss:0.00058679, Time elapsed:0.0007185004651546478 secs 
+Epoch: 1600/4000, Training MSE Loss:0.00063629, Val. MSE Loss:0.00055586, Time elapsed:0.0007186494767665863 secs 
+Epoch: 1800/4000, Training MSE Loss:0.00061306, Val. MSE Loss:0.00053191, Time elapsed:0.0007410869002342224 secs 
+Epoch: 2000/4000, Training MSE Loss:0.00059397, Val. MSE Loss:0.00051300, Time elapsed:0.0006926413625478745 secs 
+Epoch: 2200/4000, Training MSE Loss:0.00057796, Val. MSE Loss:0.00049754, Time elapsed:0.0006941277533769608 secs 
+Epoch: 2400/4000, Training MSE Loss:0.00056416, Val. MSE Loss:0.00048461, Time elapsed:0.0007003359496593475 secs 
+Epoch: 2600/4000, Training MSE Loss:0.00056202, Val. MSE Loss:0.00048935, Time elapsed:0.0006991438567638397 secs 
+Epoch: 2800/4000, Training MSE Loss:0.00054126, Val. MSE Loss:0.00046404, Time elapsed:0.000693000853061676 secs 
+Epoch: 3000/4000, Training MSE Loss:0.00053156, Val. MSE Loss:0.00045563, Time elapsed:0.000691726803779602 secs 
+Epoch: 3200/4000, Training MSE Loss:0.00052429, Val. MSE Loss:0.00046010, Time elapsed:0.0006915964186191559 secs 
+Epoch: 3400/4000, Training MSE Loss:0.00051504, Val. MSE Loss:0.00044159, Time elapsed:0.0007179230451583862 secs 
+Epoch: 3600/4000, Training MSE Loss:0.00050806, Val. MSE Loss:0.00043573, Time elapsed:0.0007410906255245209 secs 
+Epoch: 3800/4000, Training MSE Loss:0.00050251, Val. MSE Loss:0.00043588, Time elapsed:0.0007208008319139481 secs 
+Epoch: 4000/4000, Training MSE Loss:0.00049609, Val. MSE Loss:0.00042584, Time elapsed:0.0007191207259893417 secs 
+Time elapsed measured in seconds:2.853892819955945
+Model - AR,  P - 30,  Training Error - 0.00049609,  Validation Error - 0.00042584,  Test Error, - 0.01630819
+***********************************************************************************************************

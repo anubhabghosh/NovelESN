@@ -31,7 +31,7 @@ class Linear_AR(nn.Module):
             
     def init_linearAR(self):
         self.net = nn.Sequential(
-            nn.Linear(self.num_taps, 1))
+            nn.Linear(self.num_taps, self.output_size))
         #print(self.net)
     
     def forward(self, inputs):

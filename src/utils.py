@@ -158,7 +158,8 @@ def get_msah_training_dataset(X, minimum_idx, tau=1, p=np.inf):
         tmp = []
         if not np.isinf(p):
             # i spans the indexes of a cycle
-            for i in range(minimum_idx[icycle - 1], minimum_idx[icycle]):
+            # the shift is in accordance with the no. of steps ahead to predict
+            for i in range(minimum_idx[icycle - 1], minimum_idx[icycle], tau):
                 # tmp receives a tuple (training data, target)
                 if i - p >= 0 and (len(X[i:i + tau]) == tau):
                     # Append the p points prior to i

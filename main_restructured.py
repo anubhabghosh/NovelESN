@@ -125,7 +125,7 @@ def main():
         
         tau_chosen = options["gru"]["output_size"]
         orig_stdout = sys.stdout
-        f_tmp = open('./results/compare_all_preds_{}_cycle{}_osize{}_logs_eps{}.txt'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w')
+        f_tmp = open('./results/compare_all_preds_{}_cycle{}_osize{}_logs_eps{}_tr3.txt'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w')
         sys.stdout = f_tmp
         
         #tau_chosen = options["gru"]["output_size"]
@@ -156,7 +156,7 @@ def main():
         compare_model_preds["pred_gru"] = list(np.float64(predictions_gru))
         print("GRU signal saved")
 
-        with open('./results/compare_all_preds_{}_cycle{}_osize{}_eps{}.json'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w') as f:
+        with open('./results/compare_all_preds_{}_cycle{}_osize{}_eps{}_tr3.json'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w') as f:
             f.write(json.dumps(compare_model_preds, cls=NDArrayEncoder, indent=2))
 
         # Plot the LSTM, GRU predictions

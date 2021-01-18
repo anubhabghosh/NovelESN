@@ -149,7 +149,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
 
     elif use_grid_search == 1:
         
-        logfile = './param_selection/{}_gs_cycle_{}_logs.txt'.format(model_type, predict_cycle_num)
+        logfile = './param_selection/{}_gs_cycle_{}_1_logs.txt'.format(model_type, predict_cycle_num)
         
         orig_stdout = sys.stdout
         f_tmp = open(logfile, 'w')
@@ -212,7 +212,7 @@ def train_model_AR(options, model_type, data, minimum_idx, predict_cycle_num, ta
         else:
             Error_dict["Test_error"] = []
 
-        with open('./param_selection/gsresults_{}_cycle{}.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
+        with open('./param_selection/gsresults_{}_cycle{}_1.json'.format(model_type, predict_cycle_num_array[i]), 'w+') as fp:
             json.dump(Error_dict, fp, indent=2)
         
         # Saving result files properly

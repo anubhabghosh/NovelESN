@@ -17,7 +17,7 @@ from load_model import load_model_with_opts
 
 
 # Implement the version here
-def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False):
+def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_data, tr_to_val_split=0.9, tr_verbose=False, use_grid_search=0):
 
     # Count number of model parameters
     total_num_params, total_num_trainable_params = count_params(model=model)
@@ -39,8 +39,8 @@ def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_dat
     tr_losses, val_losses, model = train_rnn(model=model, nepochs=model.num_epochs, tr_inputs=tr_inputs, tr_targets=tr_targets, 
                                             val_inputs=val_inputs, val_targets=val_targets, tr_verbose=tr_verbose)
     
-    if tr_verbose == True:
-        plot_losses(tr_losses=tr_losses, val_losses=val_losses, logscale=True)
+    #if tr_verbose == True:
+    #    plot_losses(tr_losses=tr_losses, val_losses=val_losses, logscale=True)
 
     # Trying to visualise training data predictions
     #predictions_rnn_train = predict_rnn(model=model, eval_input=train_data_inputs[0, :, :].reshape((1, P, -1)), n_predict=len(train_data_targets))
@@ -57,14 +57,15 @@ def train_and_predict_RNN(model, train_data_inputs, train_data_targets, test_dat
     tr_error = tr_losses[-1] # latest training error
     val_error = val_losses[-1] # latest validation error
     #print("**********************************************************************************************************")
-    print("{} - {}, {} - {},  {} - {},  {}, - {}".format("Model", model.model_type,
-                                                                "Training Error",
-                                                                tr_error,
-                                                                "Validation Error",
-                                                                val_error,
-                                                                "Test Error",
-                                                                test_error))
-    print("***********************************************************************************************************")
+    if use_grid_search == 0:
+        print("{} - {}, {} - {},  {} - {},  {} - {}".format("Model", model.model_type, "Training Error", tr_error,
+                                                            "Validation Error", val_error, "Test Error", test_error))
+        print("***********************************************************************************************************")
+    elif use_grid_search == 1:
+        print("{} - {}, {} - {},  {} - {}".format("Model", model.model_type, "Training Error", tr_error,"Validation Error", 
+                                                  val_error))
+        print("***********************************************************************************************************")
+
     return predictions_rnn, test_error, val_error, tr_error
 
 def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, tau=1, output_file=None, use_grid_search=0, Xmax=None, Xmin=None):
@@ -125,11 +126,16 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
         orig_stdout = sys.stdout
         f_tmp = open(logfile, 'w')
         sys.stdout = f_tmp
-        gs_params = {"n_hidden":[20, 30, 40, 50, 60],
-                     "output_size":[1,5,10],
-                     "num_epochs":[4000]
-                    }
+        #gs_params = {"n_hidden":[20, 30, 40, 50, 60],
+        #             "output_size":[1,5,10],
+        #             "num_epochs":[4000]
+        #            }
         
+        gs_params = {"n_hidden":[20, 30, 40, 50, 60],
+                     "output_size":[1, 5, 10],
+                     "num_epochs":[4000, 5000]
+                    }
+
         gs_list_of_options = create_list_of_dicts(options=options,
                                                 model_type=model_type,
                                                 param_dict=gs_params)
@@ -165,7 +171,8 @@ def train_model_RNN(options, model_type, data, minimum_idx, predict_cycle_num, t
             # Pred of q values
             predictions_rnn, _, val_error, tr_error = train_and_predict_RNN(model, xtrain, ytrain, ytest, 
                                                                                     tr_to_val_split=0.90, 
-                                                                                    tr_verbose=True)
+                                                                                    tr_verbose=True,
+                                                                                    use_grid_search=use_grid_search)
             gs_option["Validation_Error"] = val_error
             gs_option["Training_Error"] = tr_error
 
