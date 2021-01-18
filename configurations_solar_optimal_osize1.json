@@ -1,0 +1,60 @@
+{
+    "esn":{
+        "num_neurons":1000,
+        "conn_per_neuron":10,
+        "spectral_radius":0.8,
+        "tau":151,
+        "beta_regularizer":1e-10,
+        "history_q":152,
+        "history_p":32
+    },
+    
+    "linear_ar":{
+        "batchsize":64,
+        "lossfn_type":"mse",
+        "output_size":1,
+        "init_net":true,
+        "device":"cpu",
+        "num_taps":22,
+        "lr":1e-2,
+        "num_epochs":4000
+    },
+    
+    "rnn":{
+        "input_size":1,
+        "output_size":1,
+        "n_hidden":30,
+        "n_layers":2,
+        "num_directions":1,
+        "model_type":"rnn",
+        "batch_first":true,
+        "lr":1e-3,
+        "device":"cpu",
+        "num_epochs":4000
+    },
+    
+    "lstm":{
+        "input_size":1,
+        "output_size":1,
+        "n_hidden":30,
+        "n_layers":2,
+        "num_directions":1,
+        "model_type":"lstm",
+        "batch_first":true,
+        "lr":1e-3,
+        "device":"cpu",
+        "num_epochs":4000
+    },
+    
+    "gru":{
+        "input_size":1,
+        "output_size":1,
+        "n_hidden":20,
+        "n_layers":2,
+        "num_directions":1,
+        "model_type":"gru",
+        "batch_first":true,
+        "lr":1e-3,
+        "device":"cpu",
+        "num_epochs":4000
+    }}
