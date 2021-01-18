@@ -123,6 +123,10 @@ def main():
     # In case running for all models
     elif compare_all_models == 1:
         
+        config_file = "./configurations_{}_optimal_osize1.json".format(dataset)
+        with open(config_file) as f:
+            options = json.load(f)  # This loads options as a dict with keys that can be accessed
+        
         tau_chosen = options["gru"]["output_size"]
         orig_stdout = sys.stdout
         f_tmp = open('./results/compare_all_preds_{}_cycle{}_osize{}_logs_eps{}_tr3.txt'.format(dataset, predict_cycle_num, tau_chosen, options["gru"]["num_epochs"]), 'w')
